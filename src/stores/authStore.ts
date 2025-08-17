@@ -1,0 +1,146 @@
+import { create } from "zustand";
+import { supabase } from "../lib/supabase";
+import type { AuthUser, ProfileFormData } from "../types";
+
+interface AuthState {
+  user: AuthUser | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  updateProfile: (profileData: Partial<ProfileFormData>) => Promise<void>;
+  initialize: () => Promise<void>;
+}
+
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  loading: true,
+
+  initialize: async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+
+        set({
+          user: {
+            id: session.user.id,
+            email: session.user.email,
+            profile: profile || undefined,
+          },
+          loading: false,
+        });
+      } else {
+        set({ user: null, loading: false });
+      }
+    } catch (error) {
+      console.error("Error initializing auth:", error);
+      set({ user: null, loading: false });
+    }
+  },
+
+  signIn: async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+
+    if (data.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", data.user.id)
+        .single();
+
+      set({
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          profile: profile || undefined,
+        },
+      });
+    }
+  },
+
+  signUp: async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+
+    if (data.user) {
+      set({
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          profile: undefined,
+        },
+      });
+    }
+  },
+
+  signOut: async () => {
+    await supabase.auth.signOut();
+    set({ user: null });
+  },
+
+  updateProfile: async (profileData: Partial<ProfileFormData>) => {
+    const { user } = get();
+    if (!user) throw new Error("No user found");
+
+    // Check if the student_id is being updated and if it already exists
+    if (profileData.student_id) {
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("student_id", profileData.student_id)
+        .neq("id", user.id)
+        .single();
+
+      if (existingProfile) {
+        throw new Error(
+          "Student ID already exists. Please use a different student ID."
+        );
+      }
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .upsert({
+        id: user.id,
+        ...profileData,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      if (
+        error.code === "23505" &&
+        error.message.includes("profiles_student_id_key")
+      ) {
+        throw new Error(
+          "Student ID already exists. Please use a different student ID."
+        );
+      }
+      throw error;
+    }
+
+    set({
+      user: {
+        ...user,
+        profile: data,
+      },
+    });
+  },
+}));
