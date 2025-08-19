@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  buddy-ride-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - buddy-ride-network
+
+  # Optional: Add reverse proxy with SSL
+  nginx-proxy:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - buddy-ride-web
+    restart: unless-stopped
+    networks:
+      - buddy-ride-network
+
+networks:
+  buddy-ride-network:
+    driver: bridge
+# For production with external database
+# volumes:
+#   postgres_data:
+#     driver: local

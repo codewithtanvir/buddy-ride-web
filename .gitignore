@@ -102,5 +102,54 @@ temp/
 *.sqlite
 *.sqlite3
 
-# all markdown files
-*.md
+# Deployment platforms
+.vercel
+.netlify
+
+# Docker volumes
+docker-data/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Security files
+*.key
+*.crt
+*.csr
+
+# Local configuration overrides
+config.local.js
+config.local.json
+
+# Health check outputs
+health-check-*.json
+
+# Performance reports
+lighthouse-*.json
+bundle-analyzer-*.json
+
+# Development artifacts
+dev-dist/
+fix-sql.sh
+
+# Allow documentation files (remove markdown exclusion)
+# *.md
+
+# Ignore unnecessary development/troubleshooting markdown files
+ADMIN_DASHBOARD_FIXED.md
+CRITICAL_FIXES_SUMMARY.md
+GENDER_SECURITY_GUIDE.md
+OTP_EMAIL_EXAMPLES.md
+OTP_EMAIL_FIX.md
+OTP_IMPLEMENTATION_SUMMARY.md
+OTP_PASSWORD_RESET_COMPLETE.md
+OTP_TROUBLESHOOTING_GUIDE.md
+PASSWORD_RESET_EMAIL_ENHANCED.md
+PASSWORD_RESET_GUIDE.md
+PWA_SETUP_COMPLETE.md
+REDIRECT_FIXES_SUMMARY.md
+STUDENT_SIGNUP_GUIDE.md
+SUPABASE_DOMAIN_SETUP.md
+SUPABASE_SMTP_SETUP.md

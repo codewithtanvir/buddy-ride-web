@@ -10,6 +10,8 @@ import {
   TrendingUp,
   Clock,
   MapPin,
+  Phone,
+  Bell,
 } from "lucide-react";
 import {
   Card,
@@ -18,6 +20,8 @@ import {
   CardTitle,
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
+import { PhoneRequestsManager } from "../components/PhoneRequestsManager";
+import NotificationManager from "../components/NotificationManager";
 import { useAuthStore } from "../stores/authStore";
 import { useRideStore } from "../stores/rideStore";
 import { supabase } from "../lib/supabase";
@@ -76,9 +80,9 @@ const HomePage: React.FC = () => {
                 🚗 Share Rides, Save Money, Stay Safe
               </h2>
               <p className="text-blue-100 text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
-                <strong>Our Mission:</strong> Choose location and time
-                where you want to go, find a buddy based on gender for security,
-                chat with them, go together and{" "}
+                <strong>Our Mission:</strong> Choose location and time where you
+                want to go, find a buddy based on gender for security, chat with
+                them, go together and{" "}
                 <span className="text-yellow-300 font-semibold">
                   split the fare to save money!
                 </span>
@@ -190,6 +194,19 @@ const HomePage: React.FC = () => {
               </CardContent>
             </Card>
           )}
+        </div>
+
+        {/* Notifications and Requests */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Notifications */}
+          <div>
+            <NotificationManager maxItems={5} />
+          </div>
+
+          {/* Phone Requests */}
+          <div>
+            <PhoneRequestsManager />
+          </div>
         </div>
 
         {/* Recent Activity */}

@@ -92,7 +92,9 @@ const ChatsPage: React.FC = () => {
             department,
             gender,
             phone_number,
-            created_at
+            role,
+            created_at,
+            notification_preferences
           )
         `
         )
@@ -116,7 +118,10 @@ const ChatsPage: React.FC = () => {
               student_id,
               department,
               gender,
-              created_at
+              phone_number,
+              role,
+              created_at,
+              notification_preferences
             )
           )
         `
@@ -142,7 +147,9 @@ const ChatsPage: React.FC = () => {
               department,
               gender,
               phone_number,
-              created_at
+              role,
+              created_at,
+              notification_preferences
             )
           )
         `

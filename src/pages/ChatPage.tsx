@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Send, MapPin, Clock, Users } from "lucide-react";
+import { ArrowLeft, Send, MapPin, Clock, Users, Phone } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
@@ -9,10 +9,13 @@ import {
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import { PhoneSharingPanel } from "../components/PhoneSharingPanel";
+import { PhoneNumberDisplay } from "../components/PhoneShareModal";
 import { useAuthStore } from "../stores/authStore";
 import { useRideStore } from "../stores/rideStore";
 import { supabase } from "../lib/supabase";
 import { formatDateTime } from "../utils/formatters";
+import { formatPhoneNumber } from "../utils/phoneSharing";
 import toast from "react-hot-toast";
 import type { MessageWithProfile, RideWithProfile } from "../types";
 
@@ -28,6 +31,7 @@ const ChatPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] =
     useState<string>("disconnected");
+  const [showPhonePanel, setShowPhonePanel] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -76,7 +80,9 @@ const ChatPage: React.FC = () => {
                   department,
                   gender,
                   phone_number,
-                  created_at
+                  role,
+                  created_at,
+                  notification_preferences
                 )
               `
               )
@@ -138,7 +144,9 @@ const ChatPage: React.FC = () => {
               department,
               gender,
               phone_number,
-              created_at
+              role,
+              created_at,
+              notification_preferences
             )
           `
           )
@@ -180,7 +188,9 @@ const ChatPage: React.FC = () => {
             department,
             gender,
             phone_number,
-            created_at
+            role,
+            created_at,
+            notification_preferences
           )
         `
         )
@@ -226,7 +236,9 @@ const ChatPage: React.FC = () => {
             department,
             gender,
             phone_number,
-            created_at
+            role,
+            created_at,
+            notification_preferences
           )
         `
         )
@@ -352,7 +364,9 @@ const ChatPage: React.FC = () => {
             department,
             gender,
             phone_number,
-            created_at
+            role,
+            created_at,
+            notification_preferences
           )
         `
         )
@@ -490,6 +504,15 @@ const ChatPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                onClick={() => setShowPhonePanel(!showPhonePanel)}
+                className="p-2 h-10 w-10 lg:h-12 lg:w-12 flex-shrink-0 rounded-xl hover:bg-blue-100 transition-colors"
+                title="Contact sharing"
+              >
+                <Phone className="h-5 w-5 lg:h-6 lg:w-6 text-blue-600" />
+              </Button>
+
               <div className="hidden sm:flex items-center text-xs lg:text-sm text-gray-500">
                 <Clock className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
                 <span>{formatDateTime(ride.ride_time)}</span>
@@ -525,54 +548,81 @@ const ChatPage: React.FC = () => {
 
       {/* Enhanced Messages Section */}
       <div className="flex-1 overflow-y-auto p-3 lg:p-4">
-        <div className="max-w-4xl mx-auto space-y-3 lg:space-y-4">
-          {messages.length === 0 ? (
-            <div className="text-center py-8 lg:py-12">
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 mx-auto max-w-md shadow-sm border border-gray-200">
-                <div className="text-gray-500 text-base mb-2">💬</div>
-                <div className="text-gray-600 font-medium mb-2">
-                  No messages yet
-                </div>
-                <div className="text-gray-500 text-sm">
-                  Start the conversation with {ride.profiles?.name}!
+        <div className="max-w-4xl mx-auto">
+          {/* Phone Sharing Panel */}
+          {showPhonePanel && ride && (
+            <div className="mb-4">
+              <PhoneSharingPanel
+                rideId={rideId!}
+                recipientName={ride.profiles?.name || "Unknown User"}
+                isRideOwner={ride.user_id === user?.id}
+              />
+            </div>
+          )}
+
+          {/* Messages */}
+          <div className="space-y-3 lg:space-y-4">
+            {messages.length === 0 ? (
+              <div className="text-center py-8 lg:py-12">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 mx-auto max-w-md shadow-sm border border-gray-200">
+                  <div className="text-gray-500 text-base mb-2">💬</div>
+                  <div className="text-gray-600 font-medium mb-2">
+                    No messages yet
+                  </div>
+                  <div className="text-gray-500 text-sm">
+                    Start the conversation with {ride.profiles?.name}!
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  isMyMessage(message) ? "justify-end" : "justify-start"
-                }`}
-              >
+            ) : (
+              messages.map((message) => (
                 <div
-                  className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                    isMyMessage(message)
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                      : "bg-white/95 backdrop-blur-sm text-gray-900 border border-gray-200"
+                  key={message.id}
+                  className={`flex ${
+                    isMyMessage(message) ? "justify-end" : "justify-start"
                   }`}
                 >
-                  {!isMyMessage(message) && (
-                    <div className="text-xs font-medium mb-1 text-gray-600">
-                      {message.profiles?.name}
-                    </div>
-                  )}
-                  <div className="break-words text-sm lg:text-base">
-                    {message.content}
-                  </div>
                   <div
-                    className={`text-xs mt-2 ${
-                      isMyMessage(message) ? "text-blue-100" : "text-gray-500"
+                    className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                      isMyMessage(message)
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                        : "bg-white/95 backdrop-blur-sm text-gray-900 border border-gray-200"
                     }`}
                   >
-                    {formatDateTime(message.created_at)}
+                    {!isMyMessage(message) && (
+                      <div className="text-xs font-medium mb-1 text-gray-600">
+                        {message.profiles?.name}
+                      </div>
+                    )}
+                    <div className="break-words text-sm lg:text-base">
+                      {message.content}
+                    </div>
+
+                    {/* Phone Number Display */}
+                    {(message as any).phone_shared &&
+                      (message as any).phone_number && (
+                        <PhoneNumberDisplay
+                          phoneNumber={formatPhoneNumber(
+                            (message as any).phone_number
+                          )}
+                          isShared={true}
+                          userName={message.profiles?.name || "User"}
+                        />
+                      )}
+
+                    <div
+                      className={`text-xs mt-2 ${
+                        isMyMessage(message) ? "text-blue-100" : "text-gray-500"
+                      }`}
+                    >
+                      {formatDateTime(message.created_at)}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
-          <div ref={messagesEndRef} />
+              ))
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       </div>
 

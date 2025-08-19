@@ -150,7 +150,7 @@ const ProfilePage: React.FC = () => {
           content:
             "Welcome! Your ride request has been accepted. You can now chat about pickup details and coordination.",
           ride_id: rideId,
-          sender_id: user?.id, // Ride owner sends the welcome message
+          sender_id: user?.id!, // Ride owner sends the welcome message
         });
       }
     } catch (error) {

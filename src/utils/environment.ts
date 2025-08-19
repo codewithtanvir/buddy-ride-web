@@ -5,6 +5,9 @@ interface EnvironmentConfig {
   supabaseAnonKey: string;
   environment: "development" | "production" | "test";
   logLevel: "error" | "warn" | "info" | "debug";
+  apiTimeout: number;
+  enableAnalytics: boolean;
+  version: string;
 }
 
 class EnvironmentError extends Error {
@@ -36,7 +39,7 @@ function validateUrl(name: string, url: string): string {
 }
 
 function getEnvironment(): "development" | "production" | "test" {
-  const env = import.meta.env.MODE;
+  const env = import.meta.env.VITE_ENVIRONMENT || import.meta.env.MODE;
   if (env === "development" || env === "production" || env === "test") {
     return env;
   }
@@ -56,6 +59,21 @@ function getLogLevel(): "error" | "warn" | "info" | "debug" {
   return getEnvironment() === "production" ? "error" : "debug";
 }
 
+function getApiTimeout(): number {
+  const timeout = import.meta.env.VITE_API_TIMEOUT;
+  const parsed = timeout ? parseInt(timeout, 10) : null;
+  return parsed && !isNaN(parsed) ? parsed : 5000; // Default 5 seconds
+}
+
+function getEnableAnalytics(): boolean {
+  const analytics = import.meta.env.VITE_ENABLE_ANALYTICS;
+  return analytics === "true" || analytics === true;
+}
+
+function getAppVersion(): string {
+  return import.meta.env.VITE_APP_VERSION || "1.0.0";
+}
+
 export function validateAndGetConfig(): EnvironmentConfig {
   try {
     const supabaseUrl = validateRequiredEnvVar(
@@ -73,7 +91,8 @@ export function validateAndGetConfig(): EnvironmentConfig {
     // Validate Supabase URL domain (basic check)
     if (
       !supabaseUrl.includes("supabase.co") &&
-      !supabaseUrl.includes("localhost")
+      !supabaseUrl.includes("localhost") &&
+      !supabaseUrl.includes("127.0.0.1")
     ) {
       console.warn(
         "Warning: Supabase URL does not appear to be a standard Supabase domain"
@@ -92,12 +111,18 @@ export function validateAndGetConfig(): EnvironmentConfig {
 
     const environment = getEnvironment();
     const logLevel = getLogLevel();
+    const apiTimeout = getApiTimeout();
+    const enableAnalytics = getEnableAnalytics();
+    const version = getAppVersion();
 
     const config: EnvironmentConfig = {
       supabaseUrl,
       supabaseAnonKey,
       environment,
       logLevel,
+      apiTimeout,
+      enableAnalytics,
+      version,
     };
 
     // Log configuration in development
@@ -107,7 +132,24 @@ export function validateAndGetConfig(): EnvironmentConfig {
         supabaseAnonKey: `${supabaseAnonKey.substring(0, 20)}...`,
         environment,
         logLevel,
+        apiTimeout,
+        enableAnalytics,
+        version,
       });
+    }
+
+    // Validate production requirements
+    if (environment === "production") {
+      if (logLevel !== "error" && logLevel !== "warn") {
+        console.warn(
+          "Production environment should use 'error' or 'warn' log level"
+        );
+      }
+      if (supabaseUrl.includes("localhost")) {
+        throw new EnvironmentError(
+          "Production environment cannot use localhost URLs"
+        );
+      }
     }
 
     return config;

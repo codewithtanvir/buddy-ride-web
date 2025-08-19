@@ -9,6 +9,8 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./stores/authStore";
 import { startAutomaticCleanup } from "./utils/rideCleanup";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
+import { PWAUpdatePrompt } from "./components/PWAUpdatePrompt";
+import { ProtectedAdminRoute } from "./components/ProtectedAdminRoute";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AsyncErrorBoundary } from "./components/AsyncErrorBoundary";
 import { PageLoadingSpinner } from "./components/LoadingStates";
@@ -113,7 +115,14 @@ function App() {
                     <Route path="post-ride" element={<PostRidePage />} />
                     <Route path="chats" element={<ChatsPage />} />
                     <Route path="profile" element={<ProfilePage />} />
-                    <Route path="admin" element={<AdminPage />} />
+                    <Route
+                      path="admin"
+                      element={
+                        <ProtectedAdminRoute>
+                          <AdminPage />
+                        </ProtectedAdminRoute>
+                      }
+                    />
                   </Route>
                   <Route path="/chat/:rideId" element={<ChatPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
@@ -123,6 +132,9 @@ function App() {
 
             {/* PWA Install Prompt */}
             <PWAInstallPrompt />
+
+            {/* PWA Update Prompt */}
+            <PWAUpdatePrompt />
           </div>
         </Router>
       </AsyncErrorBoundary>

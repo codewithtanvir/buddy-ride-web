@@ -10,14 +10,19 @@ import {
   Car,
   Menu,
   X,
+  Shield,
+  RefreshCw,
 } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
+import { isAdmin } from "../../utils/roles";
 import toast from "react-hot-toast";
+import NotificationManager from "../NotificationManager";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
-  const { user, signOut } = useAuthStore();
+  const { user, signOut, refreshProfile } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -28,17 +33,37 @@ const DashboardLayout: React.FC = () => {
     }
   };
 
+  const handleRefreshProfile = async () => {
+    try {
+      setIsRefreshing(true);
+      await refreshProfile();
+      toast.success(
+        "Profile refreshed! If you were recently promoted to admin, you should now see the admin menu."
+      );
+    } catch (error) {
+      toast.error("Failed to refresh profile");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const navigation = [
+  // Base navigation items
+  const baseNavigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Find Buddy", href: "/find-buddy", icon: Search },
     { name: "Post Ride", href: "/post-ride", icon: Plus },
     { name: "Chats", href: "/chats", icon: MessageSquare },
     { name: "Profile", href: "/profile", icon: User },
   ];
+
+  // Add admin navigation if user is admin
+  const navigation = isAdmin(user)
+    ? [...baseNavigation, { name: "Admin Panel", href: "/admin", icon: Shield }]
+    : baseNavigation;
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -53,16 +78,19 @@ const DashboardLayout: React.FC = () => {
               <h1 className="text-lg font-bold text-gray-900">Buddy Ride</h1>
             </div>
           </div>
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
+          <div className="flex items-center space-x-3">
+            <NotificationManager compact />
+            <button
+              onClick={toggleMobileMenu}
+              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -132,15 +160,36 @@ const DashboardLayout: React.FC = () => {
                   <p className="text-xs text-gray-500 truncate">
                     {user?.email}
                   </p>
+                  {user?.profile?.role && (
+                    <p className="text-xs text-primary-600 font-medium capitalize">
+                      {user.profile.role}
+                    </p>
+                  )}
                 </div>
               </div>
-              <button
-                onClick={handleSignOut}
-                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <LogOut className="h-5 w-5 mr-3" />
-                Sign Out
-              </button>
+
+              <div className="space-y-2">
+                <button
+                  onClick={handleRefreshProfile}
+                  disabled={isRefreshing}
+                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw
+                    className={`h-5 w-5 mr-3 ${
+                      isRefreshing ? "animate-spin" : ""
+                    }`}
+                  />
+                  Refresh Profile
+                </button>
+
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 mr-3" />
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -149,14 +198,19 @@ const DashboardLayout: React.FC = () => {
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex lg:w-64 lg:flex-col bg-white shadow-lg">
         <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary-600 rounded-lg">
-              <Car className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-primary-600 rounded-lg">
+                <Car className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Buddy Ride</h1>
+                <p className="text-sm text-gray-600">AIUB Students</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Buddy Ride</h1>
-              <p className="text-sm text-gray-600">AIUB Students</p>
-            </div>
+          </div>
+          <div className="mb-4">
+            <NotificationManager compact maxItems={5} showHeader={false} />
           </div>
         </div>
 
@@ -197,15 +251,34 @@ const DashboardLayout: React.FC = () => {
                 {user?.profile?.name || "Unknown User"}
               </p>
               <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              {user?.profile?.role && (
+                <p className="text-xs text-primary-600 font-medium capitalize">
+                  {user.profile.role}
+                </p>
+              )}
             </div>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <LogOut className="h-5 w-5 mr-3" />
-            Sign Out
-          </button>
+
+          <div className="space-y-2">
+            <button
+              onClick={handleRefreshProfile}
+              disabled={isRefreshing}
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw
+                className={`h-5 w-5 mr-3 ${isRefreshing ? "animate-spin" : ""}`}
+              />
+              Refresh Profile
+            </button>
+
+            <button
+              onClick={handleSignOut}
+              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <LogOut className="h-5 w-5 mr-3" />
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
 
@@ -217,20 +290,22 @@ const DashboardLayout: React.FC = () => {
       {/* Mobile Bottom Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
         <div className="flex justify-around">
-          {navigation.slice(0, 5).map((item) => {
+          {navigation.slice(0, isAdmin(user) ? 6 : 5).map((item) => {
             const isActive = location.pathname === item.href;
             return (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-colors ${
+                className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
                   isActive
                     ? "text-primary-600"
                     : "text-gray-500 hover:text-gray-700"
                 }`}
               >
-                <item.icon className="h-5 w-5 mb-1" />
-                <span className="text-xs font-medium">{item.name}</span>
+                <item.icon className="h-4 w-4 mb-1" />
+                <span className="text-xs font-medium truncate">
+                  {item.name === "Admin Panel" ? "Admin" : item.name}
+                </span>
               </Link>
             );
           })}

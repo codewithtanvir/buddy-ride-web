@@ -19,6 +19,7 @@ interface AuthState {
   ) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
   updateProfile: (profileData: Partial<ProfileFormData>) => Promise<void>;
+  refreshProfile: () => Promise<void>; // Add method to refresh profile
   initialize: () => Promise<void>;
   verifyEmailOTP: (email: string, token: string) => Promise<void>;
   resendEmailOTP: (email: string) => Promise<void>;
@@ -193,6 +194,31 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         profile: data,
       },
     });
+  },
+
+  // Refresh user profile from database (useful after role changes)
+  refreshProfile: async () => {
+    const { user } = get();
+    if (!user) return;
+
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (profile) {
+        set({
+          user: {
+            ...user,
+            profile,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error refreshing profile:", error);
+    }
   },
 
   // OTP-based password reset

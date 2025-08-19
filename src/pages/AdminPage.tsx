@@ -15,6 +15,11 @@ import {
   TrendingUp,
   MessageSquare,
   RefreshCw,
+  Bell,
+  AlertTriangle,
+  Phone,
+  X,
+  Check,
 } from "lucide-react";
 import {
   Card,
@@ -43,6 +48,8 @@ interface AdminStats {
   expiredRides: number;
   totalMessages: number;
   totalRequests: number;
+  totalNotifications: number;
+  unreadNotifications: number;
 }
 
 const AdminPage: React.FC = () => {
@@ -59,6 +66,8 @@ const AdminPage: React.FC = () => {
     expiredRides: 0,
     totalMessages: 0,
     totalRequests: 0,
+    totalNotifications: 0,
+    unreadNotifications: 0,
   });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -97,6 +106,8 @@ const AdminPage: React.FC = () => {
             department,
             gender,
             phone_number,
+            role,
+            notification_preferences,
             created_at
           )
         `
@@ -119,32 +130,41 @@ const AdminPage: React.FC = () => {
   const calculateStats = async () => {
     try {
       // Get total counts
-      const [usersCount, ridesCount, messagesCount, requestsCount] =
-        await Promise.all([
-          supabase
-            .from("profiles")
-            .select("id", { count: "exact", head: true }),
-          supabase.from("rides").select("id", { count: "exact", head: true }),
-          supabase
-            .from("messages")
-            .select("id", { count: "exact", head: true }),
-          supabase
-            .from("ride_requests")
-            .select("id", { count: "exact", head: true }),
-        ]);
+      const [
+        usersCount,
+        ridesCount,
+        messagesCount,
+        requestsCount,
+        notificationsCount,
+      ] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }),
+        supabase.from("rides").select("id", { count: "exact", head: true }),
+        supabase.from("messages").select("id", { count: "exact", head: true }),
+        supabase
+          .from("ride_requests")
+          .select("id", { count: "exact", head: true }),
+        supabase
+          .from("notifications")
+          .select("id", { count: "exact", head: true }),
+      ]);
 
       // Get active vs expired rides
       const now = new Date().toISOString();
-      const [activeRidesCount, expiredRidesCount] = await Promise.all([
-        supabase
-          .from("rides")
-          .select("id", { count: "exact", head: true })
-          .gte("ride_time", now),
-        supabase
-          .from("rides")
-          .select("id", { count: "exact", head: true })
-          .lt("ride_time", now),
-      ]);
+      const [activeRidesCount, expiredRidesCount, unreadNotificationsCount] =
+        await Promise.all([
+          supabase
+            .from("rides")
+            .select("id", { count: "exact", head: true })
+            .gte("ride_time", now),
+          supabase
+            .from("rides")
+            .select("id", { count: "exact", head: true })
+            .lt("ride_time", now),
+          supabase
+            .from("notifications")
+            .select("id", { count: "exact", head: true })
+            .eq("read", false),
+        ]);
 
       setStats({
         totalUsers: usersCount.count || 0,
@@ -153,6 +173,8 @@ const AdminPage: React.FC = () => {
         expiredRides: expiredRidesCount.count || 0,
         totalMessages: messagesCount.count || 0,
         totalRequests: requestsCount.count || 0,
+        totalNotifications: notificationsCount.count || 0,
+        unreadNotifications: unreadNotificationsCount.count || 0,
       });
     } catch (error) {
       console.error("Error calculating stats:", error);
@@ -473,6 +495,46 @@ const AdminPage: React.FC = () => {
                     </div>
                     <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                       <Star className="h-6 w-6" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-teal-500 to-teal-600 text-white border-0 shadow-xl">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-teal-100 text-sm font-medium mb-1">
+                        Notifications
+                      </p>
+                      <p className="text-3xl font-bold">
+                        {stats.totalNotifications}
+                      </p>
+                      <p className="text-teal-200 text-xs mt-1">Total sent</p>
+                    </div>
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <Bell className="h-6 w-6" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-pink-500 to-pink-600 text-white border-0 shadow-xl">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-pink-100 text-sm font-medium mb-1">
+                        Unread Alerts
+                      </p>
+                      <p className="text-3xl font-bold">
+                        {stats.unreadNotifications}
+                      </p>
+                      <p className="text-pink-200 text-xs mt-1">
+                        Need attention
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-6 w-6" />
                     </div>
                   </div>
                 </CardContent>
