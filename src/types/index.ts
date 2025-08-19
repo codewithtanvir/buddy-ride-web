@@ -18,5 +18,6 @@ export interface ProfileFormData {
   student_id: string;
   department: string;
   gender: "male" | "female";
+  phone_number?: string;
   role?: "user" | "admin" | "moderator";
 }

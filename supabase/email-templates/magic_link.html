@@ -164,43 +164,49 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>✨ Magic Link Login</h1>
-        <p>One-click access to Buddy Ride</p>
+        <h1>🔢 Your Login Code</h1>
+        <p>Quick and secure access to Buddy Ride</p>
       </div>
 
       <div class="content">
         <div class="welcome-back">
           <h2 style="margin: 0 0 10px 0; color: #2c5282">Welcome back! 👋</h2>
           <p style="margin: 0; color: #4a5568">
-            Ready to continue your ride-sharing journey? Use your magic link
+            Ready to continue your ride-sharing journey? Use your login code
             below for instant access.
           </p>
         </div>
 
+        <!-- OTP Section (Primary) -->
         <div class="magic-box">
           <h2 style="margin: 0 0 15px 0; color: #2d3748">
-            🪄 Your Magic Link is Ready!
+            🔢 Your 6-Digit Login Code
           </h2>
           <p style="margin: 0 0 25px 0; color: #4a5568">
-            Click the button below for instant, secure access to your Buddy Ride
-            account:
+            Enter this code in the Buddy Ride app login screen:
+          </p>
+          <div
+            class="token-code"
+            style="font-size: 28px; padding: 20px 24px; letter-spacing: 4px"
+          >
+            {{ .Token }}
+          </div>
+          <p style="margin: 20px 0 0 0; font-size: 14px; color: #718096">
+            ⏰ Code expires in 1 hour for your security
+          </p>
+        </div>
+
+        <!-- Magic Link Alternative (Secondary) -->
+        <div class="alternative">
+          <h3>� Alternative: One-Click Login</h3>
+          <p style="margin: 5px 0; color: #4a5568">
+            Prefer to click a link? Use this secure magic link:
           </p>
           <a href="{{ .ConfirmationURL }}" class="magic-button">
             🚀 Login to Buddy Ride
           </a>
-          <p style="margin: 20px 0 0 0; font-size: 12px; color: #718096">
-            No password required - just pure magic! ✨
-          </p>
-        </div>
-
-        <div class="alternative">
-          <h3>🔢 Alternative Login Code</h3>
-          <p style="margin: 5px 0; color: #4a5568">
-            Prefer to enter a code? Use this 6-digit verification code:
-          </p>
-          <div class="token-code">{{ .Token }}</div>
-          <p style="margin: 10px 0 0 0; font-size: 12px; color: #718096">
-            Enter this code in the Buddy Ride app login screen
+          <p style="margin: 15px 0 0 0; font-size: 12px; color: #718096">
+            No password required - just one click! ✨
           </p>
         </div>
 

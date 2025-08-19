@@ -27,7 +27,11 @@ import { Input } from "../components/ui/Input";
 import { useAuthStore } from "../stores/authStore";
 import { supabase } from "../lib/supabase";
 import { formatDateTime } from "../utils/formatters";
-import { cleanupExpiredRides, isRideExpired } from "../utils/rideCleanup";
+import {
+  cleanupExpiredRides,
+  runManualCleanup,
+  isRideExpired,
+} from "../utils/rideCleanup";
 import { isAdmin } from "../utils/roles";
 import toast from "react-hot-toast";
 import type { Profile, RideWithProfile } from "../types";
@@ -230,12 +234,35 @@ const AdminPage: React.FC = () => {
   };
 
   const handleCleanupExpiredRides = async () => {
-    if (!confirm("Are you sure you want to delete all expired rides?")) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete all expired rides and clean up orphaned data?"
+      )
+    )
+      return;
 
     try {
-      await cleanupExpiredRides();
-      toast.success("Expired rides cleaned up successfully");
-      loadData();
+      const result = await runManualCleanup();
+
+      if (result.success) {
+        const total =
+          result.results.expired.deletedRides + result.results.old.deletedRides;
+        const totalMessages =
+          result.results.expired.deletedMessages +
+          result.results.old.deletedMessages;
+        const totalRequests =
+          result.results.expired.deletedRequests +
+          result.results.old.deletedRequests;
+
+        toast.success(
+          `Cleanup completed! Removed ${total} rides, ${totalMessages} messages, ${totalRequests} requests, ${result.results.orphaned.orphanedMessages} orphaned messages, and ${result.results.orphaned.orphanedRequests} orphaned requests.`,
+          { duration: 8000 }
+        );
+
+        loadData();
+      } else {
+        toast.error(`Cleanup failed: ${result.error}`);
+      }
     } catch (error) {
       console.error("Error cleaning up expired rides:", error);
       toast.error("Failed to cleanup expired rides");

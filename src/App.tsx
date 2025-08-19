@@ -17,6 +17,8 @@ import { PageLoadingSpinner } from "./components/LoadingStates";
 import AuthPage from "./pages/AuthPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import OTPPasswordResetPage from "./pages/OTPPasswordResetPage";
+import EmailVerificationPage from "./pages/EmailVerificationPage";
 import ProfileSetupPage from "./pages/ProfileSetupPage";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import HomePage from "./pages/HomePage";
@@ -33,7 +35,7 @@ const LoadingSpinner = () => (
 );
 
 function App() {
-  const { user, loading, initialize } = useAuthStore();
+  const { user, loading, initialize, pendingVerification } = useAuthStore();
 
   useEffect(() => {
     initialize();
@@ -75,10 +77,31 @@ function App() {
                     element={<ForgotPasswordPage />}
                   />
                   <Route
+                    path="/otp-password-reset"
+                    element={<OTPPasswordResetPage />}
+                  />
+                  <Route
                     path="/reset-password"
                     element={<ResetPasswordPage />}
                   />
+                  {pendingVerification && (
+                    <Route
+                      path="/verify-email"
+                      element={<EmailVerificationPage />}
+                    />
+                  )}
                   <Route path="*" element={<AuthPage />} />
+                </>
+              ) : pendingVerification ? (
+                <>
+                  <Route
+                    path="/verify-email"
+                    element={<EmailVerificationPage />}
+                  />
+                  <Route
+                    path="*"
+                    element={<Navigate to="/verify-email" replace />}
+                  />
                 </>
               ) : !user.profile ? (
                 <Route path="*" element={<ProfileSetupPage />} />

@@ -2,15 +2,15 @@
 # Enhanced email templates for robust and dynamic email confirmation
 
 [auth.email.template.confirmation]
-subject = "🚗 Welcome to Buddy Ride - Confirm Your Account!"
+subject = "� Your Buddy Ride Verification Code - {{ .Token }}"
 content_path = "./supabase/email-templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "🔐 Reset Your Buddy Ride Password"
+subject = "🔐 Password Reset Code: {{ .Token }} - Buddy Ride"
 content_path = "./supabase/email-templates/recovery.html"
 
 [auth.email.template.magic_link]
-subject = "✨ Your Buddy Ride Magic Link - Instant Access!"
+subject = "🔢 Your Buddy Ride Login Code: {{ .Token }}"
 content_path = "./supabase/email-templates/magic_link.html"
 
 [auth.email.template.invite]

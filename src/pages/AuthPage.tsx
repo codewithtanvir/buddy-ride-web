@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Car, Mail, Lock, UserPlus, LogIn } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
@@ -21,7 +21,15 @@ const AuthPage: React.FC = () => {
     email?: string;
     password?: string;
   }>({});
-  const { signIn, signUp } = useAuthStore();
+  const { signIn, signUp, pendingVerification } = useAuthStore();
+  const navigate = useNavigate();
+
+  // Redirect to email verification if there's a pending verification
+  useEffect(() => {
+    if (pendingVerification) {
+      navigate("/verify-email");
+    }
+  }, [pendingVerification, navigate]);
 
   const validateForm = () => {
     const errors: { email?: string; password?: string } = {};
@@ -34,8 +42,14 @@ const AuthPage: React.FC = () => {
 
     if (!password) {
       errors.password = "Password is required";
-    } else if (password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
+    } else if (password.length < 8) {
+      errors.password = "Password must be at least 8 characters";
+    } else if (!/[A-Z]/.test(password)) {
+      errors.password = "Password must contain at least one uppercase letter";
+    } else if (!/[a-z]/.test(password)) {
+      errors.password = "Password must contain at least one lowercase letter";
+    } else if (!/\d/.test(password)) {
+      errors.password = "Password must contain at least one number";
     }
 
     setFormErrors(errors);
@@ -203,6 +217,18 @@ const AuthPage: React.FC = () => {
                 )}
               </Button>
             </form>
+
+            {/* Forgot Password Link */}
+            {!isSignUp && (
+              <div className="mt-4 text-center">
+                <Link
+                  to="/otp-password-reset"
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-md px-2 py-1"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+            )}
 
             {/* Toggle Mode */}
             <div className="mt-8 text-center">

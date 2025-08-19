@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Buddy Ride OTP Code</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+      }
+      .header {
+        background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .otp-box {
+        background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+        border: 3px solid #38b2ac;
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        margin: 30px 0;
+        position: relative;
+      }
+      .otp-code {
+        font-family: "Courier New", monospace;
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        color: #fff;
+        padding: 20px 30px;
+        border-radius: 12px;
+        font-size: 32px;
+        letter-spacing: 6px;
+        font-weight: bold;
+        margin: 20px 0;
+        display: inline-block;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 2px solid #38b2ac;
+      }
+      .steps {
+        background-color: #edf2f7;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 25px 0;
+        border-left: 4px solid #38b2ac;
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        padding: 10px;
+      }
+      .step-number {
+        background: #38b2ac;
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .security-tips {
+        background-color: #fffbeb;
+        border: 1px solid #f6ad55;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .footer {
+        background-color: #2d3748;
+        color: #a0aec0;
+        padding: 30px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #38b2ac;
+        text-decoration: none;
+      }
+      @media (max-width: 600px) {
+        .container {
+          margin: 10px;
+          border-radius: 8px;
+        }
+        .header,
+        .content {
+          padding: 20px;
+        }
+        .otp-box {
+          padding: 25px;
+        }
+        .otp-code {
+          font-size: 24px;
+          letter-spacing: 4px;
+          padding: 15px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🔢 Your Login Code</h1>
+        <p>Secure access to your Buddy Ride account</p>
+      </div>
+
+      <div class="content">
+        <div style="text-align: center; margin-bottom: 30px">
+          <h2 style="color: #2d3748; margin: 0">Hi there! 👋</h2>
+          <p style="color: #4a5568; margin: 10px 0 0 0">
+            Here's your One-Time Password (OTP) for secure access to Buddy Ride
+          </p>
+        </div>
+
+        <div class="otp-box">
+          <h3 style="color: #2d3748; margin: 0 0 15px 0; font-size: 20px">
+            🔐 Your 6-Digit OTP Code
+          </h3>
+
+          <div class="otp-code">{{ .Token }}</div>
+
+          <p style="color: #4a5568; margin: 15px 0 0 0; font-size: 14px">
+            ⏰ <strong>Expires in 1 hour</strong> • Valid for single use only
+          </p>
+        </div>
+
+        <div class="steps">
+          <h3 style="color: #2d3748; margin: 0 0 20px 0">
+            📱 How to use your OTP:
+          </h3>
+
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <strong style="color: #2d3748">Open Buddy Ride App</strong><br />
+              <small style="color: #718096"
+                >Launch the app on your mobile device or web browser</small
+              >
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <strong style="color: #2d3748">Enter Your Email</strong><br />
+              <small style="color: #718096"
+                >Type {{ .Email }} in the email field</small
+              >
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <strong style="color: #2d3748">Enter OTP Code</strong><br />
+              <small style="color: #718096"
+                >Copy and paste the 6-digit code above</small
+              >
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">4</div>
+            <div>
+              <strong style="color: #2d3748">Start Ride Sharing!</strong><br />
+              <small style="color: #718096"
+                >You'll be logged in and ready to find ride buddies</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="security-tips">
+          <h4 style="color: #c05621; margin: 0 0 15px 0">🛡️ Security Tips:</h4>
+          <ul style="color: #c05621; margin: 0; padding-left: 20px">
+            <li>Never share this OTP code with anyone</li>
+            <li>Only enter this code in the official Buddy Ride app</li>
+            <li>This code expires automatically in 1 hour</li>
+            <li>If you didn't request this code, ignore this email</li>
+          </ul>
+        </div>
+
+        <!-- Alternative Link (if needed) -->
+        <div
+          style="
+            background-color: #f7fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+          "
+        >
+          <h4 style="color: #2d3748; margin: 0 0 10px 0">
+            🔗 Having trouble with the code?
+          </h4>
+          <p style="color: #4a5568; margin: 0 0 15px 0; font-size: 14px">
+            You can also use this secure link as an alternative:
+          </p>
+          <a
+            href="{{ .ConfirmationURL }}"
+            style="
+              display: inline-block;
+              background: #38b2ac;
+              color: white;
+              text-decoration: none;
+              padding: 12px 24px;
+              border-radius: 6px;
+              font-weight: 600;
+            "
+          >
+            🚀 Login with Link
+          </a>
+        </div>
+
+        <div
+          style="
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: center;
+          "
+        >
+          <strong>🔒 Security Notice:</strong> If you didn't request this login
+          code, please ignore this email. Your account remains secure.
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          <strong>Buddy Ride</strong><br />AIUB Student Ride Sharing Platform
+        </p>
+        <p style="margin: 20px 0 0 0">
+          Questions? Contact us at
+          <a href="mailto:support@buddyride.aiub.edu"
+            >support@buddyride.aiub.edu</a
+          >
+        </p>
+        <p style="margin: 15px 0 0 0; font-size: 12px; opacity: 0.7">
+          This OTP was sent to {{ .Email }} • Visit
+          <a href="{{ .SiteURL }}">{{ .SiteURL }}</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

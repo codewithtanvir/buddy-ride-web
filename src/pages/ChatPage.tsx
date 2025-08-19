@@ -306,6 +306,29 @@ const ChatPage: React.FC = () => {
     if (!newMessage.trim() || !rideId || !user?.id || sending) return;
 
     const messageContent = newMessage.trim();
+
+    // Validate message content
+    if (messageContent.length > 1000) {
+      toast.error("Message cannot be longer than 1000 characters");
+      return;
+    }
+
+    if (messageContent.length < 1) {
+      toast.error("Message cannot be empty");
+      return;
+    }
+
+    // Basic content filtering
+    const inappropriateWords = ["spam", "scam", "fake", "fraud"];
+    if (
+      inappropriateWords.some((word) =>
+        messageContent.toLowerCase().includes(word)
+      )
+    ) {
+      toast.error("Message contains inappropriate content");
+      return;
+    }
+
     setNewMessage("");
     setSending(true);
 

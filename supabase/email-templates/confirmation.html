@@ -7,19 +7,199 @@
   </head>
   <body
     style="
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        sans-serif;
       line-height: 1.6;
       color: #333;
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
+      background-color: #f8fafc;
     "
   >
-    <h2>Confirm your signup</h2>
+    <div
+      style="
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      "
+    >
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 30px">
+        <h1 style="color: #38b2ac; margin: 0; font-size: 28px">
+          🚗 Welcome to Buddy Ride!
+        </h1>
+        <p style="color: #718096; margin: 10px 0 0 0">
+          Confirm your account to start ride-sharing
+        </p>
+      </div>
 
-    <p>Follow this link to confirm your user:</p>
-    <p><a href="{{ .ConfirmationURL }}">Confirm your mail</a></p>
+      <!-- OTP Section (Primary) -->
+      <div
+        style="
+          background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+          border: 2px solid #38b2ac;
+          border-radius: 12px;
+          padding: 30px;
+          text-align: center;
+          margin: 25px 0;
+        "
+      >
+        <h2 style="color: #2d3748; margin: 0 0 15px 0; font-size: 20px">
+          🔢 Your Verification Code
+        </h2>
+        <p style="color: #4a5568; margin: 0 0 20px 0">
+          Enter this 6-digit code in the Buddy Ride app:
+        </p>
 
-    <p>Alternatively, enter the code: {{ .Token }}</p>
+        <div
+          style="
+            font-family: 'Courier New', monospace;
+            background-color: #2d3748;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 24px;
+            letter-spacing: 3px;
+            font-weight: bold;
+            margin: 15px 0;
+            display: inline-block;
+          "
+        >
+          {{ .Token }}
+        </div>
+
+        <p style="color: #718096; font-size: 14px; margin: 15px 0 0 0">
+          ⏰ This code expires in 1 hour for your security
+        </p>
+      </div>
+
+      <!-- Alternative Link (Secondary) -->
+      <div
+        style="
+          background-color: #edf2f7;
+          border-radius: 8px;
+          padding: 20px;
+          margin: 25px 0;
+          border-left: 4px solid #38b2ac;
+        "
+      >
+        <h3 style="color: #2d3748; margin: 0 0 10px 0; font-size: 16px">
+          🔗 Alternative: One-Click Confirmation
+        </h3>
+        <p style="color: #4a5568; margin: 0 0 15px 0; font-size: 14px">
+          Prefer to click a link? Use this secure confirmation link:
+        </p>
+        <a
+          href="{{ .ConfirmationURL }}"
+          style="
+            display: inline-block;
+            background: #38b2ac;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+          "
+        >
+          ✅ Confirm Your Account
+        </a>
+      </div>
+
+      <!-- Benefits -->
+      <div style="margin: 30px 0">
+        <h3 style="color: #2d3748; margin-bottom: 20px">
+          🎯 What's next after confirmation:
+        </h3>
+
+        <div
+          style="
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #38b2ac;
+          "
+        >
+          <strong style="color: #2d3748">📍 Post & Find Rides</strong><br />
+          <small style="color: #718096"
+            >Share your travel plans and connect with fellow AIUB
+            students</small
+          >
+        </div>
+
+        <div
+          style="
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #38b2ac;
+          "
+        >
+          <strong style="color: #2d3748">🛡️ Safe Gender-Based Matching</strong
+          ><br />
+          <small style="color: #718096"
+            >Only same-gender students can send ride requests for enhanced
+            safety</small
+          >
+        </div>
+
+        <div
+          style="
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #38b2ac;
+          "
+        >
+          <strong style="color: #2d3748">💬 Real-time Chat</strong><br />
+          <small style="color: #718096"
+            >Coordinate with your ride buddies through built-in messaging</small
+          >
+        </div>
+      </div>
+
+      <!-- Security Notice -->
+      <div
+        style="
+          background-color: #fff5f5;
+          border: 1px solid #fed7d7;
+          color: #c53030;
+          padding: 15px;
+          border-radius: 8px;
+          margin: 20px 0;
+          font-size: 14px;
+          text-align: center;
+        "
+      >
+        <strong>🔒 Security Notice:</strong> If you didn't sign up for Buddy
+        Ride, please ignore this email. Your data remains secure.
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="
+          text-align: center;
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 1px solid #e2e8f0;
+          color: #718096;
+          font-size: 14px;
+        "
+      >
+        <p style="margin: 0">
+          This confirmation was sent to <strong>{{ .Email }}</strong>
+        </p>
+        <p style="margin: 10px 0 0 0">
+          Need help? Contact us at
+          <a href="mailto:support@buddyride.aiub.edu" style="color: #38b2ac"
+            >support@buddyride.aiub.edu</a
+          >
+        </p>
+      </div>
+    </div>
   </body>
 </html>

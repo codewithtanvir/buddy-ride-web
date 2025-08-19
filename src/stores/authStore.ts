@@ -1,22 +1,33 @@
 import { create } from "zustand";
 import { supabase } from "../lib/supabase";
 import type { AuthUser, ProfileFormData } from "../types";
+import { getPasswordResetRedirectUrl } from "../utils/redirects";
 
 interface AuthState {
   user: AuthUser | null;
   loading: boolean;
+  pendingVerification: string | null; // Email pending verification
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  resetPasswordWithOTP: (email: string) => Promise<void>;
+  verifyOTPAndResetPassword: (
+    email: string,
+    token: string,
+    newPassword: string
+  ) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
   updateProfile: (profileData: Partial<ProfileFormData>) => Promise<void>;
   initialize: () => Promise<void>;
+  verifyEmailOTP: (email: string, token: string) => Promise<void>;
+  resendEmailOTP: (email: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: true,
+  pendingVerification: null,
 
   initialize: async () => {
     try {
@@ -81,13 +92,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     if (error) throw error;
 
-    if (data.user) {
+    // Set pending verification email
+    set({ pendingVerification: email });
+
+    // Note: User will be null until email is verified
+    if (data.user && data.user.email_confirmed_at) {
       set({
         user: {
           id: data.user.id,
           email: data.user.email,
           profile: undefined,
         },
+        pendingVerification: null,
       });
     }
   },
@@ -99,7 +115,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   resetPassword: async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: getPasswordResetRedirectUrl(),
     });
 
     if (error) throw error;
@@ -160,5 +176,83 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         profile: data,
       },
     });
+  },
+
+  // OTP-based password reset
+  resetPasswordWithOTP: async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: undefined, // No redirect for OTP flow
+    });
+
+    if (error) throw error;
+  },
+
+  verifyOTPAndResetPassword: async (
+    email: string,
+    token: string,
+    newPassword: string
+  ) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: "recovery",
+    });
+
+    if (error) throw error;
+
+    // Update password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (updateError) throw updateError;
+
+    // Update user state
+    if (data.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", data.user.id)
+        .single();
+
+      set({
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          profile: profile || undefined,
+        },
+      });
+    }
+  },
+
+  // Email verification with OTP
+  verifyEmailOTP: async (email: string, token: string) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: "signup",
+    });
+
+    if (error) throw error;
+
+    if (data.user) {
+      set({
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          profile: undefined,
+        },
+        pendingVerification: null,
+      });
+    }
+  },
+
+  resendEmailOTP: async (email: string) => {
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+    });
+
+    if (error) throw error;
   },
 }));

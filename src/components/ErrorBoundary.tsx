@@ -2,6 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { Button } from "./ui/Button";
+import { buildAppUrl } from "../utils/redirects";
 
 interface Props {
   children: ReactNode;
@@ -54,7 +55,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   private handleGoHome = () => {
-    window.location.href = "/";
+    window.location.href = buildAppUrl("/");
   };
 
   public render() {

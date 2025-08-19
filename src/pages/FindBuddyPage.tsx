@@ -83,6 +83,12 @@ const FindBuddyPage: React.FC = () => {
       return;
     }
 
+    // CRITICAL FIX: Prevent users from requesting their own rides
+    if (targetRide.user_id === user.id) {
+      toast.error("You cannot request your own ride!");
+      return;
+    }
+
     if (!targetRide.profiles?.gender) {
       toast.error(
         "Cannot send request: Ride owner's gender information is not available"
@@ -104,7 +110,31 @@ const FindBuddyPage: React.FC = () => {
       return;
     }
 
+    // Validate message content
+    if (requestMessage.trim().length < 10) {
+      toast.error("Request message must be at least 10 characters long");
+      return;
+    }
+
+    if (requestMessage.trim().length > 500) {
+      toast.error("Request message cannot be longer than 500 characters");
+      return;
+    }
+
     try {
+      // Check if user already sent a request for this ride
+      const { data: existingRequest } = await supabase
+        .from("ride_requests")
+        .select("id")
+        .eq("ride_id", rideId)
+        .eq("requester_id", user.id)
+        .single();
+
+      if (existingRequest) {
+        toast.error("You have already sent a request for this ride");
+        return;
+      }
+
       const { error } = await supabase.from("ride_requests").insert({
         ride_id: rideId,
         requester_id: user.id,
@@ -112,14 +142,25 @@ const FindBuddyPage: React.FC = () => {
         status: "pending",
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message?.includes("Gender compatibility")) {
+          toast.error(
+            "Gender compatibility check failed. Please ensure your profile is complete."
+          );
+        } else if (error.message?.includes("duplicate")) {
+          toast.error("You have already sent a request for this ride");
+        } else {
+          throw error;
+        }
+        return;
+      }
 
       toast.success("Request sent successfully!");
       setRequestingRide(null);
       setRequestMessage("");
     } catch (error) {
       console.error("Error sending request:", error);
-      toast.error("Failed to send request");
+      toast.error("Failed to send request. Please try again.");
     }
   };
 

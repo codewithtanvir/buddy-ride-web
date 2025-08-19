@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Car, Mail, ArrowLeft, Send } from "lucide-react";
+import { Car, Mail, ArrowLeft, Send, AlertCircle } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import {
@@ -10,26 +10,20 @@ import {
   CardTitle,
 } from "../components/ui/Card";
 import { useAuthStore } from "../stores/authStore";
+import { validateEmail } from "../utils/validation";
 import toast from "react-hot-toast";
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const [formErrors, setFormErrors] = useState<{ email?: string }>({});
+  const [errors, setErrors] = useState<string[]>([]);
   const { resetPassword } = useAuthStore();
 
   const validateForm = () => {
-    const errors: { email?: string } = {};
-
-    if (!email) {
-      errors.email = "Email is required";
-    } else if (!email.endsWith("@student.aiub.edu")) {
-      errors.email = "Please use your AIUB student email (@student.aiub.edu)";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    const emailErrors = validateEmail(email);
+    setErrors(emailErrors);
+    return emailErrors.length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,6 +42,23 @@ const ForgotPasswordPage: React.FC = () => {
       });
     } catch (error: any) {
       console.error("Password reset error:", error);
+
+      // Enhanced error handling
+      if (error.message?.includes("User not found")) {
+        toast.error("No account found with this email address.");
+      } else if (error.message?.includes("Email not confirmed")) {
+        toast.error(
+          "Please verify your account first before resetting password."
+        );
+      } else if (error.message?.includes("rate limit")) {
+        toast.error(
+          "Too many reset attempts. Please wait before trying again."
+        );
+      } else {
+        toast.error(
+          error.message || "Failed to send reset email. Please try again."
+        );
+      }
 
       let errorMessage = "Failed to send reset email";
       if (error.message?.includes("User not found")) {
@@ -174,15 +185,31 @@ const ForgotPasswordPage: React.FC = () => {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    if (formErrors.email) {
-                      setFormErrors((prev) => ({ ...prev, email: undefined }));
+                    if (errors.length > 0) {
+                      setErrors([]);
                     }
                   }}
                   label="AIUB Student Email"
-                  error={formErrors.email}
+                  className={`h-12 text-base bg-gray-50 border-gray-300 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${
+                    errors.length > 0
+                      ? "border-red-300 focus:border-red-500"
+                      : ""
+                  }`}
                   required
-                  className="h-12 text-base bg-gray-50 border-gray-300 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                 />
+                {errors.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    {errors.map((error, index) => (
+                      <p
+                        key={index}
+                        className="text-sm text-red-600 flex items-center gap-1"
+                      >
+                        <AlertCircle className="h-3 w-3" />
+                        {error}
+                      </p>
+                    ))}
+                  </div>
+                )}
                 <p className="text-sm text-gray-500">
                   Use your official AIUB student email address
                 </p>
