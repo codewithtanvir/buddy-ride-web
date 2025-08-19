@@ -1,0 +1,46 @@
+# Supabase Email Configuration for Buddy Ride
+# Enhanced email templates for robust and dynamic email confirmation
+
+[auth.email.template.confirmation]
+subject = "🚗 Welcome to Buddy Ride - Confirm Your Account!"
+content_path = "./supabase/email-templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "🔐 Reset Your Buddy Ride Password"
+content_path = "./supabase/email-templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "✨ Your Buddy Ride Magic Link - Instant Access!"
+content_path = "./supabase/email-templates/magic_link.html"
+
+[auth.email.template.invite]
+subject = "🎉 You're Invited to Join Buddy Ride!"
+content_path = "./supabase/email-templates/invite.html"
+
+[auth.email.template.email_change]
+subject = "📧 Confirm Your Email Change - Buddy Ride"
+content_path = "./supabase/email-templates/email_change.html"
+
+# Email settings for enhanced functionality
+[auth.email]
+enable_confirmations = true
+double_confirm_changes = true
+secure_email_change_enabled = true
+
+# SMTP Configuration (replace with your settings)
+[auth.external_email_enabled]
+# Set to true to use custom SMTP
+enabled = false
+
+# Custom SMTP settings (configure these in production)
+# smtp_host = "smtp.your-provider.com"
+# smtp_port = 587
+# smtp_user = "your-smtp-user"
+# smtp_pass = "your-smtp-password"
+# smtp_admin_email = "noreply@buddyride.com"
+# smtp_sender_name = "Buddy Ride"
+
+# Rate limiting for email sending
+[auth.rate_limits.email]
+# Number of emails per hour (adjust based on your needs)
+max_frequency = 360

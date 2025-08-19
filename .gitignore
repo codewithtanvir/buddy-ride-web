@@ -101,3 +101,6 @@ temp/
 *.db
 *.sqlite
 *.sqlite3
+
+# all markdown files
+*.md

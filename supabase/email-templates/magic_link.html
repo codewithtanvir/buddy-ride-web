@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Buddy Ride Magic Link</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+      }
+      .header {
+        background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .magic-box {
+        background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+        border: 2px solid #38b2ac;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        margin: 25px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .magic-box::before {
+        content: "✨";
+        position: absolute;
+        font-size: 60px;
+        opacity: 0.1;
+        top: 10px;
+        right: 20px;
+      }
+      .magic-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+        color: white;
+        text-decoration: none;
+        padding: 18px 36px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(56, 178, 172, 0.3);
+        position: relative;
+        z-index: 1;
+      }
+      .magic-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 12px rgba(56, 178, 172, 0.4);
+      }
+      .alternative {
+        margin: 25px 0;
+        padding: 20px;
+        background-color: #edf2f7;
+        border-radius: 8px;
+        border-left: 4px solid #38b2ac;
+      }
+      .alternative h3 {
+        margin: 0 0 10px 0;
+        color: #2d3748;
+        font-size: 16px;
+      }
+      .token-code {
+        font-family: "Courier New", monospace;
+        background-color: #2d3748;
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 18px;
+        letter-spacing: 2px;
+        font-weight: bold;
+        margin: 10px 0;
+        display: inline-block;
+      }
+      .benefits {
+        margin: 30px 0;
+      }
+      .benefit-item {
+        display: flex;
+        align-items: flex-start;
+        margin: 15px 0;
+        padding: 15px;
+        background-color: #f7fafc;
+        border-radius: 8px;
+        border-left: 4px solid #38b2ac;
+      }
+      .benefit-icon {
+        font-size: 24px;
+        margin-right: 15px;
+        margin-top: 5px;
+      }
+      .footer {
+        background-color: #2d3748;
+        color: #a0aec0;
+        padding: 30px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #38b2ac;
+        text-decoration: none;
+      }
+      .security-note {
+        background-color: #fffbeb;
+        border: 1px solid #f6ad55;
+        color: #c05621;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-size: 14px;
+      }
+      .welcome-back {
+        background-color: #ebf8ff;
+        border: 1px solid #63b3ed;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
+      }
+      @media (max-width: 600px) {
+        .container {
+          margin: 10px;
+          border-radius: 8px;
+        }
+        .header,
+        .content {
+          padding: 20px;
+        }
+        .magic-box {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>✨ Magic Link Login</h1>
+        <p>One-click access to Buddy Ride</p>
+      </div>
+
+      <div class="content">
+        <div class="welcome-back">
+          <h2 style="margin: 0 0 10px 0; color: #2c5282">Welcome back! 👋</h2>
+          <p style="margin: 0; color: #4a5568">
+            Ready to continue your ride-sharing journey? Use your magic link
+            below for instant access.
+          </p>
+        </div>
+
+        <div class="magic-box">
+          <h2 style="margin: 0 0 15px 0; color: #2d3748">
+            🪄 Your Magic Link is Ready!
+          </h2>
+          <p style="margin: 0 0 25px 0; color: #4a5568">
+            Click the button below for instant, secure access to your Buddy Ride
+            account:
+          </p>
+          <a href="{{ .ConfirmationURL }}" class="magic-button">
+            🚀 Login to Buddy Ride
+          </a>
+          <p style="margin: 20px 0 0 0; font-size: 12px; color: #718096">
+            No password required - just pure magic! ✨
+          </p>
+        </div>
+
+        <div class="alternative">
+          <h3>🔢 Alternative Login Code</h3>
+          <p style="margin: 5px 0; color: #4a5568">
+            Prefer to enter a code? Use this 6-digit verification code:
+          </p>
+          <div class="token-code">{{ .Token }}</div>
+          <p style="margin: 10px 0 0 0; font-size: 12px; color: #718096">
+            Enter this code in the Buddy Ride app login screen
+          </p>
+        </div>
+
+        <div class="benefits">
+          <h3 style="color: #2d3748; margin-bottom: 20px">
+            🎯 What's new in your account:
+          </h3>
+
+          <div class="benefit-item">
+            <div class="benefit-icon">📱</div>
+            <div>
+              <strong style="color: #2d3748">Mobile-Optimized Experience</strong
+              ><br />
+              <small style="color: #718096"
+                >Enjoy seamless ride-sharing on any device, anywhere</small
+              >
+            </div>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-icon">⚡</div>
+            <div>
+              <strong style="color: #2d3748">Instant Notifications</strong
+              ><br />
+              <small style="color: #718096"
+                >Get real-time updates about ride requests and matches</small
+              >
+            </div>
+          </div>
+
+          <div class="benefit-item">
+            <div class="benefit-icon">🎁</div>
+            <div>
+              <strong style="color: #2d3748">Enhanced Safety Features</strong
+              ><br />
+              <small style="color: #718096"
+                >New verification options and emergency contacts for peace of
+                mind</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="security-note">
+          <strong>⏰ Quick Access:</strong> This magic link will expire in 1
+          hour for your security. Click it soon to access your account
+          instantly!
+        </div>
+
+        <div
+          style="
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: center;
+          "
+        >
+          <strong>🔒 Security Notice</strong><br />
+          If you didn't request this magic link, please ignore this email. Your
+          account remains secure and no action is needed.
+        </div>
+
+        <div
+          style="
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+          "
+        >
+          <p style="margin: 0; color: #4a5568; font-size: 14px">
+            <strong>Need help?</strong> Our support team is here for you 24/7
+          </p>
+          <p style="margin: 10px 0 0 0">
+            <a
+              href="mailto:support@buddyride.com"
+              style="color: #38b2ac; text-decoration: none; font-weight: 600"
+            >
+              📧 support@buddyride.com
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          <strong>Buddy Ride</strong><br />
+          Making every journey a shared adventure
+        </p>
+        <p style="margin: 20px 0 0 0">
+          Questions? Contact us at
+          <a href="mailto:support@buddyride.com">support@buddyride.com</a>
+        </p>
+        <p style="margin: 15px 0 0 0; font-size: 12px; opacity: 0.7">
+          This magic link was sent to {{ .Email }}. Visit
+          <a href="{{ .SiteURL }}">{{ .SiteURL }}</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -15,6 +15,8 @@ import { PageLoadingSpinner } from "./components/LoadingStates";
 
 // Pages
 import AuthPage from "./pages/AuthPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfileSetupPage from "./pages/ProfileSetupPage";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import HomePage from "./pages/HomePage";
@@ -66,7 +68,18 @@ function App() {
 
             <Routes>
               {!user ? (
-                <Route path="*" element={<AuthPage />} />
+                <>
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<ForgotPasswordPage />}
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={<ResetPasswordPage />}
+                  />
+                  <Route path="*" element={<AuthPage />} />
+                </>
               ) : !user.profile ? (
                 <Route path="*" element={<ProfileSetupPage />} />
               ) : (

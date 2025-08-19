@@ -31,6 +31,7 @@ const ProfileSetupPage: React.FC = () => {
     student_id: user?.profile?.student_id || "",
     department: user?.profile?.department || "",
     gender: (user?.profile?.gender as "male" | "female") || "male",
+    phone_number: user?.profile?.phone_number || "",
   });
   const [showDepartments, setShowDepartments] = useState(false);
 
@@ -128,6 +129,17 @@ const ProfileSetupPage: React.FC = () => {
                 }
                 label="Student ID"
                 required
+                className="text-sm lg:text-base"
+              />
+
+              <Input
+                type="tel"
+                placeholder="01XXXXXXXXX"
+                value={formData.phone_number}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone_number: e.target.value })
+                }
+                label="Phone Number (Optional)"
                 className="text-sm lg:text-base"
               />
 

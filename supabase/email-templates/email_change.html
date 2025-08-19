@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Your Email Change - Buddy Ride</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+      }
+      .header {
+        background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .change-box {
+        background-color: #faf5ff;
+        border: 2px solid #805ad5;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        margin: 25px 0;
+      }
+      .confirm-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+        color: white;
+        text-decoration: none;
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: transform 0.2s ease;
+        box-shadow: 0 4px 6px rgba(128, 90, 213, 0.3);
+        margin: 20px 0;
+      }
+      .confirm-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 8px rgba(128, 90, 213, 0.4);
+      }
+      .email-change-info {
+        background-color: #ebf8ff;
+        border: 1px solid #63b3ed;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .email-display {
+        font-family: "Courier New", monospace;
+        background-color: #2d3748;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        display: inline-block;
+        margin: 0 5px;
+      }
+      .alternative {
+        margin: 25px 0;
+        padding: 20px;
+        background-color: #edf2f7;
+        border-radius: 8px;
+        border-left: 4px solid #805ad5;
+      }
+      .alternative h3 {
+        margin: 0 0 10px 0;
+        color: #2d3748;
+        font-size: 16px;
+      }
+      .token-code {
+        font-family: "Courier New", monospace;
+        background-color: #2d3748;
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 18px;
+        letter-spacing: 2px;
+        font-weight: bold;
+        margin: 10px 0;
+        display: inline-block;
+      }
+      .security-notice {
+        background-color: #fff5f5;
+        border: 1px solid #fed7d7;
+        color: #c53030;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-size: 14px;
+      }
+      .why-change {
+        background-color: #f0fff4;
+        border: 1px solid #68d391;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .why-change h3 {
+        margin: 0 0 15px 0;
+        color: #2f855a;
+        font-size: 16px;
+      }
+      .why-change ul {
+        margin: 10px 0 0 0;
+        padding-left: 20px;
+        color: #2d3748;
+      }
+      .why-change li {
+        margin: 8px 0;
+        font-size: 14px;
+      }
+      .footer {
+        background-color: #2d3748;
+        color: #a0aec0;
+        padding: 30px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #805ad5;
+        text-decoration: none;
+      }
+      @media (max-width: 600px) {
+        .container {
+          margin: 10px;
+          border-radius: 8px;
+        }
+        .header,
+        .content {
+          padding: 20px;
+        }
+        .change-box {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📧 Email Change Request</h1>
+        <p>Buddy Ride Account Security</p>
+      </div>
+
+      <div class="content">
+        <div class="change-box">
+          <h2 style="margin: 0 0 15px 0; color: #553c9a">
+            🔄 Confirm Email Change
+          </h2>
+          <p style="margin: 0 0 20px 0; color: #4a5568; font-size: 16px">
+            You've requested to change your Buddy Ride account email address.
+            Please confirm this change to complete the process.
+          </p>
+          <a href="{{ .ConfirmationURL }}" class="confirm-button">
+            ✅ Confirm Email Change
+          </a>
+        </div>
+
+        <div class="email-change-info">
+          <h3 style="margin: 0 0 15px 0; color: #2c5282">
+            📬 Email Change Details
+          </h3>
+          <p style="margin: 0; color: #4a5568">
+            <strong>Current Email:</strong><br />
+            <span class="email-display">{{ .Email }}</span>
+          </p>
+          <p style="margin: 15px 0 0 0; color: #4a5568">
+            <strong>New Email:</strong><br />
+            <span class="email-display">{{ .NewEmail }}</span>
+          </p>
+        </div>
+
+        <div class="alternative">
+          <h3>🔑 Alternative Verification</h3>
+          <p style="margin: 5px 0; color: #4a5568">
+            If the button doesn't work, use this verification code:
+          </p>
+          <div class="token-code">{{ .Token }}</div>
+        </div>
+
+        <div class="why-change">
+          <h3>✨ Benefits of Updating Your Email</h3>
+          <ul>
+            <li>Improved account security and recovery options</li>
+            <li>Better email deliverability for ride notifications</li>
+            <li>Ensure you receive all important updates</li>
+            <li>Keep your profile information current</li>
+            <li>Enhanced spam protection and filtering</li>
+          </ul>
+        </div>
+
+        <div
+          style="
+            background-color: #fffbeb;
+            border: 1px solid #f6ad55;
+            color: #c05621;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+          "
+        >
+          <strong>⏰ Time Sensitive:</strong> This email change confirmation
+          will expire in 24 hours for security reasons. Please confirm your new
+          email address soon to complete the change.
+        </div>
+
+        <div class="security-notice">
+          <strong>🔒 Security Notice:</strong> After confirmation, you'll
+          receive a verification email at your new address. Your old email will
+          no longer be associated with your Buddy Ride account.
+        </div>
+
+        <div
+          style="
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: center;
+          "
+        >
+          <strong>🚫 Didn't request this change?</strong><br />
+          If you didn't request this email change, please ignore this email and
+          contact our security team immediately.
+          <br /><br />
+          <a
+            href="mailto:security@buddyride.com"
+            style="color: #c53030; text-decoration: underline; font-weight: 600"
+          >
+            🛡️ Report Unauthorized Change
+          </a>
+        </div>
+
+        <div
+          style="
+            background-color: #f7fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+          "
+        >
+          <h3 style="margin: 0 0 15px 0; color: #2d3748">📞 Need Help?</h3>
+          <p style="margin: 0; color: #4a5568; font-size: 14px">
+            Our support team is available 24/7 to assist with email changes or
+            account security questions.
+          </p>
+          <p style="margin: 15px 0 0 0">
+            <a
+              href="mailto:support@buddyride.com"
+              style="color: #805ad5; text-decoration: none; font-weight: 600"
+            >
+              📧 support@buddyride.com
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          <strong>Buddy Ride Security Team</strong><br />
+          Protecting your account and privacy
+        </p>
+        <p style="margin: 20px 0 0 0">
+          Questions? Contact us at
+          <a href="mailto:support@buddyride.com">support@buddyride.com</a>
+        </p>
+        <p style="margin: 15px 0 0 0; font-size: 12px; opacity: 0.7">
+          This email change request was sent to {{ .Email }}. Visit
+          <a href="{{ .SiteURL }}">{{ .SiteURL }}</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

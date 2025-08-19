@@ -10,6 +10,11 @@ import {
   Calendar,
   Clock,
   MapPin,
+  Shield,
+  Star,
+  TrendingUp,
+  MessageSquare,
+  RefreshCw,
 } from "lucide-react";
 import {
   Card,
@@ -87,6 +92,7 @@ const AdminPage: React.FC = () => {
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `
@@ -253,15 +259,17 @@ const AdminPage: React.FC = () => {
 
   if (!userIsAdmin) {
     return (
-      <div className="p-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-6">
         <div className="max-w-4xl mx-auto">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <UserX className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-12 text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Shield className="h-10 w-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
                 Access Denied
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-lg">
                 You don't have permission to access the admin panel.
               </p>
             </CardContent>
@@ -272,34 +280,49 @@ const AdminPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Enhanced Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-2">
-            Manage users, rides, and system statistics
-          </p>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Shield className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Admin Dashboard
+              </h1>
+              <p className="text-gray-600 text-lg mt-1">
+                Manage users, rides, and system statistics
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="mb-6">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+        {/* Enhanced Navigation Tabs */}
+        <div className="mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-gray-200">
+            <nav className="flex space-x-2">
               {[
-                { id: "overview", label: "Overview", icon: BarChart3 },
-                { id: "users", label: "Users", icon: Users },
-                { id: "rides", label: "Rides", icon: Car },
+                {
+                  id: "overview",
+                  label: "Overview",
+                  icon: BarChart3,
+                  color: "blue",
+                },
+                { id: "users", label: "Users", icon: Users, color: "green" },
+                { id: "rides", label: "Rides", icon: Car, color: "purple" },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`flex items-center py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 ${
                     activeTab === tab.id
-                      ? "border-primary-500 text-primary-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      ? `bg-gradient-to-r from-${tab.color}-500 to-${tab.color}-600 text-white shadow-lg scale-105`
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                   }`}
                 >
-                  <tab.icon className="h-4 w-4 mr-2" />
+                  <tab.icon className="h-5 w-5 mr-2" />
                   {tab.label}
                 </button>
               ))}
@@ -307,129 +330,152 @@ const AdminPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Overview Tab */}
+        {/* Enhanced Overview Tab */}
         {activeTab === "overview" && (
-          <div className="space-y-6">
-            {/* Stats Grid */}
+          <div className="space-y-8">
+            {/* Enhanced Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
+              <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-xl">
                 <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-blue-100 text-sm font-medium mb-1">
                         Total Users
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.totalUsers}
+                      <p className="text-3xl font-bold">{stats.totalUsers}</p>
+                      <p className="text-blue-200 text-xs mt-1">
+                        Registered members
                       </p>
                     </div>
-                    <Users className="h-8 w-8 text-blue-600" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <Users className="h-6 w-6" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-0 shadow-xl">
                 <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-green-100 text-sm font-medium mb-1">
                         Total Rides
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.totalRides}
+                      <p className="text-3xl font-bold">{stats.totalRides}</p>
+                      <p className="text-green-200 text-xs mt-1">
+                        All rides posted
                       </p>
                     </div>
-                    <Car className="h-8 w-8 text-green-600" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <Car className="h-6 w-6" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-xl">
                 <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-purple-100 text-sm font-medium mb-1">
                         Active Rides
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.activeRides}
+                      <p className="text-3xl font-bold">{stats.activeRides}</p>
+                      <p className="text-purple-200 text-xs mt-1">
+                        Currently available
                       </p>
                     </div>
-                    <Calendar className="h-8 w-8 text-purple-600" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <TrendingUp className="h-6 w-6" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-gradient-to-br from-red-500 to-red-600 text-white border-0 shadow-xl">
                 <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-red-100 text-sm font-medium mb-1">
                         Expired Rides
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {stats.expiredRides}
-                      </p>
+                      <p className="text-3xl font-bold">{stats.expiredRides}</p>
+                      <p className="text-red-200 text-xs mt-1">Need cleanup</p>
                     </div>
-                    <Clock className="h-8 w-8 text-red-600" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <Clock className="h-6 w-6" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white border-0 shadow-xl">
                 <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-yellow-100 text-sm font-medium mb-1">
                         Total Messages
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold">
                         {stats.totalMessages}
                       </p>
+                      <p className="text-yellow-200 text-xs mt-1">
+                        Chat activity
+                      </p>
                     </div>
-                    <Users className="h-8 w-8 text-yellow-600" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <MessageSquare className="h-6 w-6" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white border-0 shadow-xl">
                 <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-indigo-100 text-sm font-medium mb-1">
                         Ride Requests
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-3xl font-bold">
                         {stats.totalRequests}
                       </p>
+                      <p className="text-indigo-200 text-xs mt-1">
+                        Join requests
+                      </p>
                     </div>
-                    <Calendar className="h-8 w-8 text-indigo-600" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <Star className="h-6 w-6" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
+            {/* Enhanced Quick Actions */}
+            <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="h-4 w-4 text-white" />
+                  </div>
+                  Quick Actions
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex space-x-4">
+                <div className="flex flex-wrap gap-4">
                   <Button
                     onClick={handleCleanupExpiredRides}
-                    className="flex items-center"
-                    variant="outline"
+                    className="flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl px-6 py-3 shadow-lg transition-all duration-200"
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="h-4 w-4" />
                     Cleanup Expired Rides
                   </Button>
                   <Button
                     onClick={loadData}
-                    className="flex items-center"
-                    variant="outline"
+                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl px-6 py-3 shadow-lg transition-all duration-200"
                   >
-                    <BarChart3 className="h-4 w-4 mr-2" />
+                    <RefreshCw className="h-4 w-4" />
                     Refresh Stats
                   </Button>
                 </div>
@@ -438,7 +484,7 @@ const AdminPage: React.FC = () => {
           </div>
         )}
 
-        {/* Users Tab */}
+        {/* Enhanced Users Tab */}
         {activeTab === "users" && (
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
@@ -447,34 +493,49 @@ const AdminPage: React.FC = () => {
                   placeholder="Search users by name, student ID, or department..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="max-w-md"
+                  className="max-w-md bg-white/80 backdrop-blur-sm border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl"
                 />
               </div>
-              <Button onClick={loadData} variant="outline">
-                <Search className="h-4 w-4 mr-2" />
+              <Button
+                onClick={loadData}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl px-6 py-3 shadow-lg transition-all duration-200"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
             </div>
 
             <div className="grid gap-4">
               {filteredUsers.map((user) => (
-                <Card key={user.id}>
+                <Card
+                  key={user.id}
+                  className="bg-white/95 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-200"
+                >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <h3 className="text-lg font-medium text-gray-900">
-                              {user.name || "No Name"}
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                              ID: {user.student_id} • {user.department} •{" "}
+                      <div className="flex items-center space-x-4 flex-1">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                          {user.name?.charAt(0)?.toUpperCase() || "U"}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-gray-900 mb-1">
+                            {user.name || "No Name"}
+                          </h3>
+                          <div className="flex items-center gap-3 text-sm text-gray-600 mb-2">
+                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg font-medium">
+                              ID: {user.student_id}
+                            </span>
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg font-medium">
+                              {user.department}
+                            </span>
+                            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg font-medium">
                               {user.gender}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Joined: {formatDateTime(user.created_at)}
-                            </p>
+                            </span>
                           </div>
+                          <p className="text-xs text-gray-500 flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            Joined: {formatDateTime(user.created_at)}
+                          </p>
                         </div>
                       </div>
                       <div className="flex space-x-2">
@@ -482,7 +543,7 @@ const AdminPage: React.FC = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 rounded-xl transition-all duration-200"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -495,7 +556,7 @@ const AdminPage: React.FC = () => {
           </div>
         )}
 
-        {/* Rides Tab */}
+        {/* Enhanced Rides Tab */}
         {activeTab === "rides" && (
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
@@ -504,11 +565,14 @@ const AdminPage: React.FC = () => {
                   placeholder="Search rides by location or user..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="max-w-md"
+                  className="max-w-md bg-white/80 backdrop-blur-sm border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl"
                 />
               </div>
-              <Button onClick={loadData} variant="outline">
-                <Search className="h-4 w-4 mr-2" />
+              <Button
+                onClick={loadData}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl px-6 py-3 shadow-lg transition-all duration-200"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
               </Button>
             </div>
@@ -520,47 +584,63 @@ const AdminPage: React.FC = () => {
                 return (
                   <Card
                     key={ride.id}
-                    className={expired ? "border-red-200 bg-red-50" : ""}
+                    className={`backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-200 ${
+                      expired ? "bg-red-50/95 border-red-200" : "bg-white/95"
+                    }`}
                   >
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-4 mb-2">
-                            <div className="flex items-center text-gray-700">
-                              <MapPin className="h-4 w-4 mr-1" />
+                          <div className="flex items-center space-x-4 mb-3">
+                            <div className="flex items-center text-gray-700 bg-gray-100 rounded-lg px-3 py-2">
+                              <MapPin className="h-4 w-4 mr-2 text-green-600" />
                               <span className="font-medium">
                                 {ride.from_location}
                               </span>
-                              <span className="mx-2">→</span>
+                              <span className="mx-2 text-blue-600">→</span>
                               <span className="font-medium">
                                 {ride.to_location}
                               </span>
                             </div>
-                            <div className="flex items-center text-gray-600">
-                              <Clock className="h-4 w-4 mr-1" />
-                              <span>{formatDateTime(ride.ride_time)}</span>
+                            <div className="flex items-center text-gray-600 bg-blue-50 rounded-lg px-3 py-2">
+                              <Clock className="h-4 w-4 mr-2 text-blue-600" />
+                              <span className="font-medium">
+                                {formatDateTime(ride.ride_time)}
+                              </span>
                             </div>
                             {expired && (
-                              <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                              <span className="px-3 py-1 bg-red-500 text-white text-xs rounded-full font-medium shadow-lg">
                                 Expired
                               </span>
                             )}
                           </div>
 
                           {ride.notes && (
-                            <p className="text-gray-700 text-sm mb-2">
-                              {ride.notes}
-                            </p>
+                            <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                              <p className="text-gray-700 text-sm italic">
+                                "{ride.notes}"
+                              </p>
+                            </div>
                           )}
 
-                          <div className="text-sm text-gray-600">
-                            <span className="font-medium">
-                              {ride.profiles?.name}
-                            </span>
-                            <span className="mx-2">•</span>
-                            <span>{ride.profiles?.student_id}</span>
-                            <span className="mx-2">•</span>
-                            <span>{ride.profiles?.department}</span>
+                          <div className="flex items-center space-x-4">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                              {ride.profiles?.name?.charAt(0)?.toUpperCase() ||
+                                "U"}
+                            </div>
+                            <div>
+                              <div className="font-bold text-gray-900">
+                                {ride.profiles?.name}
+                              </div>
+                              <div className="flex items-center gap-3 text-sm">
+                                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded font-medium">
+                                  {ride.profiles?.student_id}
+                                </span>
+                                <span className="bg-green-100 text-green-800 px-2 py-1 rounded font-medium">
+                                  {ride.profiles?.department}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -569,7 +649,7 @@ const AdminPage: React.FC = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeleteRide(ride.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 rounded-xl transition-all duration-200"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

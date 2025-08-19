@@ -75,6 +75,7 @@ const ChatPage: React.FC = () => {
                   student_id,
                   department,
                   gender,
+                  phone_number,
                   created_at
                 )
               `
@@ -136,6 +137,7 @@ const ChatPage: React.FC = () => {
               student_id,
               department,
               gender,
+              phone_number,
               created_at
             )
           `
@@ -177,6 +179,7 @@ const ChatPage: React.FC = () => {
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `
@@ -222,6 +225,7 @@ const ChatPage: React.FC = () => {
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `
@@ -324,6 +328,7 @@ const ChatPage: React.FC = () => {
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `
@@ -360,11 +365,16 @@ const ChatPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-6">
         <div className="max-w-4xl mx-auto">
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-center text-gray-600">Loading chat...</p>
+          <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-8">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
+                <p className="text-gray-600 font-medium">Loading chat...</p>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -374,13 +384,20 @@ const ChatPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="p-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-6">
         <div className="max-w-4xl mx-auto">
-          <Card>
-            <CardContent className="p-6">
+          <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-8">
               <div className="text-center">
-                <p className="text-red-600 mb-4">{error}</p>
-                <Button onClick={() => navigate(-1)} variant="outline">
+                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-xl">
+                  ⚠️
+                </div>
+                <p className="text-red-600 mb-6 font-medium">{error}</p>
+                <Button
+                  onClick={() => navigate(-1)}
+                  variant="outline"
+                  className="rounded-xl border-2 hover:bg-gray-50"
+                >
                   Go Back
                 </Button>
               </div>
@@ -393,13 +410,19 @@ const ChatPage: React.FC = () => {
 
   if (!ride) {
     return (
-      <div className="p-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 p-6">
         <div className="max-w-4xl mx-auto">
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-center text-gray-600">Ride not found</p>
-              <div className="text-center mt-4">
-                <Button onClick={() => navigate("/chats")}>
+          <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-8">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-xl">
+                  🚗
+                </div>
+                <p className="text-gray-600 mb-6 font-medium">Ride not found</p>
+                <Button
+                  onClick={() => navigate("/chats")}
+                  className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
                   Back to Chats
                 </Button>
               </div>
@@ -411,76 +434,85 @@ const ChatPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-3 lg:p-4 safe-area-top">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
+      {/* Enhanced Header */}
+      <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-lg p-3 lg:p-4 safe-area-top">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               onClick={() => navigate("/chats")}
-              className="p-2 h-8 w-8 lg:h-10 lg:w-10 flex-shrink-0"
+              className="p-2 h-10 w-10 lg:h-12 lg:w-12 flex-shrink-0 rounded-xl hover:bg-blue-100 transition-colors"
             >
-              <ArrowLeft className="h-4 w-4 lg:h-5 lg:w-5" />
+              <ArrowLeft className="h-5 w-5 lg:h-6 lg:w-6 text-blue-600" />
             </Button>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2 lg:space-x-4 text-sm lg:text-base">
-                <div className="flex items-center text-gray-700 min-w-0">
-                  <MapPin className="h-3 w-3 lg:h-4 lg:w-4 mr-1 flex-shrink-0" />
-                  <span className="font-medium truncate">
-                    {ride.from_location}
-                  </span>
-                  <span className="mx-1 lg:mx-2 flex-shrink-0">→</span>
-                  <span className="font-medium truncate">
-                    {ride.to_location}
-                  </span>
+              <div className="flex items-center space-x-3 lg:space-x-4">
+                <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                  {ride.profiles?.name?.charAt(0)?.toUpperCase() || "U"}
                 </div>
-                <div className="hidden sm:flex items-center text-gray-500 text-xs lg:text-sm flex-shrink-0">
-                  <Clock className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
-                  <span>{formatDateTime(ride.ride_time)}</span>
+                <div className="flex-1 min-w-0">
+                  <h2 className="font-bold text-lg lg:text-xl text-gray-900 truncate">
+                    Chat with {ride.profiles?.name}
+                  </h2>
+                  <div className="flex items-center text-sm text-gray-600 gap-2">
+                    <MapPin className="h-3 w-3 lg:h-4 lg:w-4 flex-shrink-0 text-green-600" />
+                    <span className="font-medium truncate">
+                      {ride.from_location} → {ride.to_location}
+                    </span>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center text-xs lg:text-sm text-gray-600 mt-1 space-x-2">
-                <div className="flex items-center min-w-0">
-                  <Users className="h-3 w-3 lg:h-4 lg:w-4 mr-1 flex-shrink-0" />
-                  <span className="truncate">
-                    Chat with {ride.profiles?.name}
-                  </span>
-                  <span className="mx-2 hidden sm:inline">•</span>
-                  <span className="hidden sm:inline truncate">
-                    {ride.profiles?.department}
-                  </span>
-                </div>
-                <span
-                  className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${
-                    connectionStatus === "SUBSCRIBED"
-                      ? "bg-green-100 text-green-800"
-                      : connectionStatus === "CHANNEL_ERROR"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {connectionStatus === "SUBSCRIBED"
-                    ? "🟢 Live"
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center text-xs lg:text-sm text-gray-500">
+                <Clock className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
+                <span>{formatDateTime(ride.ride_time)}</span>
+              </div>
+              <div
+                className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 ${
+                  connectionStatus === "SUBSCRIBED"
+                    ? "bg-green-100 text-green-800"
                     : connectionStatus === "CHANNEL_ERROR"
-                    ? "🔴 Offline"
-                    : "🟡 Connecting"}
-                </span>
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    connectionStatus === "SUBSCRIBED"
+                      ? "bg-green-500 animate-pulse"
+                      : connectionStatus === "CHANNEL_ERROR"
+                      ? "bg-red-500"
+                      : "bg-yellow-500"
+                  }`}
+                ></div>
+                {connectionStatus === "SUBSCRIBED"
+                  ? "Live"
+                  : connectionStatus === "CHANNEL_ERROR"
+                  ? "Offline"
+                  : "Connecting"}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Messages */}
+      {/* Enhanced Messages Section */}
       <div className="flex-1 overflow-y-auto p-3 lg:p-4">
         <div className="max-w-4xl mx-auto space-y-3 lg:space-y-4">
           {messages.length === 0 ? (
             <div className="text-center py-8 lg:py-12">
-              <div className="text-gray-500 text-sm lg:text-base mb-4">
-                No messages yet. Start the conversation!
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 mx-auto max-w-md shadow-sm border border-gray-200">
+                <div className="text-gray-500 text-base mb-2">💬</div>
+                <div className="text-gray-600 font-medium mb-2">
+                  No messages yet
+                </div>
+                <div className="text-gray-500 text-sm">
+                  Start the conversation with {ride.profiles?.name}!
+                </div>
               </div>
             </div>
           ) : (
@@ -492,14 +524,14 @@ const ChatPage: React.FC = () => {
                 }`}
               >
                 <div
-                  className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-3 py-2 lg:px-4 lg:py-2 rounded-lg ${
+                  className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
                     isMyMessage(message)
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-900 border border-gray-200 shadow-sm"
+                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                      : "bg-white/95 backdrop-blur-sm text-gray-900 border border-gray-200"
                   }`}
                 >
                   {!isMyMessage(message) && (
-                    <div className="text-xs font-medium mb-1 opacity-75">
+                    <div className="text-xs font-medium mb-1 text-gray-600">
                       {message.profiles?.name}
                     </div>
                   )}
@@ -507,7 +539,7 @@ const ChatPage: React.FC = () => {
                     {message.content}
                   </div>
                   <div
-                    className={`text-xs mt-1 ${
+                    className={`text-xs mt-2 ${
                       isMyMessage(message) ? "text-blue-100" : "text-gray-500"
                     }`}
                   >
@@ -521,8 +553,8 @@ const ChatPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Message Input */}
-      <div className="bg-white border-t border-gray-200 p-4 safe-area-bottom">
+      {/* Enhanced Message Input */}
+      <div className="bg-white/95 backdrop-blur-sm border-t border-gray-200 p-4 shadow-lg safe-area-bottom">
         <div className="max-w-4xl mx-auto">
           <form
             onSubmit={handleSendMessage}
@@ -532,8 +564,8 @@ const ChatPage: React.FC = () => {
               <Input
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="w-full border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                placeholder={`Message ${ride.profiles?.name}...`}
+                className="w-full border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl bg-gray-50/50 backdrop-blur-sm transition-all duration-200"
                 disabled={sending}
                 autoComplete="off"
               />
@@ -541,13 +573,13 @@ const ChatPage: React.FC = () => {
             <Button
               type="submit"
               disabled={!newMessage.trim() || sending}
-              className="h-10 w-10 p-0 rounded-full bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 flex-shrink-0"
+              className="h-12 w-12 p-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-500/20 flex-shrink-0 transition-all duration-200 shadow-lg"
               variant="primary"
             >
               {sending ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                <Send className="h-4 w-4" />
+                <Send className="h-5 w-5" />
               )}
             </Button>
           </form>

@@ -40,6 +40,7 @@ export const useRideStore = create<RideState>((set, get) => ({
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `
@@ -83,6 +84,7 @@ export const useRideStore = create<RideState>((set, get) => ({
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `
@@ -111,6 +113,7 @@ export const useRideStore = create<RideState>((set, get) => ({
             student_id,
             department,
             gender,
+            phone_number,
             created_at
           )
         `

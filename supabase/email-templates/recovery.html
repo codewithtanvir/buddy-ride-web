@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Your Password</title>
+  </head>
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    "
+  >
+    <h2>Reset Your Password</h2>
+
+    <p>Follow this link to reset the password for your user:</p>
+    <p><a href="{{ .ConfirmationURL }}">Reset Password</a></p>
+
+    <p>Alternatively, enter the code: {{ .Token }}</p>
+  </body>
+</html>

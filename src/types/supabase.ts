@@ -56,6 +56,7 @@ export type Database = {
           id: string;
           name: string | null;
           student_id: string | null;
+          phone_number: string | null;
           role?: string | null;
         };
         Insert: {
@@ -65,6 +66,7 @@ export type Database = {
           id: string;
           name?: string | null;
           student_id?: string | null;
+          phone_number?: string | null;
           role?: string | null;
         };
         Update: {
@@ -74,6 +76,7 @@ export type Database = {
           id?: string;
           name?: string | null;
           student_id?: string | null;
+          phone_number?: string | null;
           role?: string | null;
         };
         Relationships: [];
@@ -125,6 +128,7 @@ export type Database = {
           ride_id: string | null;
           status: string | null;
           updated_at: string | null;
+          phone_shared: boolean | null;
         };
         Insert: {
           created_at?: string | null;
@@ -134,6 +138,7 @@ export type Database = {
           ride_id?: string | null;
           status?: string | null;
           updated_at?: string | null;
+          phone_shared?: boolean | null;
         };
         Update: {
           created_at?: string | null;
@@ -143,6 +148,7 @@ export type Database = {
           ride_id?: string | null;
           status?: string | null;
           updated_at?: string | null;
+          phone_shared?: boolean | null;
         };
         Relationships: [
           {
