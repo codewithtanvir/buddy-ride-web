@@ -85,12 +85,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signUp: async (email: string, password: string) => {
+    console.log("🔢 Starting OTP-based signup");
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: undefined, // Force OTP-only, no magic link redirect
+      },
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("❌ Signup failed:", error);
+      throw error;
+    }
+
+    console.log("✅ Signup successful, OTP email sent");
 
     // Set pending verification email
     set({ pendingVerification: email });
@@ -114,11 +124,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   resetPassword: async (email: string) => {
+    console.log("🔢 Starting OTP-based password reset");
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: getPasswordResetRedirectUrl(),
+      redirectTo: undefined, // Force OTP-only, no magic link redirect
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("❌ Password reset failed:", error);
+      throw error;
+    }
+
+    console.log("✅ Password reset OTP email sent");
   },
 
   updatePassword: async (password: string) => {
@@ -180,11 +197,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   // OTP-based password reset
   resetPasswordWithOTP: async (email: string) => {
+    console.log("🔢 Starting OTP-based password reset");
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: undefined, // No redirect for OTP flow
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("❌ Password reset OTP failed:", error);
+      throw error;
+    }
+
+    console.log("✅ Password reset OTP email sent");
   },
 
   verifyOTPAndResetPassword: async (
@@ -227,13 +251,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   // Email verification with OTP
   verifyEmailOTP: async (email: string, token: string) => {
+    console.log("🔢 Verifying email OTP");
+
     const { data, error } = await supabase.auth.verifyOtp({
       email,
       token,
       type: "signup",
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("❌ OTP verification failed:", error);
+      throw error;
+    }
+
+    console.log("✅ Email OTP verification successful");
 
     if (data.user) {
       set({
@@ -248,11 +279,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   resendEmailOTP: async (email: string) => {
+    console.log("🔢 Resending email OTP");
+
     const { error } = await supabase.auth.resend({
       type: "signup",
       email,
     });
 
-    if (error) throw error;
+    if (error) {
+      console.error("❌ OTP resend failed:", error);
+      throw error;
+    }
+
+    console.log("✅ Email OTP resent successfully");
   },
 }));

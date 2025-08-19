@@ -1,4 +1,26 @@
-# Supabase Email Configuration for Buddy Ride
+# S[auth.email.template.confirmation]
+subject = "🔢 Your Buddy Ride Verification Code - {{ .Token }}"
+content_path = "./supabase/email-templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "🔐 Password Reset Code: {{ .Token }} - Buddy Ride"
+content_path = "./supabase/email-templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "🔢 Your Buddy Ride Login Code: {{ .Token }}"
+content_path = "./supabase/email-templates/magic_link.html"
+
+[auth.email.template.otp]
+subject = "🔢 Your Buddy Ride Code: {{ .Token }}"
+content_path = "./supabase/email-templates/otp.html"
+
+[auth.email.template.invite]
+subject = "🎉 You're Invited to Join Buddy Ride!"
+content_path = "./supabase/email-templates/invite.html"
+
+[auth.email.template.email_change]
+subject = "📧 Confirm Your Email Change - Buddy Ride"
+content_path = "./supabase/email-templates/email_change.html"guration for Buddy Ride
 # Enhanced email templates for robust and dynamic email confirmation
 
 [auth.email.template.confirmation]

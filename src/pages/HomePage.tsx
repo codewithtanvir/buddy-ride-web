@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 lg:mb-10">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
                 Welcome back, {user?.profile?.name?.split(" ")[0] || "Student"}!
@@ -60,6 +60,46 @@ const HomePage: React.FC = () => {
                 <span className="text-sm font-medium text-green-700">
                   Online
                 </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Project Motto Section */}
+          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl p-6 lg:p-8 shadow-xl border-0 backdrop-blur-sm">
+            <div className="text-center text-white">
+              <div className="flex items-center justify-center mb-4">
+                <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                  <Car className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h2 className="text-2xl lg:text-3xl font-bold mb-3">
+                🚗 Share Rides, Save Money, Stay Safe
+              </h2>
+              <p className="text-blue-100 text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
+                <strong>Our Mission:</strong> Choose location and time
+                where you want to go, find a buddy based on gender for security,
+                chat with them, go together and{" "}
+                <span className="text-yellow-300 font-semibold">
+                  split the fare to save money!
+                </span>
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                  <Shield className="h-4 w-4" />
+                  <span>Gender-Based Safety</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                  <MessageSquare className="h-4 w-4" />
+                  <span>Real-time Chat</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                  <TrendingUp className="h-4 w-4" />
+                  <span>Split Fare & Save</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-full backdrop-blur-sm">
+                  <Users className="h-4 w-4" />
+                  <span>AIUB Students Only</span>
+                </div>
               </div>
             </div>
           </div>

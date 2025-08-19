@@ -1,218 +1,308 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reset Your Password</title>
-  </head>
-  <body
-    style="
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-        sans-serif;
-      line-height: 1.6;
-      color: #333;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #f8fafc;
-    "
-  >
-    <div
-      style="
-        background: white;
+    <title>Reset Your Password - Buddy Ride</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
         border-radius: 12px;
-        padding: 40px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      "
-    >
-      <!-- Header -->
-      <div style="text-align: center; margin-bottom: 30px">
-        <h1 style="color: #e53e3e; margin: 0; font-size: 28px">
-          🔐 Reset Your Password
-        </h1>
-        <p style="color: #718096; margin: 10px 0 0 0">
-          Secure password reset for {{ .Email }}
-        </p>
-      </div>
-
-      <!-- OTP Section (Primary) -->
-      <div
-        style="
-          background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
-          border: 2px solid #e53e3e;
-          border-radius: 12px;
-          padding: 30px;
-          text-align: center;
-          margin: 25px 0;
-        "
-      >
-        <h2 style="color: #2d3748; margin: 0 0 15px 0; font-size: 20px">
-          🔢 Your Password Reset Code
-        </h2>
-        <p style="color: #4a5568; margin: 0 0 20px 0">
-          Enter this 6-digit code to reset your password:
-        </p>
-
-        <div
-          style="
-            font-family: 'Courier New', monospace;
-            background-color: #2d3748;
-            color: #fff;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 24px;
-            letter-spacing: 3px;
-            font-weight: bold;
-            margin: 15px 0;
-            display: inline-block;
-          "
-        >
-          {{ .Token }}
-        </div>
-
-        <p style="color: #718096; font-size: 14px; margin: 15px 0 0 0">
-          ⏰ This code expires in 1 hour for your security
-        </p>
-      </div>
-
-      <!-- Alternative Link (Secondary) -->
-      <div
-        style="
-          background-color: #edf2f7;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+      }
+      .header {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .otp-box {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border: 3px solid #dc2626;
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        margin: 30px 0;
+        position: relative;
+      }
+      .otp-code {
+        font-family: "Courier New", monospace;
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        color: #fff;
+        padding: 20px 30px;
+        border-radius: 12px;
+        font-size: 36px;
+        letter-spacing: 8px;
+        font-weight: bold;
+        margin: 20px 0;
+        display: inline-block;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 2px solid #dc2626;
+        min-width: 200px;
+      }
+      .steps {
+        background-color: #f9fafb;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 25px 0;
+        border-left: 4px solid #dc2626;
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        padding: 10px;
+      }
+      .step-number {
+        background: #dc2626;
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      .security-tips {
+        background-color: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .warning-box {
+        background-color: #fef2f2;
+        border: 1px solid #fca5a5;
+        color: #dc2626;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 25px 0;
+        text-align: center;
+        border-left: 4px solid #dc2626;
+      }
+      .footer {
+        background-color: #1f2937;
+        color: #9ca3af;
+        padding: 30px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .footer a {
+        color: #dc2626;
+        text-decoration: none;
+      }
+      .alternative-section {
+        background-color: #f3f4f6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+        text-align: center;
+        border: 1px solid #d1d5db;
+      }
+      @media (max-width: 600px) {
+        .container {
+          margin: 10px;
           border-radius: 8px;
+        }
+        .header,
+        .content {
           padding: 20px;
-          margin: 25px 0;
-          border-left: 4px solid #e53e3e;
-        "
-      >
-        <h3 style="color: #2d3748; margin: 0 0 10px 0; font-size: 16px">
-          🔗 Alternative: Reset Link
-        </h3>
-        <p style="color: #4a5568; margin: 0 0 15px 0; font-size: 14px">
-          Prefer to click a link? Use this secure password reset link:
+        }
+        .otp-box {
+          padding: 25px;
+        }
+        .otp-code {
+          font-size: 28px;
+          letter-spacing: 6px;
+          padding: 15px 20px;
+          min-width: 160px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🔐 Password Reset Request</h1>
+        <p>Secure password reset for your Buddy Ride account</p>
+      </div>
+
+      <div class="content">
+        <div style="text-align: center; margin-bottom: 30px">
+          <h2 style="color: #1f2937; margin: 0">Hi there! 👋</h2>
+          <p style="color: #4b5563; margin: 10px 0 0 0">
+            Someone requested a password reset for <strong>{{ .Email }}</strong>
+          </p>
+        </div>
+
+        <div class="otp-box">
+          <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 20px">
+            🔢 Your 6-Digit Reset Code
+          </h3>
+
+          <div class="otp-code">{{ .Token }}</div>
+
+          <p style="color: #4b5563; margin: 15px 0 0 0; font-size: 14px">
+            ⏰ <strong>Expires in 1 hour</strong> • Valid for single use only
+          </p>
+        </div>
+
+        <div class="steps">
+          <h3 style="color: #1f2937; margin: 0 0 20px 0">
+            🔄 How to reset your password:
+          </h3>
+
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <strong style="color: #1f2937">Go back to Buddy Ride</strong
+              ><br />
+              <small style="color: #6b7280"
+                >Return to the password reset page in your browser</small
+              >
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <strong style="color: #1f2937">Enter Your Email</strong><br />
+              <small style="color: #6b7280"
+                >Type {{ .Email }} in the email field</small
+              >
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <strong style="color: #1f2937">Enter Reset Code</strong><br />
+              <small style="color: #6b7280"
+                >Copy and paste the 6-digit code above</small
+              >
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">4</div>
+            <div>
+              <strong style="color: #1f2937">Create New Password</strong><br />
+              <small style="color: #6b7280"
+                >Choose a strong, secure password for your account</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Alternative Link Section -->
+        <div class="alternative-section">
+          <h4 style="color: #1f2937; margin: 0 0 10px 0">
+            🔗 Prefer clicking a link?
+          </h4>
+          <p style="color: #4b5563; margin: 0 0 15px 0; font-size: 14px">
+            You can also use this secure reset link as an alternative:
+          </p>
+          <a
+            href="{{ .ConfirmationURL }}"
+            style="
+              display: inline-block;
+              background: #dc2626;
+              color: white;
+              text-decoration: none;
+              padding: 12px 24px;
+              border-radius: 6px;
+              font-weight: 600;
+            "
+          >
+            🔐 Reset Password with Link
+          </a>
+        </div>
+
+        <!-- Security Tips -->
+        <div class="security-tips">
+          <h4 style="color: #92400e; margin: 0 0 15px 0">
+            🛡️ Password Security Tips:
+          </h4>
+          <ul style="color: #92400e; margin: 0; padding-left: 20px">
+            <li>
+              Use at least 8 characters with mixed case, numbers, and symbols
+            </li>
+            <li>Don't reuse passwords from other accounts</li>
+            <li>Consider using a password manager</li>
+            <li>Enable two-factor authentication when available</li>
+          </ul>
+        </div>
+
+        <!-- Security Warning -->
+        <div class="warning-box">
+          <h4 style="margin: 0 0 10px 0">🚨 Didn't request this reset?</h4>
+          <p style="margin: 0; font-size: 14px">
+            If you didn't request this password reset, someone may be trying to
+            access your account. Please secure your email account and contact
+            our support team immediately.
+          </p>
+        </div>
+
+        <!-- Important Security Notice -->
+        <div
+          style="
+            background-color: #fef2f2;
+            border: 2px solid #fca5a5;
+            color: #dc2626;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-size: 14px;
+            text-align: center;
+          "
+        >
+          <strong>🔒 Security Reminder:</strong>
+          Never share this reset code with anyone. AIUB Go support will never
+          ask for your password or reset codes.
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          <strong>Buddy Ride</strong><br />AIUB Student Ride Sharing Platform
         </p>
-        <a
-          href="{{ .ConfirmationURL }}"
-          style="
-            display: inline-block;
-            background: #e53e3e;
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: 600;
-          "
-        >
-          🔐 Reset Password
-        </a>
-      </div>
-
-      <!-- Security Tips -->
-      <div style="margin: 30px 0">
-        <h3 style="color: #2d3748; margin-bottom: 20px">
-          🛡️ Password Security Tips:
-        </h3>
-
-        <div
-          style="
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f7fafc;
-            border-radius: 8px;
-            border-left: 4px solid #38b2ac;
-          "
-        >
-          <strong style="color: #2d3748">✅ Use Strong Passwords</strong><br />
-          <small style="color: #718096"
-            >Include uppercase, lowercase, numbers, and special
-            characters</small
-          >
-        </div>
-
-        <div
-          style="
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f7fafc;
-            border-radius: 8px;
-            border-left: 4px solid #38b2ac;
-          "
-        >
-          <strong style="color: #2d3748">🔒 Keep It Unique</strong><br />
-          <small style="color: #718096"
-            >Use a different password for Buddy Ride than other accounts</small
-          >
-        </div>
-
-        <div
-          style="
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f7fafc;
-            border-radius: 8px;
-            border-left: 4px solid #38b2ac;
-          "
-        >
-          <strong style="color: #2d3748">📱 Consider 2FA</strong><br />
-          <small style="color: #718096"
-            >Enable two-factor authentication for extra security</small
-          >
-        </div>
-      </div>
-
-      <!-- Security Warning -->
-      <div
-        style="
-          background-color: #fffbeb;
-          border: 1px solid #f6ad55;
-          color: #c05621;
-          padding: 15px;
-          border-radius: 8px;
-          margin: 20px 0;
-          font-size: 14px;
-        "
-      >
-        <strong>🚨 Important:</strong> If you didn't request this password
-        reset, someone may be trying to access your account. Please secure your
-        email and contact support immediately.
-      </div>
-
-      <!-- Security Notice -->
-      <div
-        style="
-          background-color: #fff5f5;
-          border: 1px solid #fed7d7;
-          color: #c53030;
-          padding: 15px;
-          border-radius: 8px;
-          margin: 20px 0;
-          font-size: 14px;
-          text-align: center;
-        "
-      >
-        <strong>🔒 Security Notice:</strong> This reset code will expire in 1
-        hour. If you didn't request this, please ignore this email.
-      </div>
-
-      <!-- Footer -->
-      <div
-        style="
-          text-align: center;
-          margin-top: 30px;
-          padding-top: 20px;
-          border-top: 1px solid #e2e8f0;
-          color: #718096;
-          font-size: 14px;
-        "
-      >
-        <p style="margin: 0">
-          This password reset was requested for <strong>{{ .Email }}</strong>
-        </p>
-        <p style="margin: 10px 0 0 0">
-          Need help? Contact us at
-          <a href="mailto:support@buddyride.aiub.edu" style="color: #e53e3e"
+        <p style="margin: 20px 0 0 0">
+          Questions? Contact us at
+          <a href="mailto:support@buddyride.aiub.edu"
             >support@buddyride.aiub.edu</a
           >
+        </p>
+        <p style="margin: 15px 0 0 0; font-size: 12px; opacity: 0.7">
+          This reset code was sent to {{ .Email }} • Visit
+          <a href="{{ .SiteURL }}">{{ .SiteURL }}</a>
         </p>
       </div>
     </div>

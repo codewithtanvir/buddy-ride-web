@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Car, Mail, ArrowLeft, Send, AlertCircle } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Car, Mail, ArrowLeft, Send, AlertCircle, Key } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import {
@@ -18,7 +18,8 @@ const ForgotPasswordPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const { resetPassword } = useAuthStore();
+  const { resetPasswordWithOTP } = useAuthStore(); // Use OTP method
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const emailErrors = validateEmail(email);
@@ -35,11 +36,14 @@ const ForgotPasswordPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await resetPassword(email);
+      await resetPasswordWithOTP(email);
       setEmailSent(true);
-      toast.success("Password reset email sent! Please check your inbox.", {
-        duration: 6000,
-      });
+      toast.success(
+        "Recovery code sent to your email! Please check your inbox.",
+        {
+          duration: 6000,
+        }
+      );
     } catch (error: any) {
       console.error("Password reset error:", error);
 
@@ -90,7 +94,7 @@ const ForgotPasswordPage: React.FC = () => {
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
               Check Your Email
             </h1>
-            <p className="text-gray-600 text-lg">Password reset link sent</p>
+            <p className="text-gray-600 text-lg">Recovery code sent</p>
           </div>
 
           {/* Success Card */}
@@ -98,12 +102,12 @@ const ForgotPasswordPage: React.FC = () => {
             <CardContent className="pt-6 px-6 lg:px-8">
               <div className="text-center space-y-4">
                 <div className="p-4 bg-green-50 rounded-xl border border-green-200">
-                  <Mail className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                  <Key className="h-12 w-12 text-green-600 mx-auto mb-3" />
                   <h3 className="font-semibold text-green-900 mb-2">
-                    Email Sent Successfully!
+                    6-Digit Recovery Code Sent!
                   </h3>
                   <p className="text-sm text-green-800 leading-relaxed">
-                    We've sent a password reset link to:
+                    We've sent a recovery code to:
                   </p>
                   <div className="mt-2 font-mono bg-green-100 px-3 py-2 rounded text-sm font-medium text-green-900">
                     {email}
@@ -111,13 +115,21 @@ const ForgotPasswordPage: React.FC = () => {
                 </div>
 
                 <div className="text-sm text-gray-600 space-y-2">
-                  <p>Please check your email and click the reset link.</p>
+                  <p>Please check your email for the 6-digit recovery code.</p>
                   <p className="text-xs text-gray-500">
-                    Don't see the email? Check your spam folder or try again.
+                    Don't see the email? Check your spam folder.
                   </p>
                 </div>
 
                 <div className="pt-4 space-y-3">
+                  <Button
+                    onClick={() => navigate("/otp-password-reset")}
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  >
+                    <Key className="h-4 w-4 mr-2" />
+                    Enter Recovery Code
+                  </Button>
+
                   <Button
                     onClick={() => {
                       setEmailSent(false);
@@ -126,7 +138,7 @@ const ForgotPasswordPage: React.FC = () => {
                     variant="outline"
                     className="w-full"
                   >
-                    Send Another Email
+                    Send Another Code
                   </Button>
 
                   <Link to="/auth">
@@ -161,7 +173,7 @@ const ForgotPasswordPage: React.FC = () => {
             Reset Password
           </h1>
           <p className="text-gray-600 text-lg">
-            Enter your email to receive a reset link
+            Enter your email to receive a recovery code
           </p>
         </div>
 
@@ -172,7 +184,7 @@ const ForgotPasswordPage: React.FC = () => {
               Forgot Password?
             </CardTitle>
             <p className="text-center text-gray-600 mt-2">
-              No worries! We'll send you reset instructions.
+              No worries! We'll send you a 6-digit recovery code.
             </p>
           </CardHeader>
 
@@ -225,12 +237,45 @@ const ForgotPasswordPage: React.FC = () => {
                   "Sending..."
                 ) : (
                   <>
-                    <Send className="h-5 w-5 mr-2" />
-                    Send Reset Link
+                    <Key className="h-5 w-5 mr-2" />
+                    Send Recovery Code
                   </>
                 )}
               </Button>
             </form>
+
+            {/* OTP Method Promotion */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-1">
+                  <div className="p-2 bg-blue-100 rounded-lg shadow-sm">
+                    <Key className="h-4 w-4 text-blue-600" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-blue-900 text-sm">
+                    🔢 Secure OTP Recovery
+                  </h3>
+                  <p className="text-sm text-blue-800 leading-relaxed">
+                    We use secure 6-digit codes instead of links for better
+                    security. The code expires in 1 hour and can only be used
+                    once.
+                  </p>
+                  <div className="text-center pt-2">
+                    <Link to="/otp-password-reset">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                      >
+                        <Key className="h-4 w-4 mr-2" />
+                        Use OTP Reset Instead
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Back to Sign In */}
             <div className="mt-8 text-center">
@@ -253,17 +298,17 @@ const ForgotPasswordPage: React.FC = () => {
                 </div>
                 <div className="space-y-3">
                   <h3 className="font-semibold text-orange-900 text-sm">
-                    Password Reset Instructions
+                    Recovery Code Instructions
                   </h3>
                   <div className="text-sm text-orange-800 space-y-2">
                     <p>1. Enter your AIUB student email address</p>
-                    <p>2. Check your email for the reset link</p>
-                    <p>3. Click the link to create a new password</p>
-                    <p>4. Sign in with your new password</p>
+                    <p>2. Check your email for the 6-digit recovery code</p>
+                    <p>3. Enter the code to verify your identity</p>
+                    <p>4. Create a new secure password</p>
                   </div>
                   <div className="text-xs text-orange-700 bg-orange-100/70 p-3 rounded-lg border-l-4 border-orange-300">
-                    <strong>Note:</strong> The reset link will expire in 1 hour
-                    for security.
+                    <strong>Note:</strong> The recovery code will expire in 1
+                    hour for security.
                   </div>
                 </div>
               </div>
