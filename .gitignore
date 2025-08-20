@@ -79,7 +79,7 @@ out/
 
 # Gatsby files
 .cache/
-public
+# public (commented out - we need to track public files in our project)
 
 # Storybook build outputs
 .out

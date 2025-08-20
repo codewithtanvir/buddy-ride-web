@@ -218,18 +218,6 @@ const AuthPage: React.FC = () => {
               </Button>
             </form>
 
-            {/* Forgot Password Link */}
-            {!isSignUp && (
-              <div className="mt-4 text-center">
-                <Link
-                  to="/otp-password-reset"
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-200 rounded-md px-2 py-1"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-            )}
-
             {/* Toggle Mode */}
             <div className="mt-8 text-center">
               <button
@@ -264,8 +252,8 @@ const AuthPage: React.FC = () => {
                     <div className="font-semibold mb-1">📧 Example:</div>
                     <div className="font-mono">23-51455-1@student.aiub.edu</div>
                     <div className="mt-2 text-blue-600">
-                      Your student ID will be automatically detected from your
-                      email.
+                      ✨ Your student ID will be automatically extracted from
+                      your email address.
                     </div>
                   </div>
                 </div>

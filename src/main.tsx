@@ -41,21 +41,6 @@ async function initializeApp() {
   }
 }
 
-// PWA Update handling
-if ("serviceWorker" in navigator) {
-  // Listen for service worker updates
-  navigator.serviceWorker.addEventListener("message", (event) => {
-    if (event.data && event.data.type === "SW_UPDATE_AVAILABLE") {
-      // Dispatch custom event for the PWA update component
-      window.dispatchEvent(
-        new CustomEvent("sw-update-available", {
-          detail: event.data.payload,
-        })
-      );
-    }
-  });
-}
-
 // Initialize and render the application
 initializeApp()
   .then(() => {

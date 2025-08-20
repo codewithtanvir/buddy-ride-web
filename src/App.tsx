@@ -8,8 +8,6 @@ import {
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./stores/authStore";
 import { startAutomaticCleanup } from "./utils/rideCleanup";
-import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
-import { PWAUpdatePrompt } from "./components/PWAUpdatePrompt";
 import { ProtectedAdminRoute } from "./components/ProtectedAdminRoute";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AsyncErrorBoundary } from "./components/AsyncErrorBoundary";
@@ -17,7 +15,6 @@ import { PageLoadingSpinner } from "./components/LoadingStates";
 
 // Pages
 import AuthPage from "./pages/AuthPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import OTPPasswordResetPage from "./pages/OTPPasswordResetPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
@@ -76,10 +73,6 @@ function App() {
                   <Route path="/auth" element={<AuthPage />} />
                   <Route
                     path="/forgot-password"
-                    element={<ForgotPasswordPage />}
-                  />
-                  <Route
-                    path="/otp-password-reset"
                     element={<OTPPasswordResetPage />}
                   />
                   <Route
@@ -129,12 +122,6 @@ function App() {
                 </>
               )}
             </Routes>
-
-            {/* PWA Install Prompt */}
-            <PWAInstallPrompt />
-
-            {/* PWA Update Prompt */}
-            <PWAUpdatePrompt />
           </div>
         </Router>
       </AsyncErrorBoundary>

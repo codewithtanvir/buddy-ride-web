@@ -19,7 +19,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+      includeAssets: ["favicon.ico", "icon.svg"],
       manifest: {
         name: "Buddy Ride - AIUB Student Ride Sharing",
         short_name: "Buddy Ride",
@@ -31,128 +31,27 @@ export default defineConfig({
         scope: "/",
         start_url: "/",
         orientation: "portrait-primary",
-        categories: ["transportation", "education", "social"],
-        lang: "en",
-        dir: "ltr",
         icons: [
           {
-            src: "icons/icon-72x72.png",
-            sizes: "72x72",
-            type: "image/png",
+            src: "icon.svg",
+            sizes: "any",
+            type: "image/svg+xml",
             purpose: "any maskable",
           },
           {
-            src: "icons/icon-96x96.png",
-            sizes: "96x96",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "icons/icon-128x128.png",
-            sizes: "128x128",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "icons/icon-144x144.png",
-            sizes: "144x144",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "icons/icon-152x152.png",
-            sizes: "152x152",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "icons/icon-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "icons/icon-384x384.png",
-            sizes: "384x384",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "icons/icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-        ],
-        shortcuts: [
-          {
-            name: "Find Rides",
-            short_name: "Find",
-            description: "Find available rides from fellow students",
-            url: "/find-buddy",
-            icons: [{ src: "icons/shortcut-find.png", sizes: "192x192" }],
-          },
-          {
-            name: "Post Ride",
-            short_name: "Post",
-            description: "Share your ride with other students",
-            url: "/post-ride",
-            icons: [{ src: "icons/shortcut-post.png", sizes: "192x192" }],
-          },
-          {
-            name: "Messages",
-            short_name: "Chat",
-            description: "Chat with your ride buddies",
-            url: "/chats",
-            icons: [{ src: "icons/shortcut-chat.png", sizes: "192x192" }],
+            src: "favicon.ico",
+            sizes: "32x32",
+            type: "image/x-icon",
           },
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
-        maximumFileSizeToCacheInBytes: 3000000, // 3MB
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-cache",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "supabase-api-cache",
-              networkTimeoutSeconds: 3,
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24, // 1 day
-              },
-            },
-          },
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "images-cache",
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-              },
-            },
-          },
-        ],
+        globPatterns: ["**/*.{js,css,html,ico,svg}"],
         skipWaiting: true,
         clientsClaim: true,
       },
       devOptions: {
-        enabled: true,
-        type: "module",
+        enabled: false, // Disable in development for simplicity
       },
     }),
   ],

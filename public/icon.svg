@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
+  
+  <!-- Car icon -->
+  <g transform="translate(50, 50)">
+    <!-- Car body -->
+    <rect x="-18" y="-8" width="36" height="16" rx="4" fill="white"/>
+    
+    <!-- Car windows -->
+    <rect x="-15" y="-6" width="12" height="6" rx="2" fill="#2563eb"/>
+    <rect x="3" y="-6" width="12" height="6" rx="2" fill="#2563eb"/>
+    
+    <!-- Car wheels -->
+    <circle cx="-12" cy="8" r="4" fill="white"/>
+    <circle cx="12" cy="8" r="4" fill="white"/>
+    <circle cx="-12" cy="8" r="2" fill="#1d4ed8"/>
+    <circle cx="12" cy="8" r="2" fill="#1d4ed8"/>
+    
+    <!-- Buddy/People icons -->
+    <circle cx="-20" cy="-15" r="3" fill="white"/>
+    <circle cx="20" cy="-15" r="3" fill="white"/>
+    <rect x="-22" y="-12" width="4" height="6" rx="2" fill="white"/>
+    <rect x="18" y="-12" width="4" height="6" rx="2" fill="white"/>
+  </g>
+  
+  <!-- App name text -->
+  <text x="50" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">BUDDY RIDE</text>
+</svg>
