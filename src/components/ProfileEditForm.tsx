@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import { User, Building, Users, Save } from "lucide-react";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/Card";
+import { User, Building, Users, Save, X } from "lucide-react";
+import { Button } from "./ui/Button";
+import { Input } from "./ui/Input";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { useAuthStore } from "../stores/authStore";
 import { validateProfileData } from "../utils/validation";
 import toast from "react-hot-toast";
@@ -17,23 +12,31 @@ const departments = [
   "Electrical and Electronic Engineering", 
   "Software Engineering",
   "Business Administration",
-  "Architecture", 
-  "Civil Engineering",
-  "Textile Engineering",
   "English",
   "Pharmacy",
-  "Industrial and Production Engineering",
+  "Architecture",
+  "Civil Engineering",
+  "Textile Engineering",
   "Environmental Science and Engineering",
-  "Law",
+  "Industrial and Production Engineering",
   "Mathematics",
   "Physics",
-  "Chemistry", 
+  "Chemistry",
   "Economics",
+  "Law",
   "Journalism and Media Studies",
   "Development Studies",
 ];
 
-const ProfileSetupPage: React.FC = () => {
+interface ProfileEditFormProps {
+  onCancel: () => void;
+  onSuccess: () => void;
+}
+
+const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
+  onCancel,
+  onSuccess,
+}) => {
   const { updateProfile, user } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,9 +46,6 @@ const ProfileSetupPage: React.FC = () => {
     gender: (user?.profile?.gender as "male" | "female") || "male",
     phone_number: user?.profile?.phone_number || "",
   });
-
-  // Check if this is a profile edit (user already has profile data)
-  const isEditing = !!(user?.profile?.name && user?.profile?.student_id && user?.profile?.department);
 
   // Check if user has a temporary student ID
   const hasTemporaryStudentId =
@@ -76,41 +76,41 @@ const ProfileSetupPage: React.FC = () => {
     setLoading(true);
     try {
       await updateProfile(formData);
-      toast.success(isEditing ? "Profile updated successfully!" : "Profile setup completed!");
+      toast.success("Profile updated successfully!");
+      onSuccess();
     } catch (error: any) {
-      toast.error(error.message || (isEditing ? "Failed to update profile" : "Failed to setup profile"));
+      toast.error(error.message || "Failed to update profile");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-blue-100 px-4 py-8">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-6 lg:mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="p-3 bg-primary-600 rounded-lg">
-              <User className="h-6 w-6 lg:h-8 lg:w-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
-            {isEditing ? "Edit Your Profile" : "Setup Your Profile"}
-          </h1>
-          <p className="text-gray-600 mt-2 text-sm lg:text-base">
-            {isEditing 
-              ? "Update your profile information" 
-              : "Complete your profile to start using Buddy Ride"
-            }
-          </p>
-        </div>
-
-        <Card className="shadow-xl">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-center text-lg lg:text-xl">
-              Profile Information
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
+          <CardHeader className="pb-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-t-xl">
+            <CardTitle className="flex items-center justify-between text-xl font-bold text-gray-900">
+              <div className="flex items-center">
+                <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg mr-3">
+                  <User className="h-6 w-6 text-white" />
+                </div>
+                Edit Profile
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onCancel}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </CardTitle>
+            <p className="text-gray-600 text-sm mt-2">
+              Update your profile information
+            </p>
           </CardHeader>
-          <CardContent className="pt-0">
+          <CardContent className="pt-6">
             {hasTemporaryStudentId && (
               <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <p className="text-sm text-yellow-800">
@@ -138,7 +138,7 @@ const ProfileSetupPage: React.FC = () => {
                 }
                 label="Full Name"
                 required
-                className="text-sm lg:text-base"
+                className="text-base"
               />
 
               <Input
@@ -150,7 +150,7 @@ const ProfileSetupPage: React.FC = () => {
                 }
                 label="Student ID"
                 required
-                className="text-sm lg:text-base"
+                className="text-base"
               />
 
               <Input
@@ -161,7 +161,7 @@ const ProfileSetupPage: React.FC = () => {
                   setFormData({ ...formData, phone_number: e.target.value })
                 }
                 label="Phone Number (Optional)"
-                className="text-sm lg:text-base"
+                className="text-base"
               />
 
               <div className="space-y-2">
@@ -231,15 +231,15 @@ const ProfileSetupPage: React.FC = () => {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Gender
+                  Gender *
                 </label>
                 <div className="flex space-x-3">
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, gender: "male" })}
-                    className={`flex-1 py-3 px-4 rounded-lg border font-medium text-sm lg:text-base ${
+                    className={`flex-1 py-3 px-4 rounded-xl border font-medium text-base transition-all duration-200 ${
                       formData.gender === "male"
-                        ? "bg-primary-600 border-primary-600 text-white"
+                        ? "bg-primary-600 border-primary-600 text-white shadow-lg"
                         : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                     }`}
                   >
@@ -251,9 +251,9 @@ const ProfileSetupPage: React.FC = () => {
                     onClick={() =>
                       setFormData({ ...formData, gender: "female" })
                     }
-                    className={`flex-1 py-3 px-4 rounded-lg border font-medium text-sm lg:text-base ${
+                    className={`flex-1 py-3 px-4 rounded-xl border font-medium text-base transition-all duration-200 ${
                       formData.gender === "female"
-                        ? "bg-primary-600 border-primary-600 text-white"
+                        ? "bg-primary-600 border-primary-600 text-white shadow-lg"
                         : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                     }`}
                   >
@@ -263,14 +263,24 @@ const ProfileSetupPage: React.FC = () => {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full h-11 lg:h-12 text-sm lg:text-base"
-                loading={loading}
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {isEditing ? "Update Profile" : "Complete Setup"}
-              </Button>
+              <div className="flex gap-3 pt-4">
+                <Button
+                  type="submit"
+                  className="flex-1 h-12 text-base bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg"
+                  loading={loading}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Update Profile
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  className="h-12 px-6 border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
@@ -279,4 +289,4 @@ const ProfileSetupPage: React.FC = () => {
   );
 };
 
-export default ProfileSetupPage;
+export default ProfileEditForm;

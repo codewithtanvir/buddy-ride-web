@@ -27,6 +27,7 @@ import {
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import ProfileEditForm from "../components/ProfileEditForm";
 import { useAuthStore } from "../stores/authStore";
 import { useRideStore } from "../stores/rideStore";
 import { RideRequestService } from "../services/rideRequestService";
@@ -49,6 +50,7 @@ const ProfilePage: React.FC = () => {
   );
   const [expandedRides, setExpandedRides] = useState<Set<string>>(new Set());
   const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -280,6 +282,14 @@ const ProfilePage: React.FC = () => {
             </div>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowProfileEdit(true)}
+                className="flex items-center justify-center border-2 border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300 px-6 py-3"
+              >
+                <Edit className="h-5 w-5 mr-2" />
+                Edit Profile
+              </Button>
               <Button
                 variant="outline"
                 onClick={() => setShowPasswordChange(!showPasswordChange)}
@@ -647,6 +657,20 @@ const ProfilePage: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Profile Edit Modal */}
+      {showProfileEdit && (
+        <ProfileEditForm
+          onCancel={() => setShowProfileEdit(false)}
+          onSuccess={() => {
+            setShowProfileEdit(false);
+            // Refresh profile data if needed
+            if (user?.id) {
+              fetchMyRides(user.id);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };
