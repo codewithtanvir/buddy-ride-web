@@ -22,17 +22,6 @@ async function initializeApp() {
       "Application initialized with environment:",
       config.environment
     );
-
-    // Register service worker for PWA functionality
-    if ("serviceWorker" in navigator && import.meta.env.PROD) {
-      try {
-        const registration = await navigator.serviceWorker.register("/sw.js");
-        console.log("Service Worker registered successfully:", registration);
-      } catch (error) {
-        console.error("Service Worker registration failed:", error);
-        captureError(error, { context: "service-worker-registration" });
-      }
-    }
   } catch (error) {
     console.error("Failed to initialize application:", error);
     captureError(error, { context: "app-initialization" });

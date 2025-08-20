@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Send, MapPin, Clock, Users, Phone } from "lucide-react";
+import { ArrowLeft, Send, MapPin, Clock, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
@@ -9,14 +9,12 @@ import {
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { PhoneSharingPanel } from "../components/PhoneSharingPanel";
-import { PhoneNumberDisplay } from "../components/PhoneShareModal";
 import { useAuthStore } from "../stores/authStore";
 import { useRideStore } from "../stores/rideStore";
 import { supabase } from "../lib/supabase";
 import { formatDateTime } from "../utils/formatters";
-import { formatPhoneNumber } from "../utils/phoneSharing";
 import toast from "react-hot-toast";
+import { ChatService } from "../services/chatService";
 import type { MessageWithProfile, RideWithProfile } from "../types";
 
 const ChatPage: React.FC = () => {
@@ -25,13 +23,13 @@ const ChatPage: React.FC = () => {
   const { user } = useAuthStore();
   const [newMessage, setNewMessage] = useState("");
   const [ride, setRide] = useState<RideWithProfile | null>(null);
+  const [chatPartner, setChatPartner] = useState<any>(null);
   const [messages, setMessages] = useState<MessageWithProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] =
     useState<string>("disconnected");
-  const [showPhonePanel, setShowPhonePanel] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -85,7 +83,6 @@ const ChatPage: React.FC = () => {
                   student_id,
                   department,
                   gender,
-                  phone_number,
                   role,
                   created_at,
                   notification_preferences
@@ -107,7 +104,7 @@ const ChatPage: React.FC = () => {
                   return prev;
                 }
                 console.log("Adding new message to state");
-                return [...prev, messageWithProfile];
+                return [...prev, messageWithProfile as MessageWithProfile];
               });
             }
           } catch (error) {
@@ -149,7 +146,6 @@ const ChatPage: React.FC = () => {
               student_id,
               department,
               gender,
-              phone_number,
               role,
               created_at,
               notification_preferences
@@ -163,7 +159,7 @@ const ChatPage: React.FC = () => {
 
         if (data && data.length !== messages.length) {
           console.log("Polling detected new messages, updating state");
-          setMessages(data);
+          setMessages(data as MessageWithProfile[]);
         }
       } catch (error) {
         console.error("Error polling for messages:", error);
@@ -182,30 +178,8 @@ const ChatPage: React.FC = () => {
     if (!rideId) return;
 
     try {
-      const { data, error } = await supabase
-        .from("messages")
-        .select(
-          `
-          *,
-          profiles:sender_id (
-            id,
-            name,
-            student_id,
-            department,
-            gender,
-            phone_number,
-            role,
-            created_at,
-            notification_preferences
-          )
-        `
-        )
-        .eq("ride_id", rideId)
-        .order("created_at", { ascending: true });
-
-      if (error) throw error;
-
-      setMessages(data || []);
+      const messages = await ChatService.getMessages(rideId);
+      setMessages(messages);
     } catch (error) {
       console.error("Error fetching messages:", error);
       setError("Failed to load messages");
@@ -241,7 +215,6 @@ const ChatPage: React.FC = () => {
             student_id,
             department,
             gender,
-            phone_number,
             role,
             created_at,
             notification_preferences
@@ -258,7 +231,47 @@ const ChatPage: React.FC = () => {
         return;
       }
 
-      setRide(data);
+      setRide(data as RideWithProfile);
+
+      // Determine who the chat partner is
+      if (data.user_id === user?.id) {
+        // User owns this ride, find the most recent requester
+        const { data: partner } = await supabase
+          .from("ride_requests")
+          .select(`
+            requester_id,
+            profiles:requester_id (*)
+          `)
+          .eq("ride_id", rideId)
+          .neq("requester_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (partner && partner.length > 0) {
+          setChatPartner(partner[0].profiles);
+        } else {
+          // Fallback: find most recent message sender
+          const { data: messageSender } = await supabase
+            .from("messages")
+            .select(`
+              sender_id,
+              profiles:sender_id (*)
+            `)
+            .eq("ride_id", rideId)
+            .neq("sender_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(1);
+
+          if (messageSender && messageSender.length > 0) {
+            setChatPartner(messageSender[0].profiles);
+          } else {
+            setChatPartner({ name: "Chat Partner" });
+          }
+        }
+      } else {
+        // User doesn't own this ride, so ride owner is the chat partner
+        setChatPartner(data.profiles);
+      }
     } catch (error) {
       console.error("Error fetching ride details:", error);
       setError("Failed to load ride details");
@@ -274,51 +287,7 @@ const ChatPage: React.FC = () => {
   ): Promise<boolean> => {
     if (!userId) return false;
 
-    try {
-      // Check if user is the ride owner
-      const { data: rideData } = await supabase
-        .from("rides")
-        .select("user_id")
-        .eq("id", rideId)
-        .single();
-
-      if (rideData?.user_id === userId) {
-        console.log("User is ride owner, access granted");
-        return true;
-      }
-
-      // Check if user has sent messages to this ride
-      const { data: messageData } = await supabase
-        .from("messages")
-        .select("id")
-        .eq("ride_id", rideId)
-        .eq("sender_id", userId)
-        .limit(1);
-
-      if (messageData && messageData.length > 0) {
-        console.log("User has sent messages to this ride, access granted");
-        return true;
-      }
-
-      // Check if user has any request for this ride (pending, accepted, or rejected)
-      // This allows access even if they haven't messaged yet
-      const { data: requestData } = await supabase
-        .from("ride_requests")
-        .select("id, status")
-        .eq("ride_id", rideId)
-        .eq("requester_id", userId);
-
-      if (requestData && requestData.length > 0) {
-        console.log("User has request for this ride, access granted");
-        return true;
-      }
-
-      console.log("User does not have access to this chat");
-      return false;
-    } catch (error) {
-      console.error("Error checking chat access:", error);
-      return false;
-    }
+    return await ChatService.checkChatAccess(rideId, userId);
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -356,49 +325,47 @@ const ChatPage: React.FC = () => {
     console.log("Sending message:", messageContent);
 
     try {
-      const { data, error } = await supabase
-        .from("messages")
-        .insert({
-          content: messageContent,
-          ride_id: rideId,
-          sender_id: user.id,
-        })
-        .select(
-          `
-          *,
-          profiles:sender_id (
-            id,
-            name,
-            student_id,
-            department,
-            gender,
-            phone_number,
-            role,
-            created_at,
-            notification_preferences
-          )
-        `
-        )
-        .single();
+      const sentMessage = await ChatService.sendMessage(
+        rideId,
+        user.id,
+        messageContent
+      );
 
-      if (error) throw error;
-
-      console.log("Message sent successfully:", data);
+      console.log("Message sent successfully:", sentMessage);
 
       // Add the message to local state (optimistically)
       setMessages((prev) => {
         // Check if message already exists to avoid duplicates
-        const exists = prev.some((msg) => msg.id === data.id);
+        const exists = prev.some((msg) => msg.id === sentMessage.id);
         if (exists) {
           console.log("Message already exists in state, skipping");
           return prev;
         }
         console.log("Adding sent message to local state");
-        return [...prev, data];
+        return [...prev, sentMessage];
       });
+
+      toast.success("Message sent successfully!");
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error("Failed to send message");
+      
+      // Get more specific error message
+      let errorMessage = "Failed to send message";
+      if (error instanceof Error) {
+        if (error.message.includes("permission")) {
+          errorMessage = "You don't have permission to send messages in this chat";
+        } else if (error.message.includes("connection")) {
+          errorMessage = "Connection error. Please check your internet and try again";
+        } else if (error.message.includes("too long")) {
+          errorMessage = "Message is too long. Please keep it under 1000 characters";
+        } else if (error.message.includes("empty")) {
+          errorMessage = "Message cannot be empty";
+        } else {
+          errorMessage = error.message || "Failed to send message";
+        }
+      }
+      
+      toast.error(errorMessage);
       setNewMessage(messageContent); // Restore the message
     } finally {
       setSending(false);
@@ -496,11 +463,11 @@ const ChatPage: React.FC = () => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-3 lg:space-x-4">
                 <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                  {ride.profiles?.name?.charAt(0)?.toUpperCase() || "U"}
+                  {chatPartner?.name?.charAt(0)?.toUpperCase() || "U"}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h2 className="font-bold text-lg lg:text-xl text-gray-900 truncate">
-                    Chat with {ride.profiles?.name}
+                    Chat with {chatPartner?.name || "Chat Partner"}
                   </h2>
                   <div className="flex items-center text-sm text-gray-600 gap-2">
                     <MapPin className="h-3 w-3 lg:h-4 lg:w-4 flex-shrink-0 text-green-600" />
@@ -513,15 +480,6 @@ const ChatPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                onClick={() => setShowPhonePanel(!showPhonePanel)}
-                className="p-2 h-10 w-10 lg:h-12 lg:w-12 flex-shrink-0 rounded-xl hover:bg-blue-100 transition-colors"
-                title="Contact sharing"
-              >
-                <Phone className="h-5 w-5 lg:h-6 lg:w-6 text-blue-600" />
-              </Button>
-
               <div className="hidden sm:flex items-center text-xs lg:text-sm text-gray-500">
                 <Clock className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
                 <span>{formatDateTime(ride.ride_time)}</span>
@@ -558,17 +516,6 @@ const ChatPage: React.FC = () => {
       {/* Enhanced Messages Section */}
       <div className="flex-1 overflow-y-auto p-3 lg:p-4">
         <div className="max-w-4xl mx-auto">
-          {/* Phone Sharing Panel */}
-          {showPhonePanel && ride && (
-            <div className="mb-4">
-              <PhoneSharingPanel
-                rideId={rideId!}
-                recipientName={ride.profiles?.name || "Unknown User"}
-                isRideOwner={ride.user_id === user?.id}
-              />
-            </div>
-          )}
-
           {/* Messages */}
           <div className="space-y-3 lg:space-y-4">
             {messages.length === 0 ? (
@@ -579,7 +526,7 @@ const ChatPage: React.FC = () => {
                     No messages yet
                   </div>
                   <div className="text-gray-500 text-sm">
-                    Start the conversation with {ride.profiles?.name}!
+                    Start the conversation with {chatPartner?.name || "your chat partner"}!
                   </div>
                 </div>
               </div>
@@ -606,18 +553,6 @@ const ChatPage: React.FC = () => {
                     <div className="break-words text-sm lg:text-base">
                       {message.content}
                     </div>
-
-                    {/* Phone Number Display */}
-                    {(message as any).phone_shared &&
-                      (message as any).phone_number && (
-                        <PhoneNumberDisplay
-                          phoneNumber={formatPhoneNumber(
-                            (message as any).phone_number
-                          )}
-                          isShared={true}
-                          userName={message.profiles?.name || "User"}
-                        />
-                      )}
 
                     <div
                       className={`text-xs mt-2 ${
@@ -646,7 +581,7 @@ const ChatPage: React.FC = () => {
               <Input
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                placeholder={`Message ${ride.profiles?.name}...`}
+                placeholder={`Message ${chatPartner?.name || "chat partner"}...`}
                 className="w-full border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl bg-gray-50/50 backdrop-blur-sm transition-all duration-200"
                 disabled={sending}
                 autoComplete="off"

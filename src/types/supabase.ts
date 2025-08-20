@@ -330,6 +330,26 @@ export type Database = {
           student_id: string | null;
         };
       };
+      get_user_chat_rides: {
+        Args: { input_user_id: string };
+        Returns: {
+          id: string;
+          user_id: string;
+          from_location: string;
+          to_location: string;
+          ride_time: string | null;
+          notes: string | null;
+          created_at: string;
+          profile_id: string;
+          profile_name: string | null;
+          profile_student_id: string | null;
+          profile_department: string | null;
+          profile_gender: string | null;
+          profile_role: string | null;
+          profile_created_at: string;
+          profile_notification_preferences: Json | null;
+        }[];
+      };
     };
     Enums: {
       [_ in never]: never;

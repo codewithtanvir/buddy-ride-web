@@ -105,7 +105,6 @@ const AdminPage: React.FC = () => {
             student_id,
             department,
             gender,
-            phone_number,
             role,
             notification_preferences,
             created_at
@@ -115,7 +114,7 @@ const AdminPage: React.FC = () => {
         .order("created_at", { ascending: false });
 
       if (ridesError) throw ridesError;
-      setRides(ridesData || []);
+      setRides(ridesData as RideWithProfile[] || []);
 
       // Calculate stats
       await calculateStats();

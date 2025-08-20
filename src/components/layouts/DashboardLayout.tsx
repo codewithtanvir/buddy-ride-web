@@ -11,7 +11,6 @@ import {
   Menu,
   X,
   Shield,
-  RefreshCw,
 } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 import { isAdmin } from "../../utils/roles";
@@ -20,9 +19,8 @@ import NotificationManager from "../NotificationManager";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
-  const { user, signOut, refreshProfile } = useAuthStore();
+  const { user, signOut } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -30,20 +28,6 @@ const DashboardLayout: React.FC = () => {
       toast.success("Signed out successfully");
     } catch (error) {
       toast.error("Failed to sign out");
-    }
-  };
-
-  const handleRefreshProfile = async () => {
-    try {
-      setIsRefreshing(true);
-      await refreshProfile();
-      toast.success(
-        "Profile refreshed! If you were recently promoted to admin, you should now see the admin menu."
-      );
-    } catch (error) {
-      toast.error("Failed to refresh profile");
-    } finally {
-      setIsRefreshing(false);
     }
   };
 
@@ -170,19 +154,6 @@ const DashboardLayout: React.FC = () => {
 
               <div className="space-y-2">
                 <button
-                  onClick={handleRefreshProfile}
-                  disabled={isRefreshing}
-                  className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
-                >
-                  <RefreshCw
-                    className={`h-5 w-5 mr-3 ${
-                      isRefreshing ? "animate-spin" : ""
-                    }`}
-                  />
-                  Refresh Profile
-                </button>
-
-                <button
                   onClick={handleSignOut}
                   className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
@@ -260,17 +231,6 @@ const DashboardLayout: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <button
-              onClick={handleRefreshProfile}
-              disabled={isRefreshing}
-              className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
-            >
-              <RefreshCw
-                className={`h-5 w-5 mr-3 ${isRefreshing ? "animate-spin" : ""}`}
-              />
-              Refresh Profile
-            </button>
-
             <button
               onClick={handleSignOut}
               className="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"

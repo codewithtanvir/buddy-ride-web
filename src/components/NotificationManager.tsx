@@ -179,8 +179,6 @@ export const NotificationManager: React.FC<NotificationManagerProps> = ({
     switch (type) {
       case "ride_request":
         return <Car className={iconClass} />;
-      case "phone_request":
-        return <Phone className={iconClass} />;
       case "ride_update":
         return <MessageSquare className={iconClass} />;
       case "system_alert":

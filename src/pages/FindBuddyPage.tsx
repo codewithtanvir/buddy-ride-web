@@ -76,6 +76,13 @@ const FindBuddyPage: React.FC = () => {
       return;
     }
 
+    if (!user?.profile?.name || !user?.profile?.student_id) {
+      toast.error(
+        "Please complete your profile information (name and student ID) before sending requests"
+      );
+      return;
+    }
+
     // Find the ride to check gender compatibility
     const targetRide = rides.find((ride) => ride.id === rideId);
     if (!targetRide) {
@@ -117,19 +124,56 @@ const FindBuddyPage: React.FC = () => {
     }
 
     try {
-      // Check if user already sent a request for this ride
-      const { data: existingRequest } = await supabase
+      // First check if user already sent a request for this ride
+      const { data: existingRequest, error: checkError } = await supabase
         .from("ride_requests")
-        .select("id")
+        .select("id, status")
         .eq("ride_id", rideId)
         .eq("requester_id", user.id)
-        .single();
+        .maybeSingle(); // Use maybeSingle to avoid error if no record found
 
-      if (existingRequest) {
-        toast.error("You have already sent a request for this ride");
+      if (checkError) {
+        console.error("Error checking existing request:", checkError);
+        toast.error("Unable to verify request status. Please try again.");
         return;
       }
 
+      if (existingRequest) {
+        const statusText =
+          existingRequest.status === "pending"
+            ? "pending"
+            : existingRequest.status === "accepted"
+            ? "already accepted"
+            : "previously sent";
+        toast.error(`You have ${statusText} a request for this ride`);
+        return;
+      }
+
+      // Verify the ride still exists and is valid
+      const { data: rideCheck, error: rideError } = await supabase
+        .from("rides")
+        .select("id, user_id, ride_time")
+        .eq("id", rideId)
+        .single();
+
+      if (rideError || !rideCheck) {
+        toast.error("This ride is no longer available");
+        return;
+      }
+
+      // Check if ride is in the future
+      if (rideCheck.ride_time && new Date(rideCheck.ride_time) <= new Date()) {
+        toast.error("This ride has already passed");
+        return;
+      }
+
+      // Double-check that user is not requesting their own ride
+      if (rideCheck.user_id === user.id) {
+        toast.error("You cannot request your own ride!");
+        return;
+      }
+
+      // Now try to insert the new request
       const { error } = await supabase.from("ride_requests").insert({
         ride_id: rideId,
         requester_id: user.id,
@@ -138,14 +182,33 @@ const FindBuddyPage: React.FC = () => {
       });
 
       if (error) {
-        if (error.message?.includes("Gender compatibility")) {
+        console.error("Database error details:", error);
+
+        // Handle specific database constraint violations
+        if (
+          error.code === "23505" ||
+          error.message?.includes("duplicate") ||
+          error.message?.includes("unique")
+        ) {
+          toast.error("You have already sent a request for this ride");
+        } else if (error.message?.includes("Gender compatibility")) {
           toast.error(
             "Gender compatibility check failed. Please ensure your profile is complete."
           );
-        } else if (error.message?.includes("duplicate")) {
-          toast.error("You have already sent a request for this ride");
+        } else if (error.code === "23503") {
+          // Foreign key constraint violation
+          toast.error(
+            "Invalid ride or user information. Please refresh and try again."
+          );
+        } else if (error.message?.includes("Row Level Security")) {
+          toast.error(
+            "You don't have permission to send this request. Please check your profile."
+          );
         } else {
-          throw error;
+          // Generic error with more details
+          toast.error(
+            `Failed to send request: ${error.message || "Unknown error"}`
+          );
         }
         return;
       }
@@ -153,9 +216,30 @@ const FindBuddyPage: React.FC = () => {
       toast.success("Request sent successfully!");
       setRequestingRide(null);
       setRequestMessage("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending request:", error);
-      toast.error("Failed to send request. Please try again.");
+
+      // Provide more specific error messages
+      if (error?.code === "23505") {
+        toast.error("You have already sent a request for this ride");
+      } else if (error?.code === "23503") {
+        toast.error(
+          "Invalid ride information. Please refresh the page and try again."
+        );
+      } else if (error?.message?.includes("JSON")) {
+        toast.error("Invalid data format. Please refresh and try again.");
+      } else if (
+        error?.message?.includes("network") ||
+        error?.message?.includes("fetch")
+      ) {
+        toast.error(
+          "Network error. Please check your connection and try again."
+        );
+      } else {
+        toast.error(
+          `Failed to send request: ${error?.message || "Please try again"}`
+        );
+      }
     }
   };
 

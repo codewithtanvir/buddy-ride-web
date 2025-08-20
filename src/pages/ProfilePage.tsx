@@ -16,7 +16,6 @@ import {
   Star,
   Settings,
   LogOut,
-  Phone,
   Edit,
   FileText,
 } from "lucide-react";
@@ -30,6 +29,7 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { useAuthStore } from "../stores/authStore";
 import { useRideStore } from "../stores/rideStore";
+import { RideRequestService } from "../services/rideRequestService";
 import { supabase } from "../lib/supabase";
 import { formatDateTime } from "../utils/formatters";
 import { isRideExpired } from "../utils/rideCleanup";
@@ -49,10 +49,6 @@ const ProfilePage: React.FC = () => {
   );
   const [expandedRides, setExpandedRides] = useState<Set<string>>(new Set());
   const [showPasswordChange, setShowPasswordChange] = useState(false);
-  const [editingPhone, setEditingPhone] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState(
-    user?.profile?.phone_number || ""
-  );
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -108,23 +104,12 @@ const ProfilePage: React.FC = () => {
     requestId: string,
     action: "accepted" | "rejected"
   ) => {
+    console.log(`🎯 ${action} request:`, requestId);
     try {
-      const { error } = await supabase
-        .from("ride_requests")
-        .update({
-          status: action,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", requestId);
-
-      if (error) throw error;
-
-      // If accepted, create a welcome message to enable chat
       if (action === "accepted") {
-        const request = rideRequests.find((r) => r.id === requestId);
-        if (request && request.ride_id && request.requester_id) {
-          await createWelcomeMessage(request.ride_id, request.requester_id);
-        }
+        await RideRequestService.acceptRequest(requestId, user?.id!);
+      } else {
+        await RideRequestService.rejectRequest(requestId);
       }
 
       toast.success(`Request ${action} successfully`);
@@ -135,29 +120,7 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const createWelcomeMessage = async (rideId: string, requesterId: string) => {
-    try {
-      // Check if there are already messages in this chat
-      const { data: existingMessages } = await supabase
-        .from("messages")
-        .select("id")
-        .eq("ride_id", rideId)
-        .limit(1);
-
-      // Only create welcome message if there are no existing messages
-      if (!existingMessages || existingMessages.length === 0) {
-        await supabase.from("messages").insert({
-          content:
-            "Welcome! Your ride request has been accepted. You can now chat about pickup details and coordination.",
-          ride_id: rideId,
-          sender_id: user?.id!, // Ride owner sends the welcome message
-        });
-      }
-    } catch (error) {
-      console.error("Error creating welcome message:", error);
-      // Don't throw error as this is not critical
-    }
-  };
+  // Removed createWelcomeMessage - now handled by RideRequestService
 
   const handleDeleteRide = async (rideId: string) => {
     if (!confirm("Are you sure you want to delete this ride?")) return;
@@ -221,52 +184,8 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handlePhoneUpdate = async () => {
-    if (!user?.id) return;
 
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ phone_number: phoneNumber })
-        .eq("id", user.id);
 
-      if (error) throw error;
-
-      toast.success("Phone number updated successfully");
-      setEditingPhone(false);
-    } catch (error: any) {
-      console.error("Error updating phone number:", error);
-      toast.error(error.message || "Failed to update phone number");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSharePhone = async (requestId: string) => {
-    if (!user?.profile?.phone_number) {
-      toast.error("Please add your phone number in your profile first");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from("ride_requests")
-        .update({ phone_shared: true })
-        .eq("id", requestId);
-
-      if (error) throw error;
-
-      toast.success("Phone number shared! The requester can now contact you.");
-      fetchRideRequests();
-    } catch (error: any) {
-      console.error("Error sharing phone number:", error);
-      toast.error(error.message || "Failed to share phone number");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggleRideExpansion = (rideId: string) => {
     const newExpanded = new Set(expandedRides);
@@ -348,53 +267,6 @@ const ProfilePage: React.FC = () => {
                 <p className="text-base font-medium text-gray-900 capitalize">
                   {user?.profile?.gender}
                 </p>
-              </div>
-              <div className="p-4 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl border border-cyan-100">
-                <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                  <Phone className="h-4 w-4 mr-2" />
-                  Phone Number
-                </label>
-                {editingPhone ? (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="01XXXXXXXXX"
-                      className="flex-1"
-                    />
-                    <Button
-                      size="sm"
-                      onClick={handlePhoneUpdate}
-                      disabled={loading}
-                    >
-                      <Check className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingPhone(false);
-                        setPhoneNumber(user?.profile?.phone_number || "");
-                      }}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <p className="text-base font-medium text-gray-900">
-                      {user?.profile?.phone_number || "Not provided"}
-                    </p>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setEditingPhone(true)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
               </div>
               <div className="p-4 bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl border border-gray-100">
                 <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
@@ -757,27 +629,6 @@ const ProfilePage: React.FC = () => {
                                           </span>
                                           {request.status === "accepted" && (
                                             <div className="flex flex-col gap-1">
-                                              {!request.phone_shared ? (
-                                                <Button
-                                                  size="sm"
-                                                  onClick={() =>
-                                                    handleSharePhone(request.id)
-                                                  }
-                                                  disabled={
-                                                    !user?.profile
-                                                      ?.phone_number || loading
-                                                  }
-                                                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs"
-                                                >
-                                                  <Phone className="h-3 w-3 mr-1" />
-                                                  Share Phone
-                                                </Button>
-                                              ) : (
-                                                <div className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-lg text-center">
-                                                  <Phone className="h-3 w-3 inline mr-1" />
-                                                  Phone Shared
-                                                </div>
-                                              )}
                                             </div>
                                           )}
                                         </div>

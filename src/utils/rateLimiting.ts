@@ -105,16 +105,6 @@ export const containsInappropriateContent = (content: string): boolean => {
   return inappropriateWords.some((word) => lowercaseContent.includes(word));
 };
 
-// Phone number extractor and validator for Bangladesh
-export const extractPhoneNumbers = (text: string): string[] => {
-  const phoneRegex = /(?:\+88)?01[3-9]\d{8}/g;
-  return text.match(phoneRegex) || [];
-};
-
-export const containsPhoneNumber = (text: string): boolean => {
-  return extractPhoneNumbers(text).length > 0;
-};
-
 // URL extractor for preventing link spam
 export const extractUrls = (text: string): string[] => {
   const urlRegex = /https?:\/\/[^\s]+/g;
@@ -151,17 +141,8 @@ export const validateMessageContent = (
     errors.push("Messages cannot contain URLs for security reasons");
   }
 
-  // Allow phone numbers but warn about privacy
-  if (containsPhoneNumber(content)) {
-    errors.push(
-      "Warning: Consider sharing contact details only after establishing trust"
-    );
-  }
-
   return {
-    valid:
-      errors.length === 0 ||
-      (errors.length === 1 && errors[0].startsWith("Warning:")),
+    valid: errors.length === 0,
     errors,
   };
 };
@@ -173,6 +154,5 @@ export default {
   checkRateLimit,
   validateMessageContent,
   containsInappropriateContent,
-  containsPhoneNumber,
   containsUrls,
 };

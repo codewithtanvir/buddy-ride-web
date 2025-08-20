@@ -165,16 +165,6 @@ export const validateProfileData = (data: ProfileFormData): string[] => {
     errors.push("Gender must be either 'male' or 'female'");
   }
 
-  // Validate phone number if provided
-  if (data.phone_number && data.phone_number.trim()) {
-    const phonePattern = /^(\+88)?01[3-9]\d{8}$/;
-    if (!phonePattern.test(data.phone_number.trim().replace(/\s/g, ""))) {
-      errors.push(
-        "Please enter a valid Bangladeshi phone number (e.g., 01712345678)"
-      );
-    }
-  }
-
   return errors;
 };
 

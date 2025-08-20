@@ -20,7 +20,6 @@ import {
   CardTitle,
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
-import { PhoneRequestsManager } from "../components/PhoneRequestsManager";
 import NotificationManager from "../components/NotificationManager";
 import { useAuthStore } from "../stores/authStore";
 import { useRideStore } from "../stores/rideStore";
@@ -203,10 +202,6 @@ const HomePage: React.FC = () => {
             <NotificationManager maxItems={5} />
           </div>
 
-          {/* Phone Requests */}
-          <div>
-            <PhoneRequestsManager />
-          </div>
         </div>
 
         {/* Recent Activity */}

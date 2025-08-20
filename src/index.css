@@ -4,10 +4,10 @@
 
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-gray-100;
   }
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 min-h-screen;
   }
 
   /* Mobile optimizations */
@@ -104,20 +104,4 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
-}
-
-/* PWA Install Prompt Animation */
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
 }
