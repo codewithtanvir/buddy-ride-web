@@ -15,22 +15,14 @@ import toast from "react-hot-toast";
 const departments = [
   "Computer Science and Engineering",
   "Electrical and Electronic Engineering", 
-  "Software Engineering",
   "Business Administration",
-  "Architecture", 
-  "Civil Engineering",
-  "Textile Engineering",
+  "Architecture",
   "English",
   "Pharmacy",
   "Industrial and Production Engineering",
-  "Environmental Science and Engineering",
-  "Law",
-  "Mathematics",
-  "Physics",
-  "Chemistry", 
+  "Law", 
   "Economics",
   "Journalism and Media Studies",
-  "Development Studies",
 ];
 
 const ProfileSetupPage: React.FC = () => {
