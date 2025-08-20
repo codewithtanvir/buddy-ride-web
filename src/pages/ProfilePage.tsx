@@ -432,11 +432,10 @@ const ProfilePage: React.FC = () => {
                   return (
                     <Card
                       key={ride.id}
-                      className={`shadow-lg border-0 transition-all duration-300 hover:-translate-y-1 ${
-                        expired
+                      className={`shadow-lg border-0 transition-all duration-300 hover:-translate-y-1 ${expired
                           ? "bg-gradient-to-br from-red-50 to-red-100 border-l-4 border-l-red-500"
                           : "bg-white/95 backdrop-blur-sm hover:shadow-xl"
-                      }`}
+                        }`}
                     >
                       <CardContent className="p-6">
                         <div className="flex justify-between items-start mb-4">
@@ -617,11 +616,10 @@ const ProfilePage: React.FC = () => {
                                       ) : (
                                         <div className="flex flex-col gap-2">
                                           <span
-                                            className={`px-4 py-2 rounded-full text-sm font-semibold text-center ${
-                                              request.status === "accepted"
+                                            className={`px-4 py-2 rounded-full text-sm font-semibold text-center ${request.status === "accepted"
                                                 ? "bg-green-100 text-green-800 border border-green-200"
                                                 : "bg-red-100 text-red-800 border border-red-200"
-                                            }`}
+                                              }`}
                                           >
                                             {request.status === "accepted"
                                               ? "Accepted"

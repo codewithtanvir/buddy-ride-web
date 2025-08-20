@@ -143,8 +143,8 @@ const FindBuddyPage: React.FC = () => {
           existingRequest.status === "pending"
             ? "pending"
             : existingRequest.status === "accepted"
-            ? "already accepted"
-            : "previously sent";
+              ? "already accepted"
+              : "previously sent";
         toast.error(`You have ${statusText} a request for this ride`);
         return;
       }
@@ -472,11 +472,10 @@ const FindBuddyPage: React.FC = () => {
                             </h3>
                             {ride.profiles?.gender && (
                               <div
-                                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                                  ride.profiles.gender === "male"
+                                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${ride.profiles.gender === "male"
                                     ? "bg-blue-100 text-blue-700"
                                     : "bg-pink-100 text-pink-700"
-                                }`}
+                                  }`}
                               >
                                 <User className="h-3 w-3" />
                                 {ride.profiles.gender === "male"
@@ -576,11 +575,10 @@ const FindBuddyPage: React.FC = () => {
                           {/* Gender Compatibility Indicator */}
                           {!isMyRide(ride) && (
                             <div
-                              className={`flex items-center gap-2 px-3 py-1 rounded-full ${
-                                isGenderCompatible(ride)
+                              className={`flex items-center gap-2 px-3 py-1 rounded-full ${isGenderCompatible(ride)
                                   ? "bg-green-100 text-green-700"
                                   : "bg-red-100 text-red-700"
-                              }`}
+                                }`}
                             >
                               <Shield className="h-3 w-3" />
                               <span className="text-xs font-medium">
@@ -607,11 +605,10 @@ const FindBuddyPage: React.FC = () => {
                           <Button
                             onClick={() => setRequestingRide(ride.id)}
                             disabled={!isGenderCompatible(ride)}
-                            className={`w-full lg:w-32 ${
-                              isGenderCompatible(ride)
+                            className={`w-full lg:w-32 ${isGenderCompatible(ride)
                                 ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            }`}
+                              }`}
                           >
                             <MessageSquare className="h-4 w-4 mr-2" />
                             {isGenderCompatible(ride) ? "Join" : "Restricted"}

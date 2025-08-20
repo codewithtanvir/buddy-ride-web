@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://buddy-ride.aiub.edu/sitemap.xml
+
+# PWA files
+Allow: /manifest.webmanifest
+Allow: /sw.js
+Allow: /workbox-*.js
+Allow: /workbox-*.js.map

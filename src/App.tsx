@@ -12,6 +12,7 @@ import { ProtectedAdminRoute } from "./components/ProtectedAdminRoute";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { AsyncErrorBoundary } from "./components/AsyncErrorBoundary";
 import { PageLoadingSpinner } from "./components/LoadingStates";
+import PWAProvider from "./components/PWAProvider";
 
 // Pages
 import AuthPage from "./pages/AuthPage";
@@ -54,76 +55,78 @@ function App() {
   return (
     <ErrorBoundary>
       <AsyncErrorBoundary>
-        <Router>
-          <div className="min-h-screen bg-gray-50">
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: "#363636",
-                  color: "#fff",
-                },
-              }}
-            />
+        <PWAProvider>
+          <Router>
+            <div className="min-h-screen bg-gray-50">
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: "#363636",
+                    color: "#fff",
+                  },
+                }}
+              />
 
-            <Routes>
-              {!user ? (
-                <>
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route
-                    path="/forgot-password"
-                    element={<OTPPasswordResetPage />}
-                  />
-                  <Route
-                    path="/reset-password"
-                    element={<ResetPasswordPage />}
-                  />
-                  {pendingVerification && (
+              <Routes>
+                {!user ? (
+                  <>
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route
+                      path="/forgot-password"
+                      element={<OTPPasswordResetPage />}
+                    />
+                    <Route
+                      path="/reset-password"
+                      element={<ResetPasswordPage />}
+                    />
+                    {pendingVerification && (
+                      <Route
+                        path="/verify-email"
+                        element={<EmailVerificationPage />}
+                      />
+                    )}
+                    <Route path="*" element={<AuthPage />} />
+                  </>
+                ) : pendingVerification ? (
+                  <>
                     <Route
                       path="/verify-email"
                       element={<EmailVerificationPage />}
                     />
-                  )}
-                  <Route path="*" element={<AuthPage />} />
-                </>
-              ) : pendingVerification ? (
-                <>
-                  <Route
-                    path="/verify-email"
-                    element={<EmailVerificationPage />}
-                  />
-                  <Route
-                    path="*"
-                    element={<Navigate to="/verify-email" replace />}
-                  />
-                </>
-              ) : !user.profile ? (
-                <Route path="*" element={<ProfileSetupPage />} />
-              ) : (
-                <>
-                  <Route path="/" element={<DashboardLayout />}>
-                    <Route index element={<HomePage />} />
-                    <Route path="find-buddy" element={<FindBuddyPage />} />
-                    <Route path="post-ride" element={<PostRidePage />} />
-                    <Route path="chats" element={<ChatsPage />} />
-                    <Route path="profile" element={<ProfilePage />} />
                     <Route
-                      path="admin"
-                      element={
-                        <ProtectedAdminRoute>
-                          <AdminPage />
-                        </ProtectedAdminRoute>
-                      }
+                      path="*"
+                      element={<Navigate to="/verify-email" replace />}
                     />
-                  </Route>
-                  <Route path="/chat/:rideId" element={<ChatPage />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </>
-              )}
-            </Routes>
-          </div>
-        </Router>
+                  </>
+                ) : !user.profile ? (
+                  <Route path="*" element={<ProfileSetupPage />} />
+                ) : (
+                  <>
+                    <Route path="/" element={<DashboardLayout />}>
+                      <Route index element={<HomePage />} />
+                      <Route path="find-buddy" element={<FindBuddyPage />} />
+                      <Route path="post-ride" element={<PostRidePage />} />
+                      <Route path="chats" element={<ChatsPage />} />
+                      <Route path="profile" element={<ProfilePage />} />
+                      <Route
+                        path="admin"
+                        element={
+                          <ProtectedAdminRoute>
+                            <AdminPage />
+                          </ProtectedAdminRoute>
+                        }
+                      />
+                    </Route>
+                    <Route path="/chat/:rideId" element={<ChatPage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </>
+                )}
+              </Routes>
+            </div>
+          </Router>
+        </PWAProvider>
       </AsyncErrorBoundary>
     </ErrorBoundary>
   );

@@ -275,9 +275,9 @@ const HomePage: React.FC = () => {
                             <Clock className="h-4 w-4" />
                             {ride.ride_time
                               ? format(
-                                  new Date(ride.ride_time),
-                                  "MMM dd, yyyy 'at' hh:mm a"
-                                )
+                                new Date(ride.ride_time),
+                                "MMM dd, yyyy 'at' hh:mm a"
+                              )
                               : "No date set"}
                           </p>
                         </div>

@@ -220,11 +220,10 @@ const PostRidePage: React.FC = () => {
                     💡 Tip: Mention any preferences to help students decide
                   </p>
                   <span
-                    className={`text-xs font-medium ${
-                      formData.notes.length > 180
+                    className={`text-xs font-medium ${formData.notes.length > 180
                         ? "text-red-500"
                         : "text-gray-500"
-                    }`}
+                      }`}
                   >
                     {formData.notes.length}/200 characters
                   </span>

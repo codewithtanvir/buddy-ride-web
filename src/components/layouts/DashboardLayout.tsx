@@ -113,11 +113,10 @@ const DashboardLayout: React.FC = () => {
                       <Link
                         to={item.href}
                         onClick={toggleMobileMenu}
-                        className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
-                          isActive
-                            ? "bg-primary-100 text-primary-700"
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`}
+                        className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-colors ${isActive
+                          ? "bg-primary-100 text-primary-700"
+                          : "text-gray-700 hover:bg-gray-100"
+                          }`}
                       >
                         <item.icon className="h-5 w-5 mr-3" />
                         {item.name}
@@ -193,11 +192,10 @@ const DashboardLayout: React.FC = () => {
                 <li key={item.name}>
                   <Link
                     to={item.href}
-                    className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
-                        ? "bg-primary-100 text-primary-700"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                    className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+                      ? "bg-primary-100 text-primary-700"
+                      : "text-gray-700 hover:bg-gray-100"
+                      }`}
                   >
                     <item.icon className="h-5 w-5 mr-3" />
                     {item.name}
@@ -256,11 +254,10 @@ const DashboardLayout: React.FC = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
-                  isActive
-                    ? "text-primary-600"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
+                className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${isActive
+                  ? "text-primary-600"
+                  : "text-gray-500 hover:text-gray-700"
+                  }`}
               >
                 <item.icon className="h-4 w-4 mb-1" />
                 <span className="text-xs font-medium truncate">

@@ -348,7 +348,7 @@ const ChatPage: React.FC = () => {
       toast.success("Message sent successfully!");
     } catch (error) {
       console.error("Error sending message:", error);
-      
+
       // Get more specific error message
       let errorMessage = "Failed to send message";
       if (error instanceof Error) {
@@ -364,7 +364,7 @@ const ChatPage: React.FC = () => {
           errorMessage = error.message || "Failed to send message";
         }
       }
-      
+
       toast.error(errorMessage);
       setNewMessage(messageContent); // Restore the message
     } finally {
@@ -485,28 +485,26 @@ const ChatPage: React.FC = () => {
                 <span>{formatDateTime(ride.ride_time)}</span>
               </div>
               <div
-                className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 ${
-                  connectionStatus === "SUBSCRIBED"
+                className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-2 ${connectionStatus === "SUBSCRIBED"
                     ? "bg-green-100 text-green-800"
                     : connectionStatus === "CHANNEL_ERROR"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }`}
               >
                 <div
-                  className={`w-2 h-2 rounded-full ${
-                    connectionStatus === "SUBSCRIBED"
+                  className={`w-2 h-2 rounded-full ${connectionStatus === "SUBSCRIBED"
                       ? "bg-green-500 animate-pulse"
                       : connectionStatus === "CHANNEL_ERROR"
-                      ? "bg-red-500"
-                      : "bg-yellow-500"
-                  }`}
+                        ? "bg-red-500"
+                        : "bg-yellow-500"
+                    }`}
                 ></div>
                 {connectionStatus === "SUBSCRIBED"
                   ? "Live"
                   : connectionStatus === "CHANNEL_ERROR"
-                  ? "Offline"
-                  : "Connecting"}
+                    ? "Offline"
+                    : "Connecting"}
               </div>
             </div>
           </div>
@@ -534,16 +532,14 @@ const ChatPage: React.FC = () => {
               messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${
-                    isMyMessage(message) ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${isMyMessage(message) ? "justify-end" : "justify-start"
+                    }`}
                 >
                   <div
-                    className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                      isMyMessage(message)
+                    className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${isMyMessage(message)
                         ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
                         : "bg-white/95 backdrop-blur-sm text-gray-900 border border-gray-200"
-                    }`}
+                      }`}
                   >
                     {!isMyMessage(message) && (
                       <div className="text-xs font-medium mb-1 text-gray-600">
@@ -555,9 +551,8 @@ const ChatPage: React.FC = () => {
                     </div>
 
                     <div
-                      className={`text-xs mt-2 ${
-                        isMyMessage(message) ? "text-blue-100" : "text-gray-500"
-                      }`}
+                      className={`text-xs mt-2 ${isMyMessage(message) ? "text-blue-100" : "text-gray-500"
+                        }`}
                     >
                       {formatDateTime(message.created_at)}
                     </div>

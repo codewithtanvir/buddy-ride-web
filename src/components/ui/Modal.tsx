@@ -69,7 +69,7 @@ export const Modal: React.FC<ModalProps> = ({
         onClick={handleOverlayClick}
       >
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        
+
         <div
           ref={modalRef}
           className={`relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 ${sizeClasses[size]}`}
