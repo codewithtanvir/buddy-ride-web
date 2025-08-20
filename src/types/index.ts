@@ -20,3 +20,20 @@ export interface ProfileFormData {
   gender: "male" | "female";
   role?: "user" | "admin" | "moderator";
 }
+
+export interface ChatPartner {
+  id: string;
+  name: string | null;
+  avatar_url?: string | null;
+}
+
+export interface ChatRide {
+  id: string;
+  title?: string;
+  from_location: string;
+  to_location: string;
+  chat_partner: ChatPartner | null;
+  last_message?: string | null;
+  last_message_time?: string | null;
+  unread_count?: number;
+}
