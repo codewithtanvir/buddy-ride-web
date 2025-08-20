@@ -46,7 +46,7 @@ const ChatPage: React.FC = () => {
 
     console.log("Setting up real-time subscription for ride:", rideId);
 
-    // Set up real-time subscription for new messages
+    // Set up real-time subscription for new messages with better configuration
     const messagesSubscription = supabase
       .channel(`messages:${rideId}`, {
         config: {
@@ -65,6 +65,12 @@ const ChatPage: React.FC = () => {
         async (payload) => {
           console.log("New message received:", payload);
           const newMsg = payload.new as any;
+
+          // Skip if message is from current user (already added optimistically)
+          if (newMsg.sender_id === user?.id) {
+            console.log("Skipping own message from real-time");
+            return;
+          }
 
           // Fetch the complete message with profile data
           try {
@@ -120,7 +126,7 @@ const ChatPage: React.FC = () => {
       console.log("Cleaning up subscription for ride:", rideId);
       supabase.removeChannel(messagesSubscription);
     };
-  }, [rideId]);
+  }, [rideId, user?.id]);
 
   useEffect(() => {
     scrollToBottom();
@@ -277,6 +283,7 @@ const ChatPage: React.FC = () => {
         .single();
 
       if (rideData?.user_id === userId) {
+        console.log("User is ride owner, access granted");
         return true;
       }
 
@@ -289,22 +296,24 @@ const ChatPage: React.FC = () => {
         .limit(1);
 
       if (messageData && messageData.length > 0) {
+        console.log("User has sent messages to this ride, access granted");
         return true;
       }
 
-      // Check if user has an accepted request for this ride
+      // Check if user has any request for this ride (pending, accepted, or rejected)
+      // This allows access even if they haven't messaged yet
       const { data: requestData } = await supabase
         .from("ride_requests")
-        .select("id")
+        .select("id, status")
         .eq("ride_id", rideId)
-        .eq("requester_id", userId)
-        .eq("status", "accepted")
-        .limit(1);
+        .eq("requester_id", userId);
 
       if (requestData && requestData.length > 0) {
+        console.log("User has request for this ride, access granted");
         return true;
       }
 
+      console.log("User does not have access to this chat");
       return false;
     } catch (error) {
       console.error("Error checking chat access:", error);

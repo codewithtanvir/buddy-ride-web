@@ -209,10 +209,7 @@ export const validateRideRequestMessage = (message: string): string[] => {
     return errors;
   }
 
-  if (message.trim().length < 10) {
-    errors.push("Request message must be at least 10 characters long");
-  }
-
+  // Removed minimum character requirement - any length is allowed
   if (message.trim().length > 500) {
     errors.push("Request message cannot be longer than 500 characters");
   }

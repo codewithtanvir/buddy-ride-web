@@ -131,13 +131,15 @@ const ChatsPage: React.FC = () => {
 
       if (messageRidesError) throw messageRidesError;
 
-      // Get rides where user has accepted requests (status = 'accepted')
+      // Get rides where user has any requests (pending, accepted, or rejected)
+      // This allows users to see and access chats immediately after sending a request
       const { data: acceptedRequestRides, error: acceptedRequestError } =
         await supabase
           .from("ride_requests")
           .select(
             `
           ride_id,
+          status,
           rides!inner (
             *,
             profiles:user_id (
@@ -155,7 +157,6 @@ const ChatsPage: React.FC = () => {
         `
           )
           .eq("requester_id", user.id)
-          .eq("status", "accepted")
           .neq("rides.user_id", user.id);
 
       if (acceptedRequestError) throw acceptedRequestError;

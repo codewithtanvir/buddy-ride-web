@@ -110,12 +110,7 @@ const FindBuddyPage: React.FC = () => {
       return;
     }
 
-    // Validate message content
-    if (requestMessage.trim().length < 10) {
-      toast.error("Request message must be at least 10 characters long");
-      return;
-    }
-
+    // Validate message content - removed minimum length requirement
     if (requestMessage.trim().length > 500) {
       toast.error("Request message cannot be longer than 500 characters");
       return;
