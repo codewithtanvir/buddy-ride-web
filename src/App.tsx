@@ -15,6 +15,7 @@ import { PageLoadingSpinner } from "./components/LoadingStates";
 import PWAProvider from "./components/PWAProvider";
 
 // Pages
+import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import OTPPasswordResetPage from "./pages/OTPPasswordResetPage";
@@ -72,6 +73,7 @@ function App() {
               <Routes>
                 {!user ? (
                   <>
+                    <Route path="/" element={<LandingPage />} />
                     <Route path="/auth" element={<AuthPage />} />
                     <Route
                       path="/forgot-password"
@@ -87,7 +89,7 @@ function App() {
                         element={<EmailVerificationPage />}
                       />
                     )}
-                    <Route path="*" element={<AuthPage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                   </>
                 ) : pendingVerification ? (
                   <>
@@ -101,7 +103,16 @@ function App() {
                     />
                   </>
                 ) : !user.profile ? (
-                  <Route path="*" element={<ProfileSetupPage />} />
+                  <>
+                    <Route
+                      path="/profile-setup"
+                      element={<ProfileSetupPage />}
+                    />
+                    <Route
+                      path="*"
+                      element={<Navigate to="/profile-setup" replace />}
+                    />
+                  </>
                 ) : (
                   <>
                     <Route path="/" element={<DashboardLayout />}>

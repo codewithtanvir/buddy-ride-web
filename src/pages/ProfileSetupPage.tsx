@@ -123,7 +123,7 @@ const ProfileSetupPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
                 type="text"
-                placeholder="Enter your full name"
+                placeholder="e.g., Md. Rahman Khan or Fatima Sultana"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -135,7 +135,7 @@ const ProfileSetupPage: React.FC = () => {
 
               <Input
                 type="text"
-                placeholder="XX-XXXXX-X"
+                placeholder="e.g., 23-51455-1"
                 value={formData.student_id}
                 onChange={(e) =>
                   setFormData({ ...formData, student_id: e.target.value })
@@ -147,7 +147,7 @@ const ProfileSetupPage: React.FC = () => {
 
               <Input
                 type="tel"
-                placeholder="01XXXXXXXXX"
+                placeholder="e.g., 01712345678"
                 value={formData.phone_number}
                 onChange={(e) =>
                   setFormData({ ...formData, phone_number: e.target.value })

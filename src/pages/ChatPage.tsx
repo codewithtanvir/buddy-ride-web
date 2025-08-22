@@ -134,6 +134,10 @@ const ChatPage: React.FC = () => {
     if (!rideId) return;
 
     const pollForNewMessages = async () => {
+      if (connectionStatus === "SUBSCRIBED") {
+        // If real-time is working, no need to poll
+        return;
+      }
       try {
         const { data, error } = await supabase
           .from("messages")
@@ -166,13 +170,13 @@ const ChatPage: React.FC = () => {
       }
     };
 
-    // Poll every 3 seconds as fallback
-    const pollInterval = setInterval(pollForNewMessages, 3000);
+    // Poll every 5 seconds as fallback
+    const pollInterval = setInterval(pollForNewMessages, 5000);
 
     return () => {
       clearInterval(pollInterval);
     };
-  }, [rideId, messages.length]);
+  }, [rideId, messages.length, connectionStatus]);
 
   const fetchMessages = async () => {
     if (!rideId) return;
@@ -566,18 +570,18 @@ const ChatPage: React.FC = () => {
       </div>
 
       {/* Enhanced Message Input */}
-      <div className="bg-white/95 backdrop-blur-sm border-t border-gray-200 p-4 shadow-lg safe-area-bottom">
+      <div className="bg-white/95 backdrop-blur-sm border-t border-gray-200 p-3 sm:p-4 shadow-lg safe-area-bottom">
         <div className="max-w-4xl mx-auto">
           <form
             onSubmit={handleSendMessage}
-            className="flex gap-3 items-center"
+            className="flex gap-2 sm:gap-3 items-end"
           >
             <div className="flex-1">
               <Input
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder={`Message ${chatPartner?.name || "chat partner"}...`}
-                className="w-full border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl bg-gray-50/50 backdrop-blur-sm transition-all duration-200"
+                className="w-full border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl bg-gray-50/50 backdrop-blur-sm transition-all duration-200 min-h-[44px]"
                 disabled={sending}
                 autoComplete="off"
               />
@@ -585,7 +589,7 @@ const ChatPage: React.FC = () => {
             <Button
               type="submit"
               disabled={!newMessage.trim() || sending}
-              className="h-12 w-12 p-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-500/20 flex-shrink-0 transition-all duration-200 shadow-lg"
+              className="h-11 w-11 sm:h-12 sm:w-12 p-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-500/20 flex-shrink-0 transition-all duration-200 shadow-lg min-h-[44px] min-w-[44px]"
               variant="primary"
             >
               {sending ? (

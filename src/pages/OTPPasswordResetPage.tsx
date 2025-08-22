@@ -271,7 +271,7 @@ const OTPPasswordResetPage: React.FC = () => {
               <form onSubmit={handleEmailSubmit} className="space-y-6">
                 <Input
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="your-student-id@student.aiub.edu"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -306,7 +306,7 @@ const OTPPasswordResetPage: React.FC = () => {
                 <div className="space-y-2">
                   <Input
                     type="password"
-                    placeholder="Enter new password"
+                    placeholder="Create a strong new password"
                     value={newPassword}
                     onChange={(e) => {
                       setNewPassword(e.target.value);
@@ -339,7 +339,7 @@ const OTPPasswordResetPage: React.FC = () => {
 
                 <Input
                   type="password"
-                  placeholder="Confirm new password"
+                  placeholder="Confirm your new password"
                   value={confirmPassword}
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);

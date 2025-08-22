@@ -33,9 +33,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizes = {
-      sm: "h-9 px-3 text-sm",
-      md: "h-11 px-4 text-sm",
-      lg: "h-12 px-6 text-base",
+      sm: "h-10 px-3 text-sm min-h-[40px]", // Improved touch target
+      md: "h-11 px-4 text-sm min-h-[44px]", // Standard touch target
+      lg: "h-12 px-6 text-base min-h-[48px]", // Large touch target
     };
 
     const classes = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`;

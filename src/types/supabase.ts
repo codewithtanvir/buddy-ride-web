@@ -4,361 +4,390 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4";
-  };
+    PostgrestVersion: "13.0.4"
+  }
   public: {
     Tables: {
       admin_users: {
         Row: {
-          created_at: string | null;
-          user_id: string;
-        };
+          created_at: string | null
+          user_id: string
+        }
         Insert: {
-          created_at?: string | null;
-          user_id: string;
-        };
+          created_at?: string | null
+          user_id: string
+        }
         Update: {
-          created_at?: string | null;
-          user_id?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
-          content: string;
-          created_at: string;
-          id: string;
-          message_type: string | null;
-          phone_number: string | null;
-          phone_shared: boolean | null;
-          ride_id: string;
-          sender_id: string;
-        };
+          content: string
+          created_at: string
+          id: string
+          message_type: string | null
+          phone_number: string | null
+          phone_shared: boolean | null
+          ride_id: string
+          sender_id: string
+        }
         Insert: {
-          content: string;
-          created_at?: string;
-          id?: string;
-          message_type?: string | null;
-          phone_number?: string | null;
-          phone_shared?: boolean | null;
-          ride_id: string;
-          sender_id: string;
-        };
+          content: string
+          created_at?: string
+          id?: string
+          message_type?: string | null
+          phone_number?: string | null
+          phone_shared?: boolean | null
+          ride_id: string
+          sender_id: string
+        }
         Update: {
-          content?: string;
-          created_at?: string;
-          id?: string;
-          message_type?: string | null;
-          phone_number?: string | null;
-          phone_shared?: boolean | null;
-          ride_id?: string;
-          sender_id?: string;
-        };
+          content?: string
+          created_at?: string
+          id?: string
+          message_type?: string | null
+          phone_number?: string | null
+          phone_shared?: boolean | null
+          ride_id?: string
+          sender_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "messages_ride_id_fkey";
-            columns: ["ride_id"];
-            isOneToOne: false;
-            referencedRelation: "rides";
-            referencedColumns: ["id"];
+            foreignKeyName: "messages_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "messages_sender_id_fkey";
-            columns: ["sender_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
-          action_url: string | null;
-          created_at: string | null;
-          data: Json | null;
-          expires_at: string | null;
-          id: string;
-          message: string;
-          priority: string | null;
-          read: boolean | null;
-          title: string;
-          type: string;
-          user_id: string;
-        };
+          action_url: string | null
+          created_at: string | null
+          data: Json | null
+          expires_at: string | null
+          id: string
+          message: string
+          priority: string | null
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
         Insert: {
-          action_url?: string | null;
-          created_at?: string | null;
-          data?: Json | null;
-          expires_at?: string | null;
-          id?: string;
-          message: string;
-          priority?: string | null;
-          read?: boolean | null;
-          title: string;
-          type: string;
-          user_id: string;
-        };
+          action_url?: string | null
+          created_at?: string | null
+          data?: Json | null
+          expires_at?: string | null
+          id?: string
+          message: string
+          priority?: string | null
+          read?: boolean | null
+          title: string
+          type: string
+          user_id: string
+        }
         Update: {
-          action_url?: string | null;
-          created_at?: string | null;
-          data?: Json | null;
-          expires_at?: string | null;
-          id?: string;
-          message?: string;
-          priority?: string | null;
-          read?: boolean | null;
-          title?: string;
-          type?: string;
-          user_id?: string;
-        };
+          action_url?: string | null
+          created_at?: string | null
+          data?: Json | null
+          expires_at?: string | null
+          id?: string
+          message?: string
+          priority?: string | null
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "notifications_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
-          created_at: string;
-          department: string | null;
-          gender: string | null;
-          id: string;
-          name: string | null;
-          notification_preferences: Json | null;
-          phone_number: string | null;
-          role: string | null;
-          student_id: string | null;
-        };
+          created_at: string
+          department: string | null
+          gender: string | null
+          id: string
+          name: string | null
+          notification_preferences: Json | null
+          phone_number: string | null
+          role: string | null
+          student_id: string | null
+        }
         Insert: {
-          created_at?: string;
-          department?: string | null;
-          gender?: string | null;
-          id: string;
-          name?: string | null;
-          notification_preferences?: Json | null;
-          phone_number?: string | null;
-          role?: string | null;
-          student_id?: string | null;
-        };
+          created_at?: string
+          department?: string | null
+          gender?: string | null
+          id: string
+          name?: string | null
+          notification_preferences?: Json | null
+          phone_number?: string | null
+          role?: string | null
+          student_id?: string | null
+        }
         Update: {
-          created_at?: string;
-          department?: string | null;
-          gender?: string | null;
-          id?: string;
-          name?: string | null;
-          notification_preferences?: Json | null;
-          phone_number?: string | null;
-          role?: string | null;
-          student_id?: string | null;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          department?: string | null
+          gender?: string | null
+          id?: string
+          name?: string | null
+          notification_preferences?: Json | null
+          phone_number?: string | null
+          role?: string | null
+          student_id?: string | null
+        }
+        Relationships: []
+      }
       ride_requests: {
         Row: {
-          created_at: string;
-          id: string;
-          message: string | null;
-          phone_shared: boolean | null;
-          requester_id: string;
-          ride_id: string;
-          status: string | null;
-          updated_at: string;
-        };
+          created_at: string
+          id: string
+          message: string | null
+          phone_shared: boolean | null
+          requester_id: string
+          ride_id: string
+          status: string | null
+          updated_at: string
+        }
         Insert: {
-          created_at?: string;
-          id?: string;
-          message?: string | null;
-          phone_shared?: boolean | null;
-          requester_id: string;
-          ride_id: string;
-          status?: string | null;
-          updated_at?: string;
-        };
+          created_at?: string
+          id?: string
+          message?: string | null
+          phone_shared?: boolean | null
+          requester_id: string
+          ride_id: string
+          status?: string | null
+          updated_at?: string
+        }
         Update: {
-          created_at?: string;
-          id?: string;
-          message?: string | null;
-          phone_shared?: boolean | null;
-          requester_id?: string;
-          ride_id?: string;
-          status?: string | null;
-          updated_at?: string;
-        };
+          created_at?: string
+          id?: string
+          message?: string | null
+          phone_shared?: boolean | null
+          requester_id?: string
+          ride_id?: string
+          status?: string | null
+          updated_at?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "ride_requests_requester_id_fkey";
-            columns: ["requester_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
+            foreignKeyName: "ride_requests_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "ride_requests_ride_id_fkey";
-            columns: ["ride_id"];
-            isOneToOne: false;
-            referencedRelation: "rides";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
+            foreignKeyName: "ride_requests_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rides: {
         Row: {
-          created_at: string;
-          from_location: string;
-          id: string;
-          notes: string | null;
-          ride_time: string | null;
-          to_location: string;
-          user_id: string | null;
-        };
+          created_at: string
+          from_location: string
+          id: string
+          notes: string | null
+          ride_time: string | null
+          to_location: string
+          user_id: string | null
+        }
         Insert: {
-          created_at?: string;
-          from_location: string;
-          id?: string;
-          notes?: string | null;
-          ride_time?: string | null;
-          to_location: string;
-          user_id?: string | null;
-        };
+          created_at?: string
+          from_location: string
+          id?: string
+          notes?: string | null
+          ride_time?: string | null
+          to_location: string
+          user_id?: string | null
+        }
         Update: {
-          created_at?: string;
-          from_location?: string;
-          id?: string;
-          notes?: string | null;
-          ride_time?: string | null;
-          to_location?: string;
-          user_id?: string | null;
-        };
+          created_at?: string
+          from_location?: string
+          id?: string
+          notes?: string | null
+          ride_time?: string | null
+          to_location?: string
+          user_id?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "rides_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
-    };
+            foreignKeyName: "rides_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
     Views: {
-      admin_stats: {
+      admin_dashboard_stats: {
         Row: {
-          active_rides: number | null;
-          expired_rides: number | null;
-          total_messages: number | null;
-          total_requests: number | null;
-          total_rides: number | null;
-          total_users: number | null;
-        };
-        Relationships: [];
-      };
-    };
+          accepted_requests: number | null
+          admin_users: number | null
+          health_errors: number | null
+          health_warnings: number | null
+          messages_today: number | null
+          new_rides_week: number | null
+          new_users_week: number | null
+          pending_requests: number | null
+          total_messages: number | null
+          total_notifications: number | null
+          total_requests: number | null
+          total_rides: number | null
+          total_users: number | null
+          unread_notifications: number | null
+          upcoming_rides: number | null
+        }
+        Relationships: []
+      }
+    }
     Functions: {
       assign_admin_role: {
-        Args: { user_email: string };
-        Returns: undefined;
-      };
+        Args: { user_email: string } | { user_id: string }
+        Returns: undefined
+      }
       can_access_ride_chat: {
-        Args: { ride_id: string; user_id: string };
-        Returns: boolean;
-      };
-      cleanup_expired_rides_auto: {
-        Args: Record<PropertyKey, never>;
-        Returns: undefined;
-      };
-      get_user_role: {
-        Args: Record<PropertyKey, never> | { user_id?: string };
-        Returns: string;
-      };
-      is_admin: {
-        Args: Record<PropertyKey, never> | { user_id?: string };
-        Returns: boolean;
-      };
-      list_admin_users: {
-        Args: Record<PropertyKey, never>;
+        Args: { ride_id: string; user_id: string }
+        Returns: boolean
+      }
+      check_database_health: {
+        Args: Record<PropertyKey, never>
         Returns: {
-          created_at: string;
-          email: string;
-          name: string;
-          role: string;
-          student_id: string;
-          user_id: string;
-        }[];
-      };
+          check_name: string
+          details: Json
+          message: string
+          status: string
+        }[]
+      }
+      cleanup_expired_rides_auto: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_admin_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_admins: number
+          total_messages: number
+          total_notifications: number
+          total_requests: number
+          total_rides: number
+          total_users: number
+          unread_notifications: number
+        }[]
+      }
+      get_user_chat_rides: {
+        Args: { input_user_id: string }
+        Returns: {
+          created_at: string
+          from_location: string
+          id: string
+          notes: string
+          profile_created_at: string
+          profile_department: string
+          profile_gender: string
+          profile_id: string
+          profile_name: string
+          profile_notification_preferences: Json
+          profile_role: string
+          profile_student_id: string
+          ride_time: string
+          to_location: string
+          user_id: string
+        }[]
+      }
+      get_user_role: {
+        Args: Record<PropertyKey, never> | { user_id?: string }
+        Returns: string
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never> | { user_id?: string }
+        Returns: boolean
+      }
+      list_admin_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          email: string
+          name: string
+          student_id: string
+          user_id: string
+        }[]
+      }
+      perform_database_maintenance: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          action: string
+          affected_rows: number
+          message: string
+          status: string
+        }[]
+      }
       promote_user_to_admin: {
-        Args: { user_email: string };
-        Returns: Json;
-      };
+        Args: { user_email: string }
+        Returns: undefined
+      }
       promote_user_to_admin_by_student_id: {
-        Args: { student_id_param: string };
-        Returns: Json;
-      };
+        Args: { student_id_param: string }
+        Returns: undefined
+      }
       revoke_admin_access: {
-        Args: { user_email: string };
-        Returns: Json;
-      };
+        Args: { user_email: string }
+        Returns: undefined
+      }
       setup_admin_profile: {
-        Args: Record<PropertyKey, never> | { admin_user_id: string };
-        Returns: undefined;
-      };
+        Args: Record<PropertyKey, never> | { user_id: string }
+        Returns: undefined
+      }
       upsert_profile: {
         Args: {
-          user_department?: string;
-          user_gender?: string;
-          user_id: string;
-          user_name?: string;
-          user_student_id?: string;
-        };
-        Returns: {
-          created_at: string;
-          department: string | null;
-          gender: string | null;
-          id: string;
-          name: string | null;
-          phone_number: string | null;
-          role: string | null;
-          student_id: string | null;
-        };
-      };
-      get_user_chat_rides: {
-        Args: { input_user_id: string };
-        Returns: {
-          id: string;
-          user_id: string;
-          from_location: string;
-          to_location: string;
-          ride_time: string | null;
-          notes: string | null;
-          created_at: string;
-          profile_id: string;
-          profile_name: string | null;
-          profile_student_id: string | null;
-          profile_department: string | null;
-          profile_gender: string | null;
-          profile_role: string | null;
-          profile_created_at: string;
-          profile_notification_preferences: Json | null;
-        }[];
-      };
-    };
+          user_department: string
+          user_gender: string
+          user_id: string
+          user_name: string
+          user_student_id: string
+        }
+        Returns: undefined
+      }
+    }
     Enums: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
@@ -494,6 +523,7 @@ export type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 
 export interface RideWithProfile extends Ride {
   profiles: Profile | null;
+  requests_count?: number;
 }
 
 export interface MessageWithProfile extends Message {

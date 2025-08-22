@@ -152,7 +152,7 @@ const PostRidePage: React.FC = () => {
                   onSelect={(location) =>
                     setFormData({ ...formData, from_location: location })
                   }
-                  placeholder="Select departure location"
+                  placeholder="e.g., AIUB Campus, Kuril, Jumuna Future Park"
                 />
               </div>
 
@@ -164,7 +164,7 @@ const PostRidePage: React.FC = () => {
                   onSelect={(location) =>
                     setFormData({ ...formData, to_location: location })
                   }
-                  placeholder="Select destination"
+                  placeholder="e.g., Jamuna Future Park, Kuril , Aiub Campus"
                 />
               </div>
 
@@ -176,24 +176,91 @@ const PostRidePage: React.FC = () => {
                   </div>
                   Departure Date & Time
                 </label>
-                <input
-                  type="datetime-local"
-                  value={formatDateTimeForInput(formData.ride_time)}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      ride_time: new Date(e.target.value),
-                    })
-                  }
-                  min={formatDateTimeForInput(new Date())}
-                  className="flex h-12 lg:h-14 w-full rounded-xl border-2 border-gray-300 bg-white px-4 py-3 text-sm lg:text-base font-medium ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
-                  required
-                />
-                <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                  <p className="text-sm lg:text-base text-blue-800 font-medium">
-                    📅 Selected:{" "}
-                    {formatDateTime(formData.ride_time.toISOString())}
-                  </p>
+                
+                {/* Quick Time Buttons - Mobile Responsive */}
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const now = new Date();
+                        now.setHours(now.getHours() + 1);
+                        now.setMinutes(0);
+                        setFormData({ ...formData, ride_time: now });
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
+                    >
+                      <Clock className="h-3 w-3" />
+                      Next Hour
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const now = new Date();
+                        now.setDate(now.getDate() + 1);
+                        now.setHours(9);
+                        now.setMinutes(0);
+                        setFormData({ ...formData, ride_time: now });
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
+                    >
+                      <Clock className="h-3 w-3" />
+                      Tomorrow 9 AM
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const now = new Date();
+                        now.setDate(now.getDate() + 1);
+                        now.setHours(17);
+                        now.setMinutes(0);
+                        setFormData({ ...formData, ride_time: now });
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
+                    >
+                      <Clock className="h-3 w-3" />
+                      Tomorrow 5 PM
+                    </Button>
+                  </div>
+
+                  {/* Custom DateTime Picker */}
+                  <div className="space-y-2">
+                    <input
+                      type="datetime-local"
+                      value={formatDateTimeForInput(formData.ride_time)}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          ride_time: new Date(e.target.value),
+                        })
+                      }
+                      min={formatDateTimeForInput(new Date())}
+                      className="flex h-12 lg:h-14 w-full rounded-xl border-2 border-gray-300 bg-white px-4 py-3 text-sm lg:text-base font-medium ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
+                      required
+                    />
+                    <p className="text-xs text-gray-500 text-center sm:text-left">Or pick a custom date/time</p>
+                  </div>
+                </div>
+
+                {/* Selected Time Display */}
+                <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                      <Clock className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-600 mb-1">Departure Time:</p>
+                      <p className="text-base lg:text-lg font-semibold text-gray-900 break-words">
+                        {formatDateTime(formData.ride_time.toISOString())}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -210,17 +277,17 @@ const PostRidePage: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })
                   }
-                  placeholder="Add any additional details about your ride... (e.g., preferred music, AC/no AC, stops along the way)"
+                  placeholder="Share details: pickup time, cost sharing details, or any stops..."
                   rows={4}
                   maxLength={200}
                   className="text-sm lg:text-base border-2 border-gray-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all duration-200 rounded-xl"
                 />
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                   <p className="text-xs text-gray-500">
                     💡 Tip: Mention any preferences to help students decide
                   </p>
                   <span
-                    className={`text-xs font-medium ${formData.notes.length > 180
+                    className={`text-xs font-medium self-end sm:self-auto ${formData.notes.length > 180
                         ? "text-red-500"
                         : "text-gray-500"
                       }`}

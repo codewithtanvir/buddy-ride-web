@@ -276,7 +276,7 @@ class ErrorMonitor {
       console.log("Event captured:", event);
     }
 
-    // Send to analytics service (placeholder)
+    // TODO: Integrate with analytics service when available
     if (this.isOnline) {
       this.sendEvent(event);
     }

@@ -27,8 +27,8 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.15.0",
     "tailwind-merge": "^1.14.0",
-    "vite-plugin-pwa": "^1.0.3",
-    "workbox-window": "^7.3.0",
+    "vite-plugin-pwa": "^0.19.8",
+    "workbox-window": "^7.1.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.15",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "cross-env": "^10.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",

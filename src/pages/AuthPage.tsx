@@ -142,7 +142,7 @@ const AuthPage: React.FC = () => {
               <div className="space-y-2">
                 <Input
                   type="email"
-                  placeholder="23-51455-1@student.aiub.edu"
+                  placeholder="your-student-id@student.aiub.edu"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -163,7 +163,7 @@ const AuthPage: React.FC = () => {
               <div className="space-y-2">
                 <Input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Create a strong password"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -180,7 +180,10 @@ const AuthPage: React.FC = () => {
                   className="h-12 text-base bg-gray-50 border-gray-300 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                 />
                 {isSignUp && (
-                  <p className="text-sm text-gray-500">Minimum 6 characters</p>
+                  <p className="text-sm text-gray-500">
+                    Minimum 8 characters, with uppercase, lowercase, and a
+                    number.
+                  </p>
                 )}
               </div>
 
