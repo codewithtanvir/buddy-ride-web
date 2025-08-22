@@ -524,6 +524,7 @@ export type Notification = Database["public"]["Tables"]["notifications"]["Row"];
 export interface RideWithProfile extends Ride {
   profiles: Profile | null;
   requests_count?: number;
+  ride_requests?: RideRequest[];
 }
 
 export interface MessageWithProfile extends Message {

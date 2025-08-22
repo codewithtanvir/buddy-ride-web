@@ -36,14 +36,20 @@ interface StatCardProps {
 
 const HomePage: React.FC = () => {
   const { user } = useAuthStore();
-  const { myRides, messages, fetchMyRides } = useRideStore();
+  const { 
+    myRides, 
+    userMessagesCount, 
+    totalRequestsCount, 
+    loading,
+    fetchDashboardData
+  } = useRideStore();
   const isAdmin = checkIsAdmin(user);
 
   useEffect(() => {
     if (user?.id) {
-      fetchMyRides(user.id);
+      fetchDashboardData(user.id);
     }
-  }, [user?.id, fetchMyRides]);
+  }, [user?.id, fetchDashboardData]);
 
   const StatCard: React.FC<StatCardProps> = ({ icon, label, value, color }) => (
     <div
@@ -93,22 +99,19 @@ const HomePage: React.FC = () => {
           <StatCard
             icon={<Car className="h-6 w-6 text-white" />}
             label="Upcoming Rides"
-            value={myRides.length}
+            value={loading ? "..." : myRides.length}
             color="from-blue-500 to-blue-700"
           />
           <StatCard
             icon={<Users className="h-6 w-6 text-white" />}
             label="Total Requests"
-            value={myRides.reduce(
-              (sum, ride) => sum + (ride.requests_count || 0),
-              0
-            )}
+            value={loading ? "..." : totalRequestsCount}
             color="from-green-500 to-green-700"
           />
           <StatCard
             icon={<MessageSquare className="h-6 w-6 text-white" />}
             label="Messages"
-            value={messages.length}
+            value={loading ? "..." : userMessagesCount}
             color="from-purple-500 to-purple-700"
           />
         </div>
