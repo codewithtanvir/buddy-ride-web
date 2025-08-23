@@ -115,8 +115,8 @@ const ProfileSetupPage: React.FC = () => {
             {hasAutoDetectedStudentId && (
               <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-sm text-green-800">
-                  <strong>Great!</strong> Your student ID was automatically
-                  detected from your email address. You can update it if needed.
+                  <strong>Great!</strong> Your student ID ({user?.profile?.student_id}) was automatically
+                  detected from your email address ({user?.email}). You can update it if needed.
                 </p>
               </div>
             )}

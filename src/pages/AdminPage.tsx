@@ -275,6 +275,304 @@ const AdminPage: React.FC = () => {
     }
   };
 
+  // Data export functions
+  const exportToCSV = (data: any[], filename: string, headers: string[]) => {
+    const csvContent = [
+      headers.join(","), // CSV header
+      ...data.map((row) =>
+        headers.map((header) => {
+          const value = row[header.toLowerCase().replace(/ /g, "_")];
+          // Handle nested objects and arrays
+          if (typeof value === "object" && value !== null) {
+            return `"${JSON.stringify(value).replace(/"/g, '""')}"`;
+          }
+          // Escape commas and quotes in CSV
+          return `"${String(value || "").replace(/"/g, '""')}"`;
+        }).join(",")
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToJSON = (data: any, filename: string) => {
+    const jsonContent = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonContent], { type: "application/json" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${filename}_${new Date().toISOString().split('T')[0]}.json`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportUsers = async () => {
+    try {
+      const { data: usersData, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const headers = [
+        "ID",
+        "Name",
+        "Student ID",
+        "Department",
+        "Gender",
+        "Role",
+        "Phone Number",
+        "Created At"
+      ];
+
+      const exportData = usersData?.map(user => ({
+        id: user.id,
+        name: user.name || "N/A",
+        student_id: user.student_id || "N/A",
+        department: user.department || "N/A",
+        gender: user.gender || "N/A",
+        role: user.role || "user",
+        phone_number: user.phone_number || "N/A",
+        created_at: formatDateTime(user.created_at),
+      })) || [];
+
+      exportToCSV(exportData, "users_export", headers);
+      toast.success("Users data exported successfully!");
+    } catch (error: any) {
+      console.error("Error exporting users:", error);
+      toast.error("Failed to export users data");
+    }
+  };
+
+  const handleExportRides = async () => {
+    try {
+      const { data: ridesData, error } = await supabase
+        .from("rides")
+        .select(`
+          *,
+          profiles:user_id (
+            name,
+            student_id,
+            department
+          )
+        `)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const headers = [
+        "ID",
+        "Creator Name",
+        "Student ID",
+        "Department",
+        "From Location",
+        "To Location",
+        "Ride Time",
+        "Notes",
+        "Status",
+        "Created At"
+      ];
+
+      const exportData = ridesData?.map(ride => ({
+        id: ride.id,
+        creator_name: ride.profiles?.name || "N/A",
+        student_id: ride.profiles?.student_id || "N/A",
+        department: ride.profiles?.department || "N/A",
+        from_location: ride.from_location,
+        to_location: ride.to_location,
+        ride_time: ride.ride_time ? formatDateTime(ride.ride_time) : "N/A",
+        notes: ride.notes || "N/A",
+        status: isRideExpired(ride.ride_time) ? "Expired" : "Active",
+        created_at: formatDateTime(ride.created_at),
+      })) || [];
+
+      exportToCSV(exportData, "rides_export", headers);
+      toast.success("Rides data exported successfully!");
+    } catch (error: any) {
+      console.error("Error exporting rides:", error);
+      toast.error("Failed to export rides data");
+    }
+  };
+
+  const handleExportAll = async () => {
+    const loadingToast = toast.loading("Exporting all data...");
+    
+    try {
+      // Export all data types in parallel
+      await Promise.all([
+        handleExportUsers(),
+        handleExportRides(),
+        handleExportMessages(),
+        handleExportAnalytics()
+      ]);
+      
+      toast.success("All data exported successfully!", { id: loadingToast });
+    } catch (error: any) {
+      console.error("Error exporting all data:", error);
+      toast.error("Failed to export some data", { id: loadingToast });
+    }
+  };
+
+  const handleExportMessages = async () => {
+    try {
+      const { data: messagesData, error } = await supabase
+        .from("messages")
+        .select(`
+          *,
+          sender:sender_id (
+            name,
+            student_id,
+            department
+          ),
+          ride:ride_id (
+            from_location,
+            to_location,
+            ride_time
+          )
+        `)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      const headers = [
+        "ID",
+        "Sender Name",
+        "Student ID",
+        "Department",
+        "Ride Route",
+        "Content",
+        "Message Type",
+        "Phone Number",
+        "Phone Shared",
+        "Created At"
+      ];
+
+      const exportData = messagesData?.map(message => ({
+        id: message.id,
+        sender_name: message.sender?.name || "N/A",
+        student_id: message.sender?.student_id || "N/A",
+        department: message.sender?.department || "N/A",
+        ride_route: message.ride ? `${message.ride.from_location} → ${message.ride.to_location}` : "N/A",
+        content: message.content || "N/A",
+        message_type: message.message_type || "text",
+        phone_number: message.phone_number || "N/A",
+        phone_shared: message.phone_shared ? "Yes" : "No",
+        created_at: formatDateTime(message.created_at),
+      })) || [];
+
+      exportToCSV(exportData, "messages_export", headers);
+      toast.success("Messages data exported successfully!");
+    } catch (error: any) {
+      console.error("Error exporting messages:", error);
+      toast.error("Failed to export messages data");
+    }
+  };
+
+  const handleExportAnalytics = async () => {
+    try {
+      // Get detailed analytics data
+      const [
+        usersData,
+        ridesData,
+        messagesData,
+        requestsData,
+        notificationsData
+      ] = await Promise.all([
+        supabase.from("profiles").select("created_at, department, gender, role"),
+        supabase.from("rides").select("created_at, from_location, to_location"),
+        supabase.from("messages").select("created_at"),
+        supabase.from("ride_requests").select("created_at, status"),
+        supabase.from("notifications").select("created_at, type, read")
+      ]);
+
+      // Department distribution (handle nulls)
+      const departmentStats = usersData.data?.reduce((acc: any, user) => {
+        const dept = user.department || "Not Specified";
+        acc[dept] = (acc[dept] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      // Gender distribution (handle nulls)
+      const genderStats = usersData.data?.reduce((acc: any, user) => {
+        const gender = user.gender || "Not Specified";
+        acc[gender] = (acc[gender] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      // Popular routes (only use existing columns)
+      const routeStats = ridesData.data?.reduce((acc: any, ride) => {
+        const route = `${ride.from_location} → ${ride.to_location}`;
+        acc[route] = (acc[route] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      // Monthly user registrations
+      const monthlyRegistrations = usersData.data?.reduce((acc: any, user) => {
+        const month = new Date(user.created_at).toISOString().slice(0, 7);
+        acc[month] = (acc[month] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      // Request status distribution (handle nulls)
+      const requestStats = requestsData.data?.reduce((acc: any, request) => {
+        const status = request.status || "Unknown";
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      // Notification type distribution
+      const notificationTypeStats = notificationsData.data?.reduce((acc: any, notification) => {
+        const type = notification.type || "Unknown";
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      const analyticsData = {
+        timestamp: new Date().toISOString(),
+        summary: stats,
+        demographics: {
+          departmentDistribution: departmentStats,
+          genderDistribution: genderStats
+        },
+        rides: {
+          popularRoutes: Object.entries(routeStats)
+            .sort(([,a], [,b]) => (b as number) - (a as number))
+            .slice(0, 10)
+            .reduce((acc, [route, count]) => ({ ...acc, [route]: count }), {}),
+          monthlyActivity: monthlyRegistrations
+        },
+        requests: {
+          statusDistribution: requestStats
+        },
+        notifications: {
+          typeDistribution: notificationTypeStats
+        },
+        engagement: {
+          totalMessages: messagesData.count || 0,
+          totalNotifications: notificationsData.count || 0,
+          unreadNotifications: notificationsData.data?.filter(n => !n.read).length || 0
+        }
+      };
+
+      exportToJSON(analyticsData, "analytics_export");
+      toast.success("Analytics data exported successfully!");
+    } catch (error: any) {
+      console.error("Error exporting analytics:", error);
+      toast.error("Failed to export analytics data");
+    }
+  };
+
   const handleCleanupExpiredRides = async () => {
     if (
       !window.confirm(
@@ -1158,33 +1456,55 @@ const AdminPage: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button
-                    onClick={() => toast("Export feature coming soon!", { icon: "📊" })}
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
-                  >
-                    <Download className="h-6 w-6" />
-                    <span className="font-medium">Export Users</span>
-                    <span className="text-xs opacity-90">CSV format</span>
-                  </Button>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Button
+                      onClick={handleExportUsers}
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
+                    >
+                      <Download className="h-6 w-6" />
+                      <span className="font-medium">Export Users</span>
+                      <span className="text-xs opacity-90">CSV format</span>
+                    </Button>
+                    
+                    <Button
+                      onClick={handleExportRides}
+                      className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
+                    >
+                      <Download className="h-6 w-6" />
+                      <span className="font-medium">Export Rides</span>
+                      <span className="text-xs opacity-90">CSV format</span>
+                    </Button>
+                    
+                    <Button
+                      onClick={handleExportMessages}
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
+                    >
+                      <Download className="h-6 w-6" />
+                      <span className="font-medium">Export Messages</span>
+                      <span className="text-xs opacity-90">CSV format</span>
+                    </Button>
+                    
+                    <Button
+                      onClick={handleExportAnalytics}
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
+                    >
+                      <Download className="h-6 w-6" />
+                      <span className="font-medium">Export Analytics</span>
+                      <span className="text-xs opacity-90">JSON format</span>
+                    </Button>
+                  </div>
                   
-                  <Button
-                    onClick={() => toast("Export feature coming soon!", { icon: "📊" })}
-                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
-                  >
-                    <Download className="h-6 w-6" />
-                    <span className="font-medium">Export Rides</span>
-                    <span className="text-xs opacity-90">CSV format</span>
-                  </Button>
-                  
-                  <Button
-                    onClick={() => toast("Export feature coming soon!", { icon: "📊" })}
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl p-4 h-auto flex-col space-y-2 transition-all duration-200"
-                  >
-                    <Download className="h-6 w-6" />
-                    <span className="font-medium">Export Analytics</span>
-                    <span className="text-xs opacity-90">JSON format</span>
-                  </Button>
+                  <div className="pt-4 border-t border-gray-200">
+                    <Button
+                      onClick={handleExportAll}
+                      className="w-full bg-gradient-to-r from-gray-800 to-black hover:from-black hover:to-gray-900 text-white rounded-xl p-4 h-auto flex items-center justify-center space-x-3 transition-all duration-200"
+                    >
+                      <Download className="h-5 w-5" />
+                      <span className="font-semibold">Export All Data</span>
+                      <span className="text-sm opacity-75">(CSV + JSON)</span>
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
