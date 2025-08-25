@@ -20,7 +20,6 @@ import {
   Phone,
   X,
   Check,
-  Crown,
   Settings,
   Activity,
   Download,
@@ -35,7 +34,6 @@ import {
 } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { AdminPromotionTool } from "../components/admin/AdminPromotionTool";
 import { useAuthStore } from "../stores/authStore";
 import { supabase } from "../lib/supabase";
 import { formatDateTime } from "../utils/formatters";
@@ -61,7 +59,7 @@ interface AdminStats {
 
 const AdminPage: React.FC = () => {
   const { user } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "rides" | "admin-management" | "analytics">(
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "rides" | "analytics">(
     "overview"
   );
   const [users, setUsers] = useState<Profile[]>([]);
@@ -616,7 +614,8 @@ const AdminPage: React.FC = () => {
     (user) =>
       user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.student_id?.includes(searchQuery) ||
-      user.department?.toLowerCase().includes(searchQuery.toLowerCase())
+      user.department?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.phone_number?.includes(searchQuery)
   );
 
   // Filter rides based on current filter and search query
@@ -729,12 +728,6 @@ const AdminPage: React.FC = () => {
                 },
                 { id: "users", label: "Users", icon: Users, color: "green" },
                 { id: "rides", label: "Rides", icon: Car, color: "purple" },
-                { 
-                  id: "admin-management", 
-                  label: "Admin Management", 
-                  icon: Crown, 
-                  color: "pink" 
-                },
                 { 
                   id: "analytics", 
                   label: "Analytics", 
@@ -1021,7 +1014,7 @@ const AdminPage: React.FC = () => {
                         {users.filter(u => u.role === "admin").length}
                       </p>
                     </div>
-                    <Crown className="h-8 w-8 text-purple-600" />
+                    <Shield className="h-8 w-8 text-purple-600" />
                   </div>
                 </CardContent>
               </Card>
@@ -1072,7 +1065,7 @@ const AdminPage: React.FC = () => {
                               : "bg-gradient-to-br from-blue-500 to-purple-600"
                           }`}>
                             {user.role === "admin" ? (
-                              <Crown className="h-6 w-6" />
+                              <Shield className="h-6 w-6" />
                             ) : (
                               user.name?.charAt(0)?.toUpperCase() || "U"
                             )}
@@ -1098,6 +1091,12 @@ const AdminPage: React.FC = () => {
                               <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-lg font-medium">
                                 {user.gender}
                               </span>
+                              {user.phone_number && (
+                                <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-lg font-medium flex items-center gap-1">
+                                  <Phone className="h-3 w-3" />
+                                  {user.phone_number}
+                                </span>
+                              )}
                             </div>
                             <p className="text-xs text-gray-500 flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
@@ -1304,11 +1303,6 @@ const AdminPage: React.FC = () => {
               </div>
             )}
           </div>
-        )}
-
-        {/* Admin Management Tab */}
-        {activeTab === "admin-management" && (
-          <AdminPromotionTool />
         )}
 
         {/* Analytics Tab */}

@@ -21,9 +21,11 @@ const EmailVerificationPage: React.FC = () => {
 
   // If user is already verified or no pending verification, redirect
   React.useEffect(() => {
-    if (user && user.profile) {
+    if (user && user.profile && user.profile.name && user.profile.department) {
+      // Profile is complete, redirect to homepage
       navigate("/");
-    } else if (user && !user.profile) {
+    } else if (user && (!user.profile || !user.profile.name || !user.profile.department)) {
+      // User exists but profile is incomplete, redirect to profile setup
       navigate("/profile-setup");
     } else if (!pendingVerification) {
       navigate("/auth");

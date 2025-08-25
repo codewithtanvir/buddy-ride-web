@@ -103,329 +103,293 @@ const PostRidePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-blue-50/30 p-4 lg:p-6 pb-20 lg:pb-6">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="mb-8 lg:mb-10 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl shadow-lg mb-6">
-            <Car className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50/50 to-emerald-50/50 p-4 lg:p-6 pb-20 lg:pb-6">
+      <div className="max-w-3xl mx-auto">
+        {/* Simplified Header */}
+        <div className="mb-10 lg:mb-12 text-center">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full mb-6">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-green-700">Share Your Journey</span>
+          </div> */}
+          
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 via-emerald-500 to-blue-500 rounded-3xl shadow-xl mb-6">
+            <Car className="h-10 w-10 text-white" />
           </div>
-          <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-green-800 to-blue-800 bg-clip-text text-transparent mb-3">
+          
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 via-green-800 to-emerald-800 bg-clip-text text-transparent mb-4">
             Post Your Ride
           </h1>
-          <p className="text-gray-600 text-base lg:text-lg max-w-md mx-auto">
-            Share your travel plans and connect with fellow AIUB students
+          <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto mb-8">
+            Connect with fellow AIUB students and share your journey while saving costs 🚗💰
           </p>
 
-          {/* Safety Policy Info */}
-          <div className="mt-6 mx-auto max-w-lg">
-            <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <Shield className="h-5 w-5 text-blue-600 flex-shrink-0" />
-              <div className="text-sm text-blue-700">
-                <span className="font-medium">Safety Policy:</span> Only
-                students of the same gender can send requests to your ride for
-                everyone's comfort and security.
+          {/* Simplified Safety Notice */}
+          <div className="max-w-xl mx-auto">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <Shield className="h-4 w-4 text-white" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-semibold text-gray-900">🛡️ Same Gender Policy</p>
+                  <p className="text-xs text-gray-600">Only students of the same gender can join your ride</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm mb-8">
-          <CardHeader className="pb-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-t-xl">
-            <CardTitle className="flex items-center text-xl lg:text-2xl font-bold text-gray-900">
-              <div className="p-2 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg mr-3">
-                <Car className="h-6 w-6 text-white" />
+        {/* Simplified Main Form */}
+        <Card className="shadow-2xl border-0 bg-white/98 backdrop-blur-sm overflow-hidden mb-8">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <Car className="h-7 w-7" />
               </div>
-              Ride Details
-            </CardTitle>
-            <p className="text-gray-600 text-sm lg:text-base mt-2">
-              Fill in your travel information to connect with other students
-            </p>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <form onSubmit={handleSubmit} className="space-y-6 lg:space-y-8">
-              {/* From Location */}
-              <div className="space-y-2">
-                <LocationPicker
-                  label="From Location"
-                  value={formData.from_location}
-                  onSelect={(location) =>
-                    setFormData({ ...formData, from_location: location })
-                  }
-                  placeholder="e.g., AIUB Campus, Kuril, Jumuna Future Park"
-                />
-              </div>
-
-              {/* To Location */}
-              <div className="space-y-2">
-                <LocationPicker
-                  label="To Location"
-                  value={formData.to_location}
-                  onSelect={(location) =>
-                    setFormData({ ...formData, to_location: location })
-                  }
-                  placeholder="e.g., Jamuna Future Park, Kuril , Aiub Campus"
-                />
-              </div>
-
-              {/* Date & Time */}
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-gray-700 flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                    <Clock className="h-4 w-4 text-blue-600" />
-                  </div>
-                  Departure Date & Time
-                </label>
-                
-                {/* Quick Time Buttons - Mobile Responsive */}
-                <div className="space-y-3">
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const now = new Date();
-                        now.setHours(now.getHours() + 1);
-                        now.setMinutes(0);
-                        setFormData({ ...formData, ride_time: now });
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
-                    >
-                      <Clock className="h-3 w-3" />
-                      Next Hour
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const now = new Date();
-                        now.setDate(now.getDate() + 1);
-                        now.setHours(9);
-                        now.setMinutes(0);
-                        setFormData({ ...formData, ride_time: now });
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
-                    >
-                      <Clock className="h-3 w-3" />
-                      Tomorrow 9 AM
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const now = new Date();
-                        now.setDate(now.getDate() + 1);
-                        now.setHours(17);
-                        now.setMinutes(0);
-                        setFormData({ ...formData, ride_time: now });
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 min-h-[44px]"
-                    >
-                      <Clock className="h-3 w-3" />
-                      Tomorrow 5 PM
-                    </Button>
-                  </div>
-
-                  {/* Custom DateTime Picker */}
-                  <div className="space-y-2">
-                    <input
-                      type="datetime-local"
-                      value={formatDateTimeForInput(formData.ride_time)}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          ride_time: new Date(e.target.value),
-                        })
-                      }
-                      min={formatDateTimeForInput(new Date())}
-                      className="flex h-12 lg:h-14 w-full rounded-xl border-2 border-gray-300 bg-white px-4 py-3 text-sm lg:text-base font-medium ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
-                      required
-                    />
-                    <p className="text-xs text-gray-500 text-center sm:text-left">Or pick a custom date/time</p>
-                  </div>
-                </div>
-
-                {/* Selected Time Display */}
-                <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-                      <Clock className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-600 mb-1">Departure Time:</p>
-                      <p className="text-base lg:text-lg font-semibold text-gray-900 break-words">
-                        {formatDateTime(formData.ride_time.toISOString())}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="space-y-3">
-                <label className="flex items-center text-sm font-semibold text-gray-700">
-                  <div className="p-2 bg-purple-100 rounded-lg mr-3">
-                    <FileText className="h-4 w-4 text-purple-600" />
-                  </div>
-                  Additional Notes (Optional)
-                </label>
-                <TextArea
-                  value={formData.notes}
-                  onChange={(e) =>
-                    setFormData({ ...formData, notes: e.target.value })
-                  }
-                  placeholder="Share details: pickup time, cost sharing details, or any stops..."
-                  rows={4}
-                  maxLength={200}
-                  className="text-sm lg:text-base border-2 border-gray-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all duration-200 rounded-xl"
-                />
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                  <p className="text-xs text-gray-500">
-                    💡 Tip: Mention any preferences to help students decide
-                  </p>
-                  <span
-                    className={`text-xs font-medium self-end sm:self-auto ${formData.notes.length > 180
-                        ? "text-red-500"
-                        : "text-gray-500"
-                      }`}
-                  >
-                    {formData.notes.length}/200 characters
-                  </span>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full h-14 lg:h-16 text-base lg:text-lg font-semibold bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 rounded-xl"
-                loading={loading}
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                    Posting Your Ride...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-5 w-5 mr-3" />
-                    Post My Ride
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Info Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                    <Sparkles className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
-                    ✨ How it works
-                  </h3>
-                  <div className="text-sm text-gray-600 space-y-2">
-                    <div className="flex items-center">
-                      <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                      <span>
-                        Students with matching routes will discover your ride
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                      <span>They can send personalized join requests</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="inline-block w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                      <span>Accept or decline requests from your profile</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="inline-block w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
-                      <span>Start chatting and coordinate your adventure!</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0">
-                  <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg">
-                    <Shield className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
-                    🛡️ Safety First
-                  </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    Only verified AIUB students can see and respond to your
-                    ride. All users must use official{" "}
-                    <span className="font-semibold text-blue-600">
-                      @student.aiub.edu
-                    </span>{" "}
-                    email addresses for maximum security.
-                  </p>
-                  <div className="mt-3 flex items-center text-xs text-green-700 bg-green-50 px-3 py-1 rounded-full">
-                    <Users className="h-3 w-3 mr-2" />
-                    <span className="font-medium">100% AIUB Students Only</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Success Tips */}
-        <Card className="mt-6 shadow-xl border-0 bg-gradient-to-r from-blue-50 to-green-50">
-          <CardContent className="p-6">
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
-                💡 Tips for a Successful Ride Post
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
-                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-                    <span className="text-blue-600 font-bold">1</span>
-                  </div>
-                  <span className="text-center">
-                    Be specific about pickup locations and times
-                  </span>
-                </div>
-                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-2">
-                    <span className="text-green-600 font-bold">2</span>
-                  </div>
-                  <span className="text-center">
-                    Mention any preferences in your notes
-                  </span>
-                </div>
-                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mb-2">
-                    <span className="text-purple-600 font-bold">3</span>
-                  </div>
-                  <span className="text-center">
-                    Check your profile for ride requests
-                  </span>
-                </div>
+              <div>
+                <h2 className="text-2xl font-bold">Create Your Ride</h2>
+                <p className="text-green-100 text-sm">Fill in your travel details below</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-};
+          </div>
+              
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* Route Section */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                        <MapPin className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">📍 Route Information</h3>
+                        <p className="text-sm text-gray-600">Select your pickup and destination</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* From Location */}
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <LocationPicker
+                            label="From Location"
+                            value={formData.from_location}
+                            onSelect={(location) =>
+                              setFormData({ ...formData, from_location: location })
+                            }
+                            placeholder="Select pickup location"
+                          />
+                          <div className="absolute -right-2 top-8 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                        </div>
+                      </div>
+
+                      {/* Visual Route Connector */}
+                      <div className="hidden md:flex items-center justify-center py-8">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                          <div className="w-8 h-0.5 bg-gray-300"></div>
+                          <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                          <div className="w-8 h-0.5 bg-gray-300"></div>
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        </div>
+                      </div>
+
+                      {/* To Location */}
+                      <div className="space-y-3 md:col-start-2">
+                        <div className="relative">
+                          <LocationPicker
+                            label="To Location"
+                            value={formData.to_location}
+                            onSelect={(location) =>
+                              setFormData({ ...formData, to_location: location })
+                            }
+                            placeholder="Select destination"
+                          />
+                          <div className="absolute -right-2 top-8 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Route Summary */}
+                    {(formData.from_location || formData.to_location) && (
+                      <div className="bg-gradient-to-r from-gray-50 to-blue-50/50 rounded-xl p-4 border border-gray-200/50">
+                        <div className="flex items-center gap-3">
+                          <MapPin className="h-5 w-5 text-blue-600" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-700">Route Preview:</p>
+                            <p className="text-gray-900 font-semibold">
+                              {formData.from_location || "Select pickup"} → {formData.to_location || "Select destination"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Enhanced Date & Time Section */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <Clock className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">⏰ Schedule</h3>
+                        <p className="text-sm text-gray-600">When are you planning to travel?</p>
+                      </div>
+                    </div>
+                    
+                    {/* Quick Time Selection */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {[
+                        { 
+                          label: "In 1 Hour", 
+                          
+                          action: () => {
+                            const now = new Date();
+                            now.setHours(now.getHours() + 1);
+                            now.setMinutes(0);
+                            setFormData({ ...formData, ride_time: now });
+                          }
+                        },
+                        { 
+                          label: "Tomorrow 9 AM", 
+                          
+                          action: () => {
+                            const now = new Date();
+                            now.setDate(now.getDate() + 1);
+                            now.setHours(9);
+                            now.setMinutes(0);
+                            setFormData({ ...formData, ride_time: now });
+                          }
+                        },
+                        { 
+                          label: "Tomorrow 5 PM", 
+                          
+                          action: () => {
+                            const now = new Date();
+                            now.setDate(now.getDate() + 1);
+                            now.setHours(17);
+                            now.setMinutes(0);
+                            setFormData({ ...formData, ride_time: now });
+                          }
+                        }
+                      ].map((option) => (
+                        <Button
+                          key={option.label}
+                          type="button"
+                          variant="outline"
+                          onClick={option.action}
+                          className="h-14 flex-col gap-1 bg-white/80 border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+                        >
+                          <span className="text-sm font-medium">{option.label}</span>
+                        </Button>
+                      ))}
+                    </div>
+
+                    {/* Custom DateTime Picker */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-gray-700">
+                        Or pick a custom date/time:
+                      </label>
+                      <input
+                        type="datetime-local"
+                        value={formatDateTimeForInput(formData.ride_time)}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            ride_time: new Date(e.target.value),
+                          })
+                        }
+                        min={formatDateTimeForInput(new Date())}
+                        className="w-full h-14 px-4 py-3 bg-white border-2 border-gray-300 rounded-xl text-base font-medium focus:outline-none focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-200"
+                        required
+                      />
+                    </div>
+
+                    {/* Enhanced Selected Time Display */}
+                    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-5 border border-purple-200">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md">
+                          <Clock className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-600 mb-1">Your departure time:</p>
+                          <p className="text-xl font-bold text-gray-900">
+                            {formatDateTime(formData.ride_time.toISOString())}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Enhanced Notes Section */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                        <FileText className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">Additional Notes</h3>
+                        <p className="text-sm text-gray-600">Share any important details (optional)</p>
+                      </div>
+                    </div>
+                    
+                    <TextArea
+                      value={formData.notes}
+                      onChange={(e) =>
+                        setFormData({ ...formData, notes: e.target.value })
+                      }
+                      placeholder="💡 Share details like: pickup specifics, cost sharing preferences,stops along the way..."
+                      rows={5}
+                      maxLength={300}
+                      className="text-base border-2 border-gray-300 focus:border-orange-500 focus:ring-4 focus:ring-orange-200 transition-all duration-200 rounded-xl bg-white"
+                    />
+                    <div className="flex justify-between items-center">
+                      <p className="text-sm text-gray-500">
+                        💡 Tip: Clear details help students make better decisions
+                      </p>
+                      <span className={`text-sm font-medium ${
+                        formData.notes.length > 250 ? "text-orange-600" : "text-gray-500"
+                      }`}>
+                        {formData.notes.length}/300
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Enhanced Submit Button */}
+                  <div className="pt-6 border-t border-gray-200">
+                    <Button
+                      type="submit"
+                      disabled={loading || !formData.from_location || !formData.to_location}
+                      className="w-full h-16 text-lg font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-blue-600 hover:from-green-700 hover:via-emerald-700 hover:to-blue-700 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      loading={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
+                          Creating Your Ride...
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-6 w-6 mr-3" />
+                          Post My Ride & Connect Students
+                        </>
+                      )}
+                    </Button>
+                    
+                    {(!formData.from_location || !formData.to_location) && (
+                      <p className="text-sm text-orange-600 text-center mt-3 flex items-center justify-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        Please select both pickup and destination locations
+                      </p>
+                    )}
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    };
 
 export default PostRidePage;

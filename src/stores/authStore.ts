@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { supabase } from "../lib/supabase";
 import type { AuthUser, ProfileFormData } from "../types";
 import { getPasswordResetRedirectUrl } from "../utils/redirects";
+import { extractStudentIdFromEmail } from "../utils/studentIdExtractor";
 
 interface AuthState {
   user: AuthUser | null;
@@ -151,12 +152,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { user } = get();
     if (!user) throw new Error("No user found");
 
-    // Check if the student_id is being updated and if it already exists
-    if (profileData.student_id) {
+    // Security: Filter out restricted fields for existing profiles
+    // Only allow student_id and gender changes during initial profile creation
+    const isInitialSetup = !user.profile?.name || !user.profile?.department;
+    
+    let allowedData = { ...profileData };
+    
+    if (!isInitialSetup) {
+      // For existing profiles, remove restricted fields for security
+      const { student_id, gender, ...safeData } = allowedData;
+      allowedData = safeData;
+      
+      // Log security attempt if restricted fields were included
+      if (student_id || gender) {
+        console.warn("Security: Attempted to update restricted fields (student_id/gender) for existing profile");
+      }
+    }
+
+    // Check if the student_id is being updated during initial setup and if it already exists
+    if (allowedData.student_id && isInitialSetup) {
       const { data: existingProfile } = await supabase
         .from("profiles")
         .select("id")
-        .eq("student_id", profileData.student_id)
+        .eq("student_id", allowedData.student_id)
         .neq("id", user.id)
         .single();
 
@@ -171,7 +189,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       .from("profiles")
       .upsert({
         id: user.id,
-        ...profileData,
+        ...allowedData,
       })
       .select()
       .single();
@@ -293,11 +311,41 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     console.log("✅ Email OTP verification successful");
 
     if (data.user) {
+      // Try to extract student ID from email and create initial profile
+      const extractedStudentId = extractStudentIdFromEmail(email);
+      
+      let profile = undefined;
+      
+      if (extractedStudentId) {
+        console.log("🎯 Auto-extracting student ID from email:", extractedStudentId);
+        
+        try {
+          // Create initial profile with extracted student ID
+          const { data: profileData, error: profileError } = await supabase
+            .from("profiles")
+            .upsert({
+              id: data.user.id,
+              student_id: extractedStudentId,
+            })
+            .select()
+            .single();
+
+          if (!profileError && profileData) {
+            profile = profileData;
+            console.log("✅ Initial profile created with auto-extracted student ID");
+          } else {
+            console.warn("⚠️ Could not create initial profile:", profileError);
+          }
+        } catch (err) {
+          console.warn("⚠️ Error creating initial profile:", err);
+        }
+      }
+
       set({
         user: {
           id: data.user.id,
           email: data.user.email,
-          profile: undefined,
+          profile,
         },
         pendingVerification: null,
       });

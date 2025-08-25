@@ -10,6 +10,7 @@ import {
 } from "../components/ui/Card";
 import { useAuthStore } from "../stores/authStore";
 import { validateProfileData } from "../utils/validation";
+import { isStudentIdFromEmail } from "../utils/studentIdExtractor";
 import toast from "react-hot-toast";
 
 const departments = [
@@ -45,10 +46,11 @@ const ProfileSetupPage: React.FC = () => {
 
   // Check if student ID was auto-detected from email
   const hasAutoDetectedStudentId =
-    user?.email?.includes("@student.aiub.edu") &&
-    !hasTemporaryStudentId &&
+    user?.email &&
     user?.profile?.student_id &&
-    user?.profile?.student_id !== "00-00000-0";
+    !hasTemporaryStudentId &&
+    user?.profile?.student_id !== "00-00000-0" &&
+    isStudentIdFromEmail(user.email, user.profile.student_id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

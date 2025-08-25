@@ -255,8 +255,7 @@ const AuthPage: React.FC = () => {
                     <div className="font-semibold mb-1">📧 Example:</div>
                     <div className="font-mono">23-51455-1@student.aiub.edu</div>
                     <div className="mt-2 text-blue-600">
-                      ✨ Your student ID will be automatically extracted from
-                      your email address.
+                      ✨ Your student ID (the part before @) will be automatically detected and pre-filled in your profile setup.
                     </div>
                   </div>
                 </div>

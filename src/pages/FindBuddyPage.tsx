@@ -273,171 +273,320 @@ const FindBuddyPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30 p-4 lg:p-6 pb-20 lg:pb-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-6 lg:mb-10">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
-            <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                Save Money, Travel Safely! 🚗
-              </h1>
-              <p className="text-gray-600 mt-2 text-sm sm:text-base lg:text-lg">
-                Find AIUB students heading your way and share ride costs
-              </p>
-              <div className="space-y-2 mt-3">
-                <div className="flex items-start gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                  <Shield className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs sm:text-sm text-blue-700">
-                    <span className="font-medium">Safety First:</span> Connect only with verified AIUB students of the same gender
-                  </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50/50 p-4 lg:p-6 pb-20 lg:pb-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Enhanced Header */}
+        <div className="mb-8 lg:mb-12">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full mb-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-blue-700">Live Ride Sharing</span>
+            </div>
+            
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent mb-4">
+              Find Your Ride Buddy
+            </h1>
+            <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto mb-6">
+              Connect with AIUB students, share costs, and travel safely together 🚗✨
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              <div className="flex items-center gap-3 px-4 py-3 bg-white/80 backdrop-blur-sm border border-blue-200/50 rounded-xl shadow-sm">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                  <Shield className="h-5 w-5 text-white" />
                 </div>
-                <div className="flex items-start gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
-                  <MapPin className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs sm:text-sm text-green-700">
-                    <span className="font-medium">Popular Routes:</span> AIUB ↔️ Kuril, Jamuna Future Park, and more!
-                  </p>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-gray-900">Safe & Secure</p>
+                  <p className="text-xs text-gray-600">Verified AIUB students only</p>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:flex-col lg:items-end lg:flex-shrink-0">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="flex items-center justify-center gap-2 min-h-[44px] order-2 sm:order-1"
-              >
-                <RefreshCw
-                  className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-                />
-                Refresh
-              </Button>
-              <div className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-100 rounded-full min-h-[44px] order-1 sm:order-2">
-                <Users className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-700">
-                  {rides.length} rides
-                </span>
+              
+              <div className="flex items-center gap-3 px-4 py-3 bg-white/80 backdrop-blur-sm border border-green-200/50 rounded-xl shadow-sm">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                  <Users className="h-5 w-5 text-white" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-gray-900">Same Gender</p>
+                  <p className="text-xs text-gray-600">Comfort & safety first</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 px-4 py-3 bg-white/80 backdrop-blur-sm border border-purple-200/50 rounded-xl shadow-sm sm:col-span-2 lg:col-span-1">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <MapPin className="h-5 w-5 text-white" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-gray-900">Popular Routes</p>
+                  <p className="text-xs text-gray-600">AIUB ↔️ Kuril, Jamuna & more</p>
+                </div>
               </div>
             </div>
           </div>
+          
+          <div className="flex justify-center items-center gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-full shadow-sm">
+              <Users className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-medium text-gray-700">
+                {rides.length} Available Rides
+              </span>
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="bg-white/90 backdrop-blur-sm border-gray-200/50 shadow-sm hover:shadow-md"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
+          </div>
         </div>
 
-        {/* Search Filters */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          {/* Search Filters Column */}
-          <div className="lg:col-span-1">
-            {/* Search Filters */}
-            <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm sticky top-24">
-              <CardHeader className="pb-4">
+        {/* Enhanced Search Filters */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-10">
+          {/* Enhanced Search Filters Column */}
+          <div className="lg:col-span-2">
+            <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm sticky top-6 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <Search className="h-5 w-5 text-blue-600" />
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                      <Search className="h-5 w-5" />
                     </div>
-                    Search & Filter Rides
-                  </CardTitle>
+                    <div>
+                      <h2 className="text-xl font-bold">Find Your Ride</h2>
+                      <p className="text-blue-100 text-sm">Search & filter available rides</p>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowFilters(!showFilters)}
-                      className="lg:hidden"
+                      className="lg:hidden text-white hover:bg-white/20 border-white/30"
                     >
                       <Filter className="h-4 w-4 mr-2" />
-                      Filters
+                      {showFilters ? 'Hide' : 'Show'}
                     </Button>
                     {(fromLocation || toLocation || genderPreference !== "all") && (
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={clearFilters}
-                        className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                        className="text-white hover:bg-white/20 border-white/30"
                       >
-                        Clear
+                        Clear All
                       </Button>
                     )}
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent
-                className={`pt-0 ${showFilters ? "block" : "hidden lg:block"}`}
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-                  <div>
-                    <LocationPicker
-                      label="From Location"
-                      value={fromLocation}
-                      onSelect={setFromLocation}
-                      placeholder="Any location"
-                    />
+              </div>
+              
+              <CardContent className={`p-6 ${showFilters ? "block" : "hidden lg:block"}`}>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        📍 Route Information
+                      </label>
+                      <div className="space-y-4">
+                        <div className="relative">
+                          <LocationPicker
+                            label="From Location"
+                            value={fromLocation}
+                            onSelect={setFromLocation}
+                            placeholder="Select pickup location"
+                          />
+                          <div className="absolute -right-2 top-8 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                            <div className="w-4 h-4 border-2 border-gray-400 border-dashed rounded-full"></div>
+                          </div>
+                        </div>
+                        
+                        <div className="relative">
+                          <LocationPicker
+                            label="To Location"
+                            value={toLocation}
+                            onSelect={setToLocation}
+                            placeholder="Select destination"
+                          />
+                          <div className="absolute -right-2 top-8 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm"></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        👤 Gender Preference
+                      </label>
+                      <div className="grid grid-cols-1 gap-2">
+                        {[
+                          { value: "all", label: "🌍 All Students", desc: "View all available rides" },
+                          { value: "male", label: "👨 Male Students", desc: "Male students only" },
+                          { value: "female", label: "👩 Female Students", desc: "Female students only" }
+                        ].map((option) => (
+                          <div
+                            key={option.value}
+                            className={`p-3 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
+                              genderPreference === option.value
+                                ? "border-blue-500 bg-blue-50 shadow-sm"
+                                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                            }`}
+                            onClick={() => setGenderPreference(option.value)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-medium text-gray-900">{option.label}</p>
+                                <p className="text-xs text-gray-600">{option.desc}</p>
+                              </div>
+                              <div className={`w-4 h-4 rounded-full border-2 ${
+                                genderPreference === option.value
+                                  ? "border-blue-500 bg-blue-500"
+                                  : "border-gray-300"
+                              }`}>
+                                {genderPreference === option.value && (
+                                  <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <LocationPicker
-                      label="To Location"
-                      value={toLocation}
-                      onSelect={setToLocation}
-                      placeholder="Any location"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Gender Preference
-                    </label>
-                    <select
-                      value={genderPreference}
-                      onChange={(e) => setGenderPreference(e.target.value)}
-                      className="w-full h-10 lg:h-11 px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all duration-200"
-                    >
-                      <option value="all">🌍 All Students</option>
-                      <option value="male">👨 Male Students</option>
-                      <option value="female">👩 Female Students</option>
-                    </select>
-                  </div>
-                  <div className="flex items-end gap-2">
+                  
+                  <div className="space-y-3 pt-4 border-t border-gray-200">
                     <Button
                       onClick={handleSearch}
                       size="lg"
                       disabled={loading || isRefreshing}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
                     >
-                      <Search className="h-4 w-4 mr-2" />
-                      {loading || isRefreshing ? "Searching..." : "Search"}
+                      <Search className="h-5 w-5 mr-2" />
+                      {loading || isRefreshing ? "Searching..." : "Search Rides"}
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={handleRefresh}
-                      disabled={isRefreshing}
-                      className="lg:hidden p-3"
-                    >
-                      <RefreshCw
-                        className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-                      />
-                    </Button>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleRefresh}
+                        disabled={isRefreshing}
+                        className="bg-white/80 border-gray-200"
+                      >
+                        <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? "animate-spin" : ""}`} />
+                        Refresh
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearFilters}
+                        disabled={!fromLocation && !toLocation && genderPreference === "all"}
+                        className="bg-white/80 border-gray-200"
+                      >
+                        Clear
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
-          {/* Rides List Column */}
+          {/* Enhanced Rides List Column */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Rides List */}
+            {/* Quick Stats Bar */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/50 p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-medium text-gray-700">
+                      {rides.length} Rides Available
+                    </span>
+                  </div>
+                  {rides.length > 0 && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Clock className="h-4 w-4" />
+                      <span>Updated {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  {(fromLocation || toLocation || genderPreference !== "all") && (
+                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 rounded-full">
+                      <Filter className="h-3 w-3 text-blue-600" />
+                      <span className="text-xs text-blue-700 font-medium">Filtered</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Rides List */}
             <div className="space-y-6">
               {loading ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {[1, 2, 3].map((i) => (
-                    <Card
-                      key={i}
-                      className="shadow-lg border-0 bg-white/90 backdrop-blur-sm"
-                    >
+                    <Card key={i} className="shadow-lg border-0 bg-white/95 backdrop-blur-sm overflow-hidden">
                       <CardContent className="p-6">
                         <div className="animate-pulse">
-                          <div className="flex items-center space-x-4">
-                            <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                            <div className="flex-1 space-y-2">
-                              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                          <div className="flex items-start gap-4 mb-6">
+                            <div className="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl"></div>
+                            <div className="flex-1 space-y-3">
+                              <div className="flex items-center gap-3">
+                                <div className="h-5 bg-gray-200 rounded-lg w-32"></div>
+                                <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+                              </div>
+                              <div className="h-4 bg-gray-200 rounded w-48"></div>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                                <div className="space-y-1">
+                                  <div className="h-3 bg-gray-200 rounded w-12"></div>
+                                  <div className="h-4 bg-gray-200 rounded w-24"></div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                                <div className="space-y-1">
+                                  <div className="h-3 bg-gray-200 rounded w-8"></div>
+                                  <div className="h-4 bg-gray-200 rounded w-20"></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                                <div className="space-y-1">
+                                  <div className="h-3 bg-gray-200 rounded w-16"></div>
+                                  <div className="h-4 bg-gray-200 rounded w-28"></div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+                                <div className="space-y-1">
+                                  <div className="h-3 bg-gray-200 rounded w-14"></div>
+                                  <div className="h-4 bg-gray-200 rounded w-24"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <div className="flex gap-2">
+                              <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+                              <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+                            </div>
+                            <div className="flex gap-2">
+                              <div className="h-10 bg-gray-200 rounded-lg w-24"></div>
+                              <div className="h-10 bg-gray-200 rounded-lg w-20"></div>
                             </div>
                           </div>
                         </div>
@@ -446,23 +595,33 @@ const FindBuddyPage: React.FC = () => {
                   ))}
                 </div>
               ) : rides.length === 0 ? (
-                <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm">
+                <Card className="shadow-lg border-0 bg-white/95 backdrop-blur-sm overflow-hidden">
                   <CardContent className="p-12 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                      <Search className="h-8 w-8 text-gray-400" />
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl mb-6">
+                      <Search className="h-10 w-10 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    <h3 className="text-2xl font-bold text-gray-800 mb-3">
                       No rides found
                     </h3>
-                    <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                      Try adjusting your search criteria or check back later for new
-                      rides.
+                    <p className="text-gray-600 mb-8 max-w-md mx-auto text-lg">
+                      {fromLocation || toLocation || genderPreference !== "all" 
+                        ? "Try adjusting your search filters to find more rides."
+                        : "No rides are currently available. Check back later or create your own ride!"
+                      }
                     </p>
-                    <div className="flex gap-3 justify-center">
-                      <Button onClick={clearFilters} variant="outline">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-sm mx-auto">
+                      <Button 
+                        onClick={clearFilters} 
+                        variant="outline"
+                        className="flex-1 bg-white/80 border-gray-200"
+                      >
+                        <Filter className="h-4 w-4 mr-2" />
                         Clear Filters
                       </Button>
-                      <Button onClick={handleRefresh}>
+                      <Button 
+                        onClick={handleRefresh}
+                        className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      >
                         <RefreshCw className="h-4 w-4 mr-2" />
                         Refresh
                       </Button>
@@ -473,225 +632,277 @@ const FindBuddyPage: React.FC = () => {
                 rides.map((ride) => (
                   <Card
                     key={ride.id}
-                    className="shadow-lg border-0 bg-white/95 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                    className="shadow-xl border-0 bg-white/98 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group overflow-hidden"
                   >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center mb-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">
-                              {ride.profiles?.name?.charAt(0)?.toUpperCase() || "U"}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                    
+                    <CardContent className="p-0">
+                      {/* Enhanced Header */}
+                      <div className="p-6 pb-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-center gap-4">
+                            <div className="relative">
+                              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+                                {ride.profiles?.name?.charAt(0)?.toUpperCase() || "U"}
+                              </div>
+                              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                              </div>
                             </div>
-                            <div className="ml-4">
-                              <div className="flex items-center gap-2 mb-1">
-                                <h3 className="font-semibold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
+                            
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <h3 className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
                                   {ride.profiles?.name || "Unknown User"}
                                 </h3>
                                 {ride.profiles?.gender && (
-                                  <div
-                                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${ride.profiles.gender === "male"
-                                        ? "bg-blue-100 text-blue-700"
-                                        : "bg-pink-100 text-pink-700"
-                                      }`}
-                                  >
-                                    <User className="h-3 w-3" />
-                                    {ride.profiles.gender === "male"
-                                      ? "👨 Male"
-                                      : "👩 Female"}
+                                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold shadow-sm ${
+                                    ride.profiles.gender === "male"
+                                      ? "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 border border-blue-300"
+                                      : "bg-gradient-to-r from-pink-100 to-pink-200 text-pink-700 border border-pink-300"
+                                  }`}>
+                                    <User className="h-4 w-4" />
+                                    {ride.profiles.gender === "male" ? "👨 Male" : "👩 Female"}
                                   </div>
                                 )}
                               </div>
-                              <div className="flex items-center text-sm text-gray-500 gap-2">
-                                <span className="flex items-center gap-1">
-                                  <Heart className="h-3 w-3 text-red-400" />
-                                  {ride.profiles?.department || "AIUB Student"}
-                                </span>
-                                <span>•</span>
-                                <span>
-                                  {ride.profiles?.student_id || "Student"}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                            <div className="space-y-3">
-                              <div className="flex items-center text-gray-700">
-                                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                                  <MapPin className="h-4 w-4 text-green-600" />
+                              
+                              <div className="flex items-center gap-4 text-sm text-gray-600">
+                                <div className="flex items-center gap-1.5">
+                                  <Heart className="h-4 w-4 text-red-400" />
+                                  <span className="font-medium">{ride.profiles?.department || "AIUB Student"}</span>
                                 </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                    From
-                                  </p>
-                                  <p className="font-medium">
-                                    {ride.from_location}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center text-gray-700">
-                                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                                  <MapPin className="h-4 w-4 text-red-600" />
-                                </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                    To
-                                  </p>
-                                  <p className="font-medium">{ride.to_location}</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-3">
-                              <div className="flex items-center text-gray-700">
-                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                                  <Clock className="h-4 w-4 text-blue-600" />
-                                </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                    Departure
-                                  </p>
-                                  <p className="font-medium">
-                                    {formatDateTime(ride.ride_time)}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center text-gray-700">
-                                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                                  <Users className="h-4 w-4 text-purple-600" />
-                                </div>
-                                <div>
-                                  <p className="text-xs text-gray-500 uppercase tracking-wide">
-                                    Available
-                                  </p>
-                                  <p className="font-medium">Ride Available</p>
+                                <div className="flex items-center gap-1.5">
+                                  <div className="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-bold text-blue-600">#</span>
+                                  </div>
+                                  <span>{ride.profiles?.student_id || "Student"}</span>
                                 </div>
                               </div>
                             </div>
                           </div>
-
-                          {ride.notes && (
-                            <div className="mb-4 p-3 bg-gray-50 rounded-lg border-l-4 border-blue-400">
-                              <p className="text-sm text-gray-700">
-                                <span className="font-medium text-gray-900">
-                                  Note:
-                                </span>{" "}
-                                {ride.notes}
-                              </p>
+                          
+                          {/* Status Indicators */}
+                          <div className="flex flex-col gap-2 items-end">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-100 to-green-200 rounded-full border border-green-300 shadow-sm">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-sm font-semibold text-green-700">Available</span>
                             </div>
-                          )}
-
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center gap-2 px-3 py-1 bg-green-100 rounded-full">
-                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span className="text-xs font-medium text-green-700">
-                                  Available
-                                </span>
+                            
+                            {!isMyRide(ride) && (
+                              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold shadow-sm ${
+                                isGenderCompatible(ride)
+                                  ? "bg-gradient-to-r from-green-100 to-green-200 text-green-700 border border-green-300"
+                                  : "bg-gradient-to-r from-red-100 to-red-200 text-red-700 border border-red-300"
+                              }`}>
+                                <Shield className="h-3 w-3" />
+                                <span>{isGenderCompatible(ride) ? "Compatible" : "Restricted"}</span>
                               </div>
-                              {/* Gender Compatibility Indicator */}
-                              {!isMyRide(ride) && (
-                                <div
-                                  className={`flex items-center gap-2 px-3 py-1 rounded-full ${isGenderCompatible(ride)
-                                      ? "bg-green-100 text-green-700"
-                                      : "bg-red-100 text-red-700"
-                                    }`}
-                                >
-                                  <Shield className="h-3 w-3" />
-                                  <span className="text-xs font-medium">
-                                    {isGenderCompatible(ride)
-                                      ? "Compatible"
-                                      : "Gender Restricted"}
-                                  </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Enhanced Route & Time Information */}
+                      <div className="px-6 pb-4">
+                        <div className="bg-gradient-to-r from-gray-50 to-blue-50/50 rounded-xl p-4 border border-gray-200/50">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Route Information */}
+                            <div className="space-y-4">
+                              <h4 className="text-sm font-bold text-gray-700 uppercase tracking-wide">📍 Route</h4>
+                              
+                              <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+                                    <MapPin className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">From</p>
+                                    <p className="font-bold text-gray-900 text-lg">{ride.from_location}</p>
+                                  </div>
                                 </div>
-                              )}
+                                
+                                <div className="flex items-center justify-center">
+                                  <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-gray-200 shadow-sm">
+                                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                    <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-md">
+                                    <MapPin className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">To</p>
+                                    <p className="font-bold text-gray-900 text-lg">{ride.to_location}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Time & Details */}
+                            <div className="space-y-4">
+                              <h4 className="text-sm font-bold text-gray-700 uppercase tracking-wide">⏰ Schedule</h4>
+                              
+                              <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+                                    <Clock className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Departure</p>
+                                    <p className="font-bold text-gray-900 text-lg">{formatDateTime(ride.ride_time)}</p>
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                                    <Users className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Seats</p>
+                                    <p className="font-bold text-gray-900 text-lg">Space Available</p>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
+                      </div>
 
-                        <div className="lg:ml-6 flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-32">
+                      {/* Notes Section */}
+                      {ride.notes && (
+                        <div className="px-6 pb-4">
+                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-xl p-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <AlertCircle className="h-4 w-4 text-orange-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-semibold text-orange-800 mb-1">Additional Notes</p>
+                                <p className="text-sm text-orange-700 leading-relaxed">{ride.notes}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Enhanced Action Buttons */}
+                      <div className="px-6 pb-6">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           {isMyRide(ride) ? (
-                            <div className="flex items-center justify-center px-4 py-3 bg-blue-100 rounded-lg border border-blue-200">
-                              <span className="text-sm font-medium text-blue-700">
-                                Your Ride
-                              </span>
+                            <div className="flex items-center justify-center px-6 py-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl border border-blue-200 shadow-sm">
+                              <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                  <User className="h-4 w-4 text-white" />
+                                </div>
+                                <span className="text-lg font-bold text-blue-700">Your Ride</span>
+                              </div>
                             </div>
                           ) : (
                             <>
-                              {/* Join Button - disabled if gender incompatible */}
                               <Button
                                 onClick={() => setRequestingRide(ride.id)}
                                 disabled={!isGenderCompatible(ride)}
-                                className={`w-full lg:w-32 ${isGenderCompatible(ride)
+                                className={`flex-1 h-12 text-base font-semibold ${
+                                  isGenderCompatible(ride)
                                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-                                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                  }`}
+                                    : "bg-gray-300 text-gray-500 cursor-not-allowed hover:transform-none"
+                                }`}
                               >
-                                <MessageSquare className="h-4 w-4 mr-2" />
-                                {isGenderCompatible(ride) ? "Join" : "Restricted"}
+                                <MessageSquare className="h-5 w-5 mr-2" />
+                                {isGenderCompatible(ride) ? "Send Request" : "Gender Restricted"}
                               </Button>
-
-                              {/* Show warning message if gender incompatible */}
-                              {!isGenderCompatible(ride) && (
-                                <div className="flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg">
-                                  <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
-                                  <span className="text-xs text-red-700">
-                                    {getGenderCompatibilityMessage(ride)}
-                                  </span>
-                                </div>
-                              )}
 
                               <Button
                                 variant="outline"
                                 onClick={() => {
-                                  // Open Google Maps directions
                                   const mapsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(
                                     ride.from_location
                                   )}/${encodeURIComponent(ride.to_location)}`;
                                   window.open(mapsUrl, "_blank");
                                 }}
-                                className="w-full lg:w-32 border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300"
+                                className="h-12 px-6 bg-white/90 border-gray-300 hover:bg-gray-50 hover:border-gray-400 shadow-sm hover:shadow-md transition-all duration-200"
                               >
-                                <ExternalLink className="h-4 w-4 mr-2" />
-                                Route
+                                <ExternalLink className="h-5 w-5 mr-2" />
+                                View Route
                               </Button>
                             </>
                           )}
                         </div>
+
+                        {/* Gender Compatibility Warning */}
+                        {!isMyRide(ride) && !isGenderCompatible(ride) && (
+                          <div className="mt-4 flex items-start gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-xl">
+                            <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-semibold text-red-800 mb-1">Gender Restriction</p>
+                              <p className="text-sm text-red-700">
+                                {getGenderCompatibilityMessage(ride)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Request Modal */}
+                      {/* Enhanced Request Modal */}
                       {requestingRide === ride.id && (
-                        <div className="mt-6 pt-6 border-t border-gray-200 bg-gray-50 rounded-lg p-4 -m-6">
-                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                            <MessageSquare className="h-5 w-5 text-blue-600" />
-                            Send a request to join this ride
-                          </h4>
-                          <div className="space-y-4">
-                            <Input
-                              placeholder="Hi! I'd like to join your ride. Let's share the cost and travel together safely!"
-                              value={requestMessage}
-                              onChange={(e) => setRequestMessage(e.target.value)}
-                              className="w-full bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-200"
-                            />
-                            <div className="flex space-x-3 justify-end">
-                              <Button
-                                onClick={() => handleSendRequest(ride.id)}
-                                className="flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                              >
-                                <Send className="h-4 w-4 mr-2" />
-                                Send Request
-                              </Button>
-                              <Button
-                                variant="outline"
-                                onClick={() => {
-                                  setRequestingRide(null);
-                                  setRequestMessage("");
-                                }}
-                                className="border-gray-300"
-                              >
-                                Cancel
-                              </Button>
+                        <div className="px-6 pb-6">
+                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-lg">
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md">
+                                <MessageSquare className="h-6 w-6 text-white" />
+                              </div>
+                              <div>
+                                <h4 className="text-xl font-bold text-gray-900">Send Join Request</h4>
+                                <p className="text-sm text-gray-600">Introduce yourself to {ride.profiles?.name || "the rider"}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                  Your Message
+                                </label>
+                                <textarea
+                                  placeholder="Hi! I'd like to join your ride. Let's share the cost and travel together safely! 🚗"
+                                  value={requestMessage}
+                                  onChange={(e) => setRequestMessage(e.target.value)}
+                                  rows={4}
+                                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-none"
+                                />
+                                <div className="flex justify-between items-center mt-2">
+                                  <p className="text-xs text-gray-500">
+                                    Be friendly and introduce yourself!
+                                  </p>
+                                  <p className={`text-xs ${requestMessage.length > 500 ? 'text-red-600' : 'text-gray-500'}`}>
+                                    {requestMessage.length}/500
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                                <Button
+                                  onClick={() => handleSendRequest(ride.id)}
+                                  disabled={!requestMessage.trim() || requestMessage.length > 500}
+                                  className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                                >
+                                  <Send className="h-5 w-5 mr-2" />
+                                  Send Request
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setRequestingRide(null);
+                                    setRequestMessage("");
+                                  }}
+                                  className="h-12 px-6 bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400"
+                                >
+                                  Cancel
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         </div>

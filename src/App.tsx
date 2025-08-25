@@ -102,7 +102,7 @@ function App() {
                       element={<Navigate to="/verify-email" replace />}
                     />
                   </>
-                ) : !user.profile ? (
+                ) : !user.profile || !user.profile.name || !user.profile.department ? (
                   <>
                     <Route
                       path="/profile-setup"

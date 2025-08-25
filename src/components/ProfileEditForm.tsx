@@ -5,6 +5,7 @@ import { Input } from "./ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import { useAuthStore } from "../stores/authStore";
 import { validateProfileData } from "../utils/validation";
+import { isStudentIdFromEmail } from "../utils/studentIdExtractor";
 import toast from "react-hot-toast";
 
 const departments = [
@@ -53,10 +54,11 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
 
   // Check if student ID was auto-detected from email
   const hasAutoDetectedStudentId =
-    user?.email?.includes("@student.aiub.edu") &&
-    !hasTemporaryStudentId &&
+    user?.email &&
     user?.profile?.student_id &&
-    user?.profile?.student_id !== "00-00000-0";
+    !hasTemporaryStudentId &&
+    user?.profile?.student_id !== "00-00000-0" &&
+    isStudentIdFromEmail(user.email, user.profile.student_id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,15 +69,33 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
       return;
     }
 
-    const errors = validateProfileData(formData);
-    if (errors.length > 0) {
-      errors.forEach((error) => toast.error(error));
+    // Only validate editable fields for profile updates
+    const editableData = {
+      name: formData.name,
+      department: formData.department,
+      phone_number: formData.phone_number,
+    };
+
+    // Basic validation for editable fields only
+    if (!editableData.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+
+    if (editableData.name.trim().length < 2) {
+      toast.error("Name must be at least 2 characters long");
+      return;
+    }
+
+    if (!editableData.department.trim()) {
+      toast.error("Department is required");
       return;
     }
 
     setLoading(true);
     try {
-      await updateProfile(formData);
+      // Only send editable fields to prevent security issues
+      await updateProfile(editableData);
       toast.success("Profile updated successfully!");
       onSuccess();
     } catch (error: any) {
@@ -145,13 +165,18 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
                 type="text"
                 placeholder="e.g., 23-51455-1"
                 value={formData.student_id}
-                onChange={(e) =>
-                  setFormData({ ...formData, student_id: e.target.value })
-                }
                 label="Student ID"
                 required
-                className="text-base"
+                className="text-base bg-gray-50"
+                disabled
+                readOnly
               />
+              <div className="flex items-center text-xs text-gray-500 mt-1 px-3">
+                <svg className="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                Student ID cannot be changed for security reasons
+              </div>
 
               <Input
                 type="tel"
@@ -234,32 +259,42 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({
                   Gender *
                 </label>
                 <div className="flex space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, gender: "male" })}
-                    className={`flex-1 py-3 px-4 rounded-xl border font-medium text-base transition-all duration-200 ${
+                  <div
+                    className={`flex-1 py-3 px-4 rounded-xl border font-medium text-base bg-gray-50 border-gray-200 text-gray-600 cursor-not-allowed ${
                       formData.gender === "male"
-                        ? "bg-primary-600 border-primary-600 text-white shadow-lg"
-                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "ring-2 ring-primary-200"
+                        : ""
                     }`}
                   >
                     <Users className="h-4 w-4 mr-2 inline" />
                     Male
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormData({ ...formData, gender: "female" })
-                    }
-                    className={`flex-1 py-3 px-4 rounded-xl border font-medium text-base transition-all duration-200 ${
+                    {formData.gender === "male" && (
+                      <svg className="h-4 w-4 ml-auto inline text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                  <div
+                    className={`flex-1 py-3 px-4 rounded-xl border font-medium text-base bg-gray-50 border-gray-200 text-gray-600 cursor-not-allowed ${
                       formData.gender === "female"
-                        ? "bg-primary-600 border-primary-600 text-white shadow-lg"
-                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "ring-2 ring-primary-200"
+                        : ""
                     }`}
                   >
                     <Users className="h-4 w-4 mr-2 inline" />
                     Female
-                  </button>
+                    {formData.gender === "female" && (
+                      <svg className="h-4 w-4 ml-auto inline text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center text-xs text-gray-500 mt-1 px-3">
+                  <svg className="h-3 w-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  Gender cannot be changed for security and safety reasons
                 </div>
               </div>
 
