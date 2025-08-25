@@ -37,7 +37,7 @@ const ResetPasswordPage: React.FC = () => {
       toast.error("Invalid or expired reset link");
       navigate("/forgot-password");
     }
-  }, [searchParams, navigate]);
+  }, [searchParams]);
 
   const validateForm = () => {
     const errors: { password?: string; confirmPassword?: string } = {};

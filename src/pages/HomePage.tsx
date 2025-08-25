@@ -49,7 +49,7 @@ const HomePage: React.FC = () => {
     if (user?.id) {
       fetchDashboardData(user.id);
     }
-  }, [user?.id, fetchDashboardData]);
+  }, [user?.id]); // Only depend on user.id, not the function
 
   const StatCard: React.FC<StatCardProps> = ({ icon, label, value, color }) => (
     <div

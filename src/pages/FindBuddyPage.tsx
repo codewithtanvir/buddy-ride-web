@@ -43,7 +43,7 @@ const FindBuddyPage: React.FC = () => {
   useEffect(() => {
     // Load all rides initially, regardless of gender
     fetchRides("", "", "all");
-  }, [fetchRides]);
+  }, []); // Only run once on mount
 
   const handleSearch = async () => {
     setIsRefreshing(true);

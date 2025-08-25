@@ -63,7 +63,7 @@ const ProfilePage: React.FC = () => {
       fetchMyRides(user.id);
       fetchRideRequests();
     }
-  }, [user, fetchMyRides]);
+  }, [user?.id]); // Only depend on user.id, not the function
 
   const fetchRideRequests = async () => {
     if (!user?.id) return;

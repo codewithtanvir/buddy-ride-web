@@ -9,7 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/Card";
+import { PasswordStrengthIndicator } from "../components/PasswordStrengthIndicator";
 import { useAuthStore } from "../stores/authStore";
+import { meetsMinimumRequirements, type PasswordValidationResult } from "../utils/passwordValidation";
 import toast from "react-hot-toast";
 
 const AuthPage: React.FC = () => {
@@ -17,6 +19,7 @@ const AuthPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(false);
   const [formErrors, setFormErrors] = useState<{
     email?: string;
     password?: string;
@@ -29,7 +32,7 @@ const AuthPage: React.FC = () => {
     if (pendingVerification) {
       navigate("/verify-email");
     }
-  }, [pendingVerification, navigate]);
+  }, [pendingVerification]);
 
   const validateForm = () => {
     const errors: { email?: string; password?: string } = {};
@@ -42,18 +45,23 @@ const AuthPage: React.FC = () => {
 
     if (!password) {
       errors.password = "Password is required";
-    } else if (password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
-    } else if (!/[A-Z]/.test(password)) {
-      errors.password = "Password must contain at least one uppercase letter";
-    } else if (!/[a-z]/.test(password)) {
-      errors.password = "Password must contain at least one lowercase letter";
-    } else if (!/\d/.test(password)) {
-      errors.password = "Password must contain at least one number";
+    } else if (isSignUp && !passwordValid) {
+      errors.password = "Please ensure your password meets all security requirements";
+    } else if (!isSignUp && password.length < 6) {
+      // For sign in, just check minimum length
+      errors.password = "Password must be at least 6 characters";
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
+  };
+
+  const handlePasswordValidation = (isValid: boolean, result: PasswordValidationResult) => {
+    setPasswordValid(isValid);
+    // Clear password error if validation passes
+    if (isValid && formErrors.password) {
+      setFormErrors(prev => ({ ...prev, password: undefined }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -179,10 +187,22 @@ const AuthPage: React.FC = () => {
                   required
                   className="h-12 text-base bg-gray-50 border-gray-300 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                 />
-                {isSignUp && (
+                {isSignUp && password && (
+                  <PasswordStrengthIndicator
+                    password={password}
+                    onValidationChange={handlePasswordValidation}
+                    showDetails={true}
+                    className="mt-3"
+                  />
+                )}
+                {isSignUp && !password && (
                   <p className="text-sm text-gray-500">
-                    Minimum 8 characters, with uppercase, lowercase, and a
-                    number.
+                    Choose a strong password with at least 8 characters, including uppercase, lowercase, numbers, and special characters.
+                  </p>
+                )}
+                {!isSignUp && (
+                  <p className="text-sm text-gray-500">
+                    Enter your account password
                   </p>
                 )}
               </div>

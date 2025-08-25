@@ -30,7 +30,7 @@ const EmailVerificationPage: React.FC = () => {
     } else if (!pendingVerification) {
       navigate("/auth");
     }
-  }, [user, pendingVerification, navigate]);
+  }, [user, pendingVerification]);
 
   const handleVerifyOTP = async (otp: string) => {
     if (!pendingVerification) {

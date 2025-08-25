@@ -47,7 +47,7 @@ function App() {
     return () => {
       clearInterval(cleanupInterval);
     };
-  }, [initialize]);
+  }, []); // Empty dependency array - only run once on mount
 
   if (loading) {
     return <LoadingSpinner />;
